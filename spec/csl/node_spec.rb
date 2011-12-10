@@ -17,13 +17,15 @@ module CSL
 		  end
 
 		  it 'overwrites previously defined constants with same name' do
-		    first = Node.new('Point', :x, :y)
-		    first.should == Node::Point
+        silent_warnings do
+  		    first = Node.new('Point', :x, :y)
+  		    first.should == Node::Point
 
-		    second = Node.new('Point', :alpha, :length)
-		    second.should == Node::Point
+  		    second = Node.new('Point', :alpha, :length)
+  		    second.should == Node::Point
 
-		    first.members.should_not == second.members
+  		    first.members.should_not == second.members
+  		  end
 		  end
 
 	    it 'creates a new anonymous class when first argument is nil' do
@@ -100,9 +102,17 @@ module CSL
 				end
 			end
 
-
-
 		end
+
+    describe 'Node Instances' do
+      before(:all) { Node.new('Animal', :name, :legs) }
+      
+      it 'is treelike' do
+        Node::Animal.new.should be_a(Treelike)
+      end
+      
+    end
+    
 
 	end
 
