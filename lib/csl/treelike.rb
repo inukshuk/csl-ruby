@@ -2,19 +2,20 @@ module CSL
   
   module Treelike
     
-    attr_accessor :parent, :nodename
+    attr_accessor :parent
+    attr_writer :nodename
     
     def self.included(base)
       base.extend(ClassMethods)
     end
     
-    def name
+    def nodename
       @nodename ||= self.class.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase
     end
     
     def find_children_by_name(name)
       name = name.to_s
-      children.select { |node| node.name == name }
+      children.select { |node| node.nodename == name }
     end
 
     def children

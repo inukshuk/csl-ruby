@@ -26,9 +26,9 @@ module CSL
 	    end
 	  end
   
-	  describe '#name' do
+	  describe '#nodename' do
 	    it 'returns the class name in attribute form by default' do
-	      node.name.should == 'tree'
+	      node.nodename.should == 'tree'
 	    end
 	  end
   

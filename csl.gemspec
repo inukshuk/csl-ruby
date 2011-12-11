@@ -20,8 +20,6 @@ Gem::Specification.new do |s|
   s.license     = 'FreeBSD'
   s.date        = Time.now.strftime('%Y-%m-%d')
 
-  s.add_runtime_dependency('multi_json', '~>1.0')
-  
   s.add_development_dependency('cucumber', ['~>1.1'])
   s.add_development_dependency('rspec', ['>=2.6.0'])
   s.add_development_dependency('watchr', ['>=0.7'])
