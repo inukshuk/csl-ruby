@@ -6,6 +6,7 @@ module CSL
 	class Locale
 		
 		include Comparable
+		include Enumerable
 		
     @default = 'en-US'.freeze
 
@@ -21,7 +22,6 @@ module CSL
     
 		# Default languages/regions.
 		# Auto-detection is based on these lists.
-		
 		@regions = Hash[*%w{
 		  af ZA ar AR bg BG ca AD cs CZ da DK de DE el GR en US es ES et EE fa IR
 		  fr FR he IL hu HU is IS it IT ja JP km KH ko KR mn MN nb NO nl NL nn NO
@@ -51,14 +51,28 @@ module CSL
 		def initialize(locale = Locale.default, options = {})
 		  @options = Locale.options.merge(options)
 		  @terms, @dates = {}, {}
+		
 		  set(locale)
+		
+			yield self if block_given?
 		end
 		
+		# call-seq:
+		#   locale.set('en')    -> sets language to :en, region to :US
+		#   locale.set('de-AT') -> sets language to :de, region to :AT
+		#   locale.set('-DE')   -> sets langauge to :de, region to :DE
+		#
 		# Sets language and region according to the passed-in locale string. If
 		# the region part is not defined by the string, this method will set the
 		# region to the default region for the given language.
+		#
+		# Raises ArgumentError if the argument is no valid locale string. A valid
+		# locale string is based on the syntax of IETF language tags; it consists
+		# of either a language or region tag (or both), separated by a hyphen.
 		def set(locale)
-		  language, region = locale.to_s.scan(/([a-z]{2})?-([A-Z]{2})?/)[0].map(&:to_sym)
+		  language, region = locale.to_s.scan(/([a-z]{2})?(?:-([A-Z]{2}))?/)[0].map do |tag|
+				tag.respond_to?(:to_sym) ? tag.to_sym : nil
+			end
 		  
 		  case
 		  when language && region
@@ -72,6 +86,39 @@ module CSL
 		  end
 		  
 		  self
+		end
+		
+		# call-seq:
+		#   locale.each      { |term| block } -> locale
+		#   locale.each_term { |term| block } -> locale
+		#   locale.each                       -> enumerator
+		#   locale.each_term                  -> enumerator
+		#
+		# Calls block once for each term defined by the locale. If no block is
+		# given, an enumerator is returned instead.
+		def each_term
+			if block_given?
+				terms.values.each(&Proc.new)
+				self
+			else
+				enum_for(:each_term)
+			end
+		end
+		
+		alias each each_term
+		
+		# call-seq:
+		#   locale.each_date { |date_format| block } -> locale
+		#   locale.each_date                         -> enumerator
+		#
+		# Calls block once for each date format defined by the locale. If no
+		# block is given, an enumerator is returned instead.
+		def each_date
+			if block_given?
+				dates.values.each(&Proc.new)
+			else
+				enum_for(:each_date)
+			end
 		end
 		
 		# Returns true if the Locale is the default locale.
@@ -99,9 +146,9 @@ module CSL
     # language will be prioritised (e.g., de-DE will come before de-AT even
     # though the alphabetical order would be different).
 		def <=>(other)
-			return nil unless other.is_a?(Locale)
-
       case
+			when !other.is_a?(Locale)
+				nil
       when [language, region] == [other.language, other.region]
         0
       when default?

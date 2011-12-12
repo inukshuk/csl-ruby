@@ -21,8 +21,8 @@ Gem::Specification.new do |s|
   s.date        = Time.now.strftime('%Y-%m-%d')
 
   s.add_development_dependency('cucumber', ['~>1.1'])
-  s.add_development_dependency('rspec', ['>=2.6.0'])
-  s.add_development_dependency('watchr', ['>=0.7'])
+  s.add_development_dependency('rspec', ['~>2.7'])
+  s.add_development_dependency('watchr', ['~>0.7'])
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = `git ls-files -- {test,spec,features}/*`.split("\n")

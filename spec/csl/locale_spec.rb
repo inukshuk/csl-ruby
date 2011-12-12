@@ -56,5 +56,24 @@ module CSL
 
 		end
 
+		describe '#set' do			
+			
+			it 'when passed "en-GB" sets language to :en and region to :GB' do
+				locale.set('en-GB')
+				[locale.language, locale.region].should == [:en, :GB]
+			end
+
+			it 'when passed "de" sets language to :de and region to :DE' do
+				locale.set('de')
+				[locale.language, locale.region].should == [:de, :DE]
+			end
+
+			it 'when passed "-AT" sets language to :de and region to :AT' do
+				locale.set('-AT')
+				[locale.language, locale.region].should == [:de, :AT]
+			end
+			
+		end
+		
 	end
 end
