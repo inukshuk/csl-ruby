@@ -1,0 +1,70 @@
+require 'spec_helper'
+
+module CSL
+  describe 'Schema' do
+  
+    describe '.version' do
+      it 'returns a version string' do
+        Schema.version.should match(/^\d+\.\d+\.\d+/)
+      end
+      
+      it 'is greater than 1.0' do
+        Schema.version.split(/\./)[0].to_i.should >= 1
+      end
+    end
+    
+    describe '.variables' do
+      it 'contains :names fields' do
+        Schema.variables[:names].should_not be_empty
+        Schema.variables[:name].should equal Schema.variables[:names]
+      end
+
+      it 'contains :date fields' do
+        Schema.variables[:date].should_not be_empty
+        Schema.variables[:dates].should equal Schema.variables[:date]
+      end
+
+      it 'contains :text fields' do
+        Schema.variables[:text].should_not be_empty
+      end
+
+      it 'contains :number fields' do
+        Schema.variables[:numbers].should_not be_empty
+        Schema.variables[:number].should_not be_empty
+      end
+      
+      it 'accepts either string or symbol input' do
+        Schema.variables[:names].should equal Schema.variables['names']
+      end  
+    end
+    
+    describe '.types' do
+      it 'returns an array' do
+        Schema.types.should be_a(Array)
+      end
+      
+      it 'is not empty' do
+        Schema.types.should_not be_empty
+      end
+      
+      it 'includes :article' do
+        Schema.types.should include(:article)
+      end
+    end
+    
+    describe '.categories' do
+      it 'given a field name returns the corresponding type' do
+        Schema.categories[:author].should == :names
+        Schema.categories[:issued].should == :date
+        Schema.categories[:abstract].should == :text
+        Schema.categories[:issue].should == :number
+      end
+      
+      it 'accepts either string or symbol input' do
+        Schema.categories.should have_key(:author)
+        Schema.categories['author'].should equal Schema.categories[:author]
+      end
+    end
+    
+  end
+end

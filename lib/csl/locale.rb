@@ -1,9 +1,22 @@
+
+require 'csl/locale/date'
+
 module CSL
 	#
 	# CSL Locales contain locale specific date formatting options, term
 	# translations, and a number ordinalizer.
 	#
 	class Locale
+		
+		Metadata = Struct.new(:translators, :rights, :updated) do
+			
+			def initialize(attributes = {})
+				super attributes.fetch(:translators, []).map { |t| Translator.new(t) },
+					*attributes.values_at(:rights, :updated)
+			end
+			
+		end
+		
 		
 		include Comparable
 		include Enumerable
@@ -45,8 +58,10 @@ module CSL
 			
 		end
 		
-		attr_reader :options, :terms, :dates
+		attr_reader :options, :terms, :dates, :metadata
 		attr_accessor :language, :region
+
+		alias info metadata
 		
 		def initialize(locale = Locale.default, options = {})
 		  @options = Locale.options.merge(options)
@@ -55,6 +70,11 @@ module CSL
 		  set(locale)
 		
 			yield self if block_given?
+		end
+		
+		def initialize_copy(other)
+			@options = other.options.dup
+			# TODO
 		end
 		
 		# call-seq:
