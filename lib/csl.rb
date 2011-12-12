@@ -13,7 +13,6 @@ require 'csl/treelike'
 
 require 'csl/metadata'
 
-require 'csl/term'
 require 'csl/locale'
 
 require 'csl/node'

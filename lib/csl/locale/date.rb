@@ -4,7 +4,11 @@ module CSL
     # A localized Date comprises a set of formatting rules for dates.
 		Date = Struct.new(:form, *Schema.attr(:font, :delimiter, :textcase)) do
 		  
+		  extend Forwardable
+		  
 		  attr_reader :parts
+		  
+		  def_delegator :@parts, :empty?
 		  
 		  def initialize(attributes = {})
 		    super(*attributes.values_at(*members))
@@ -13,6 +17,22 @@ module CSL
 
       %w{ text numeric }.each do |type|
         define_method("#{type}?") { form == type }
+      end
+      
+      def to_xml
+        if empty?
+          "<date #{ attribute_list }/>"
+        else
+          ['<date ', attribute_list, '>', parts.map(&:to_xml).join, '</date>'].join
+        end
+      end
+      
+      private
+      
+      def attribute_list
+        each_pair.map { |name, value|
+          value ? [name, value.inspect].join('=') : nil
+        }.compact.join(' ')
       end
 
 		end
@@ -30,8 +50,17 @@ module CSL
       end
       
       def to_xml
-        "<date-part #{ each_pair.map { |a,v| v ? [a,v.inspect].join('=') : nil }.compact.join(' ') }/>"
+        "<date-part #{ attribute_list }/>"
       end
+      
+      private
+      
+      def attribute_list
+        each_pair.map { |name, value|
+          value ? [name, value.inspect].join('=') : nil
+        }.compact.join(' ')
+      end
+      
 		end
 		
 		

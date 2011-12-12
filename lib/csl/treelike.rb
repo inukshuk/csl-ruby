@@ -46,9 +46,7 @@ module CSL
 
       self
     end
-    
-    alias :add_child :add_children
-    
+    alias add_child add_children
     
     def ancestors!
       @ancestors = root? ? [] : [parent] + parent.ancestors!

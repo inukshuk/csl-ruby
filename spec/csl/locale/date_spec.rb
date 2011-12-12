@@ -19,6 +19,18 @@ module CSL
       
     end
     
+    describe '#to_xml' do
+      
+      it 'returns <date /> by default' do
+        Locale::Date.new.to_xml.should == '<date />'
+      end
+
+      it 'returns <date form="numeric"/> for an empty numeric date' do
+        Locale::Date.new(:form => 'numeric').to_xml.should == '<date form="numeric"/>'
+      end
+      
+    end
+    
   end
 
   describe Locale::DatePart do

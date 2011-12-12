@@ -1,22 +1,14 @@
 
+require 'csl/locale/metadata'
 require 'csl/locale/date'
+require 'csl/locale/term'
 
 module CSL
 	#
 	# CSL Locales contain locale specific date formatting options, term
 	# translations, and a number ordinalizer.
 	#
-	class Locale
-		
-		Metadata = Struct.new(:translators, :rights, :updated) do
-			
-			def initialize(attributes = {})
-				super attributes.fetch(:translators, []).map { |t| Translator.new(t) },
-					*attributes.values_at(:rights, :updated)
-			end
-			
-		end
-		
+	class Locale		
 		
 		include Comparable
 		include Enumerable
@@ -65,16 +57,17 @@ module CSL
 		
 		def initialize(locale = Locale.default, options = {})
 		  @options = Locale.options.merge(options)
-		  @terms, @dates = {}, {}
+		  @terms, @dates = [], []
 		
-		  set(locale)
+		  set(locale) unless locale.nil?
 		
 			yield self if block_given?
 		end
 		
 		def initialize_copy(other)
-			@options = other.options.dup
-			# TODO
+			@options = other.options.dup			
+			@dates = other.dates.map(&:dup)
+			@terms = other.terms.map(&:dup)
 		end
 		
 		# call-seq:
@@ -105,6 +98,12 @@ module CSL
 		    raise ArgumentError, "not a valid locale string: #{locale.inspect}"
 		  end
 		  
+		  self
+		end
+		
+		# Sets the locale's language and region to nil.
+		def clear
+		  @language, @region = nil
 		  self
 		end
 		
@@ -189,12 +188,29 @@ module CSL
       end
 		end
 		
+		def nodename
+		  'locale'
+		end
+		
+		def to_xml
+		  "<#{nodename}"
+		end
+		
+		def content
+		end
+		
 		def to_s
 		  [language, region].compact.join('-')
 		end
 		
 		def inspect
-		  "#<#{self.class.name} #{to_s}: terms={#{terms.length}} dates=#{dates.length}>"
+		  "#<#{self.class.name} #{to_s}: dates=[#{dates.length}] terms=[#{terms.length}]>"
+		end
+		
+		private
+		
+		def attribute_list
+		  ' xml:lang="%s"' % to_s
 		end
 		
 	end

@@ -84,10 +84,13 @@ module CSL
     @attributes.each_value { |v| v.map!(&:to_sym).freeze }
     @attributes.freeze
     
+    @terms = %w{ long verb short verb-short symbol }.map(&:to_sym).freeze
+    
+    
     class << self
       
       attr_accessor :version, :namespace, :types, :variables, :categories,
-        :attributes
+        :attributes, :terms
       
       private :new
       
