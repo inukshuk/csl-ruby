@@ -30,7 +30,7 @@ module CSL
 
 	    it 'creates a new anonymous class when first argument is nil' do
 	      node = Node.new(nil, :foo)
-	      node.new('bar').foo.should == 'bar'
+	      node.new(:foo => 'bar').foo.should == 'bar'
 	      node.should be_a(Class)
 	      node.name.to_s.should == ''
 	    end
@@ -43,7 +43,7 @@ module CSL
 
 	    it 'creates a new anonymous class when first argument is nil' do
 	      node = Node.new(nil, :foo)
-	      node.new('bar').foo.should == 'bar'
+	      node.new(:foo => 'bar').foo.should == 'bar'
 	      node.should be_a(Class)
 	      node.name.should be_nil
 	    end
@@ -97,9 +97,6 @@ module CSL
 					Node::Point2d.new.should respond_to(:y=)
 				end
 
-				it 'fails with too many arguments' do
-					lambda { Node::Point2d.new(2.0, 1, true) }.should raise_error(ArgumentError)
-				end
 			end
 
 		end

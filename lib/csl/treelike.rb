@@ -142,7 +142,6 @@ module CSL
       @siblings = each_sibling.to_a
     end
     
-    
     def each_descendant
       if block_given?
         each_child do |child|
@@ -211,10 +210,12 @@ module CSL
     module ClassMethods
       
       def attr_children(*arguments)
-        arguments.each do |name|          
-          unless method_defined?(name)
-            ivar = "@#{name}"            
-            define_method(name) do
+        arguments.each do |name|
+          name = name.to_s
+          method_id = name.tr('-', '_')
+          unless method_defined?(method_id)
+            ivar = "@#{method_id}"
+            define_method(method_id) do
               instance_variable_set(ivar, find_children_by_name(name))
             end
           end

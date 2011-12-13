@@ -89,6 +89,27 @@ module CSL
       end
       
     end
+
+    describe 'named child accessors' do
+      before(:all) { TestTree.instance_eval { attr_children :'test-tree' } }
+
+      context 'when it has no children' do
+        it 'returns an empty list by default' do
+          node.test_tree.should be_empty
+        end
+      end
+
+      context 'when it has children' do
+        it 'returns a list of a single child with the matching name' do
+          lvl1.parent.test_tree.should have(1).item
+        end
+
+        it 'returns a list of all children with the matching name' do
+          node.add_children(TestTree.new, TestTree.new)
+          node.test_tree.should have(2).items
+        end
+      end
+    end
     
 	end
 	
