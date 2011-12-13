@@ -4,6 +4,7 @@ module CSL
     
     @version   = '1.0.1'.freeze
     @namespace = 'http://purl.org/net/xbiblio/csl'.freeze
+    @preamble  = '<?xml version="1.0" encoding="utf-8"?>'.freeze
     
     @types = %w{ article article-journal article-magazine article-newspaper
       bill book broadcast chapter entry entry-dictionary entry-encyclopedia
@@ -90,7 +91,7 @@ module CSL
     class << self
       
       attr_accessor :version, :namespace, :types, :variables, :categories,
-        :attributes, :terms
+        :attributes, :terms, :preamble
       
       private :new
       

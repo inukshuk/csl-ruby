@@ -13,6 +13,8 @@ module CSL
 		include Comparable
 		include Enumerable
 		
+		include Treelike
+		
     @default = 'en-US'.freeze
 
 		@root = File.expand_path('../../../vendor/locales', __FILE__).freeze
@@ -188,16 +190,15 @@ module CSL
       end
 		end
 		
-		def nodename
-		  'locale'
-		end
+		def children
+		  dates + terms
+	  end
+	  
 		
 		def to_xml
 		  "<#{nodename}"
 		end
 		
-		def content
-		end
 		
 		def to_s
 		  [language, region].compact.join('-')
@@ -206,12 +207,16 @@ module CSL
 		def inspect
 		  "#<#{self.class.name} #{to_s}: dates=[#{dates.length}] terms=[#{terms.length}]>"
 		end
-		
-		private
-		
-		def attribute_list
-		  ' xml:lang="%s"' % to_s
+
+    private
+    
+		def attribute_pairs
+		  if root?
+		    ['xmlns', Schema.namespace, 'version', Schema.version, 'xml:lang', to_s]
+		  else
+		    ['xml:lang', to_s]
+		  end
 		end
-		
+				
 	end
 end
