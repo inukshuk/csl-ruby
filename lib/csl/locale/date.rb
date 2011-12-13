@@ -15,7 +15,7 @@ module CSL
 		
 		# DatePart represent the localized formatting options for an individual
 		# date part (day, month, or year).
-		DatePart = Node.new(:name, *Schema.attr(:affixes, :textcase, :font, :periods, :date)) do
+		DatePart = Node.new(:name, :form, :'range-delimiter', *Schema.attr(:affixes, :textcase, :font, :periods)) do
 
 		  alias empty? has_children?
       
