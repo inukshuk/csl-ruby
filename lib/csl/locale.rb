@@ -1,19 +1,11 @@
-
-require 'csl/locale/metadata'
-require 'csl/locale/date'
-require 'csl/locale/term'
-
 module CSL
 	#
 	# CSL Locales contain locale specific date formatting options, term
 	# translations, and a number ordinalizer.
 	#
-	class Locale		
+	Locale = Node.new(:version) do
 		
 		include Comparable
-		include Enumerable
-		
-		include Treelike
 		
     @default = 'en-US'.freeze
 
@@ -42,6 +34,7 @@ module CSL
 		
 		
 		class << self
+		  
 			extend Loader
 			
 			attr_accessor :default, :options
@@ -52,24 +45,56 @@ module CSL
 			
 		end
 		
+		undef_method :attributes
+		undef_method :[]=
+		
 		attr_reader :options, :terms, :dates, :metadata
 		attr_accessor :language, :region
-
+		
 		alias info metadata
 		
 		def initialize(locale = Locale.default, options = {})
 		  @options = Locale.options.merge(options)
-		  @terms, @dates = [], []
-		
+		  @terms, @dates = {}, {}
+		  
 		  set(locale) unless locale.nil?
 		
 			yield self if block_given?
 		end
+
+		# TODO
+    # def initialize_copy(other)
+    #   @options = other.options.dup
+    # end
 		
-		def initialize_copy(other)
-			@options = other.options.dup			
-			@dates = other.dates.map(&:dup)
-			@terms = other.terms.map(&:dup)
+		
+		def added_to(node)
+		  raise "cannot add locale to #{node.inspect}" unless node.is_a?(Style)
+		end
+		
+		def added_child(node)
+		  case node
+		  when Term
+		    terms[node.code] = node
+		  when Date
+		    dates[node.form] = node
+		  when Metadata
+		    delete_child metadata unless metadata.nil?
+		    @metadata = node
+		  else
+		    raise "cannot add node to locale: #{node.inspect}"
+		  end
+		end
+
+		def deleted_child(node)
+		  case node
+		  when Term
+		    term.delete(node.code)
+		  when Date
+		    dates.delete(node.form)
+		  when Metadata
+		    @metadata = nil
+		  end		  
 		end
 		
 		# call-seq:
@@ -109,10 +134,15 @@ module CSL
 		  self
 		end
 		
+		def translate(*arguments)
+		  raise 'not implemented'
+		end
+		
+		alias [] translate
+		alias _  translate
+		
 		# call-seq:
-		#   locale.each      { |term| block } -> locale
 		#   locale.each_term { |term| block } -> locale
-		#   locale.each                       -> enumerator
 		#   locale.each_term                  -> enumerator
 		#
 		# Calls block once for each term defined by the locale. If no block is
@@ -122,11 +152,9 @@ module CSL
 				terms.values.each(&Proc.new)
 				self
 			else
-				enum_for(:each_term)
+				enum_for :each_term
 			end
 		end
-		
-		alias each each_term
 		
 		# call-seq:
 		#   locale.each_date { |date_format| block } -> locale
@@ -138,7 +166,7 @@ module CSL
 			if block_given?
 				dates.values.each(&Proc.new)
 			else
-				enum_for(:each_date)
+				enum_for :each_date
 			end
 		end
 		
@@ -189,16 +217,7 @@ module CSL
         language <=> other.language
       end
 		end
-		
-		def children
-		  dates + terms
-	  end
-	  
-		
-		def to_xml
-		  "<#{nodename}"
-		end
-		
+
 		
 		def to_s
 		  [language, region].compact.join('-')
@@ -207,16 +226,21 @@ module CSL
 		def inspect
 		  "#<#{self.class.name} #{to_s}: dates=[#{dates.length}] terms=[#{terms.length}]>"
 		end
-
-    private
-    
-		def attribute_pairs
+		
+		private
+		
+		def attribute_assignments
+		  as = []
+		  
 		  if root?
-		    ['xmlns', Schema.namespace, 'version', Schema.version, 'xml:lang', to_s]
-		  else
-		    ['xml:lang', to_s]
+		    as.push('xmlns="%s"' % Schema.namespace)
+		    as.push('version="%s"'  % (version || Schema.version))		    
 		  end
+		  
+		  as.push('xml:lang="%s"' % to_s)
+		  as
 		end
-				
+		
 	end
+	
 end

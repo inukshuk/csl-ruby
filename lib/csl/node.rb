@@ -3,11 +3,12 @@ module CSL
   class Node < Struct
     
     include Treelike
-
+    include PrettyPrinter
+    
     @tabwidth = 2
     
     class << self
-      attr_accessor :tabwidth
+      attr_accessor :tabwidth      
     end
 
     
@@ -43,34 +44,13 @@ module CSL
       end
     end
     
-    def to_xml
-      to_tags.flatten.join
-    end
-    
-    def pretty_print
-      pp(to_tags).join("\n")
-    end
-        
-    alias to_s pretty_print
-    
     def inspect
       "#<#{self.class.name} attributes={#{size}} children=[#{children.length}]>"
     end
     
     
     private
-    
-    # pretty printer helper
-    def pp(tags, level = 0)
-      tags.map do |tag|
-        if tag.respond_to?(:map)
-          pp tag, level + 1
-        else
-          ' ' * (level * Node.tabwidth) + tag.to_s
-        end
-      end
-    end
-    
+        
     def attribute_assignments
       each_pair.map { |name, value|
         value ? [name, value.to_s.inspect].join('=') : nil

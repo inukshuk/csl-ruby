@@ -86,12 +86,17 @@ module CSL
     @attributes.freeze
     
     @terms = %w{ long verb short verb-short symbol }.map(&:to_sym).freeze
+
+    @metadata = %w{
+      author category contributor id issn eissn issnl link published rights
+      summary title title-short updated translator
+    }.map(&:to_sym).freeze
     
     
     class << self
       
       attr_accessor :version, :namespace, :types, :variables, :categories,
-        :attributes, :terms, :preamble
+        :attributes, :terms, :preamble, :metadata
       
       private :new
       

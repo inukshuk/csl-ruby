@@ -47,13 +47,14 @@ module CSL
         Locale.new.options.should == Locale.options
       end
 
-			[:terms, :dates].each do |m|
-				it "contains no #{m} by default" do
-					Locale.new.send(m).should_not be_nil
-					Locale.new.send(m).should be_empty
-				end
-			end
+      it 'contains no dates by default' do
+        Locale.new.dates.should be_empty
+      end
 
+      it 'contains no terms by default' do
+        Locale.new.terms.should be_empty
+      end
+      
 		end
 
 		describe '#set' do			

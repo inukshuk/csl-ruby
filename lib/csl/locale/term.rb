@@ -1,19 +1,23 @@
 module CSL
   class Locale
     
-    Term = Struct.new(:name, :form, :gender, :'gender-form') do
+    Term = Node.new(:name, :form, :gender, :'gender-form') do
       extend Forwardable
   
       attr_accessor :value
       
       def initialize(attributes = {})
-        super(*attributes.values_at(*members))
-        @value = attributes[:value].to_s
+        super
+        @value = Term::Value.parse(attributes[:value])
       end
 
       def initialize_copy(other)
         super
         @value = other.value.dup
+      end
+
+      def children
+        Array(value)
       end
       
       def code
@@ -36,48 +40,47 @@ module CSL
       def pluralize
         value && value.respond_to?(:multiple) ? value.multiple : value.to_s
       end
+      
       alias plural pluralize
 
       %w{ masculine feminine }.each do |name|
         define_method("#{name}?") { gender == name }
         define_method("#{name}!") { gender == name ? nil : self.gender = name }
       end
-
-      def nodename
-        self.class.name.split(/::/)[-1].downcase
-      end
       
-      def to_xml
-        "<#{nodename} #{attribute_list}>#{content}</#{nodename}>"
-      end
-      
-      def content
-        value.respond_to?(:to_xml) ? value.to_xml : value.to_s
-      end
-      
-      private
-      
-      def attribute_list
-        each_pair.map { |name, value|
-          value ? [name, value.inspect].join('=') : nil
-        }.compact.join(' ')
-      end
-    
     end
     
     Term::Value = Struct.new(:single, :multiple) do
       extend Forwardable
+      include PrettyPrinter
+      
+      class << self
+        
+        def parse(data)
+          case data
+          when String
+            data.to_s
+          when Hash
+            new(data)
+          else
+            nil
+          end
+        end
+        
+      end
       
       def_delegators :to_s, *(String.instance_methods(false) -
         Struct.instance_methods(false)).reject { |m| m.to_s =~ /^(<<|replace)|!$/ }
 
       def initialize(attributes = {})
-        super(*attributes.values_at(:single, :multiple))
+        super(*attributes.values_at(*members))
       end
-    
-      def to_xml
-        "<single>#{single}</single><multiple>#{multiple}</multiple>"
-      end
+
+      def to_tags
+        each_pair.map { |name, value|
+          value ? "#<{name}>#{value}</#{name}>" : nil
+        }.compact
+      end      
     
     end
     

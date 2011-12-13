@@ -72,6 +72,9 @@ module CSL
         
         deleted
       end
+    rescue => e
+      # TODO rollback
+      raise e
     end
     
     def add_children(*nodes)
@@ -90,6 +93,9 @@ module CSL
       node.added_to self
       
       node
+    rescue => e
+      # TODO rollback
+      raise e
     end
     
     def <<(node)
@@ -176,15 +182,17 @@ module CSL
       end
     end
     
+    # Returns this node's ancestors as an array.
     def ancestors
       @ancestors = each_ancestor.to_a
     end
     
-    # Returns the depth of the node in the tree.
+    # Returns the node's current depth in the tree.
     def depth
       @depth = ancestors.length
     end
-        
+    
+    # Returns the root node.
     def root
       @root = root? ? self : parent.root!
     end
@@ -208,6 +216,9 @@ module CSL
     end
     
     module ClassMethods
+      
+      # TODO add self-closing tag macro
+      # TODO add children type validator
       
       def attr_children(*arguments)
         arguments.each do |name|
