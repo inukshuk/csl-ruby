@@ -2,7 +2,7 @@ module CSL
 	
 	Metadata = Node.new(*Schema.metadata) do
 
-		def initalize(attributes = {})
+		def initialize(attributes = {})
 			super(*attributes.values_at(*members))
 			@nodename = 'info'
 		end
@@ -36,7 +36,7 @@ module CSL
 
 		include PrettyPrinter
 
-		def initalize(attributes = {})
+		def initialize(attributes = {})
 			super(*attributes.values_at(*members))
 		end
 
