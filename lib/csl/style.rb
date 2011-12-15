@@ -1,6 +1,7 @@
 module CSL
   
-  Style = Node.new(:version, :class, :'default-locale') do
+  class Style < Node
+    attr_struct :version, :class, :'default-locale'
   end
   
 end

@@ -3,7 +3,7 @@ module CSL
 	# CSL Locales contain locale specific date formatting options, term
 	# translations, and a number ordinalizer.
 	#
-	Locale = Node.new(:version) do
+	class Locale < Node
 		
 		include Comparable
 		

@@ -1,7 +1,9 @@
 module CSL
   class Style
     
-    Bibliography = Node.new(*Schema.attr(:bibliography)) do
+    class Bibliography < Node
+      
+      attr_struct *Schema.attr(:bibliography)
       
     end
     

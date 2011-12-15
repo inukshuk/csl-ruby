@@ -16,4 +16,8 @@ module CSL
   describe Style::EtAl do
   
   end
+
+  describe Style::Substitute do
+  
+  end
 end

@@ -1,7 +1,8 @@
 module CSL
   class Style
     
-    Number = Node.new(*Schema.attr(:number)) do
+    class Number < Node
+      attr_struct *Schema.attr(:number)
       
     end
     

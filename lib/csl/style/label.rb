@@ -1,7 +1,10 @@
 module CSL
   class Style
     
-    Label = Node.new(:variable, :form, *Schema.attr(:label)) do
+    class Label < Node
+      
+      attr_struct :variable, :form, *Schema.attr(:label)
+      
     end
     
   end

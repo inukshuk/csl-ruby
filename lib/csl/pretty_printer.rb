@@ -12,17 +12,19 @@ module CSL
     def pretty_print
       pp(to_tags).join("\n")
     end
-        
-    alias to_s pretty_print
 
     private
     
+		def tabwidth
+			2
+		end
+		
     def pp(tags, level = 0)
       tags.map do |tag|
         if tag.respond_to?(:map)
           pp tag, level + 1
         else
-          ' ' * (level * Node.tabwidth) + tag.to_s
+          ' ' * (level * tabwidth) + tag.to_s
         end
       end
     end

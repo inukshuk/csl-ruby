@@ -1,30 +1,88 @@
 module CSL
   
-  class Node < Struct
+  class Node
     
+		extend Forwardable
+		
+		include Enumerable
+		
     include Treelike
     include PrettyPrinter
-    
-    @tabwidth = 2
-    
+    		
+		
     class << self
-      attr_accessor :tabwidth      
+
+			def default_attributes
+			  @default_attributes ||= {}
+			end
+			
+			def create_attributes(attributes)
+				if const_defined?(:Attributes)
+					const_get(:Attributes).new(default_attributes.merge(attributes))
+				else
+					default_attributes.merge(attributes)
+				end
+			end
+
+			private
+			
+			def attr_defaults(attributes)
+			  @default_attributes = attributes
+			end
+			
+			def attr_struct(*attributes)
+				const_set(:Attributes, Struct.new(*attributes) {
+					
+			    def initialize(attrs = {})
+			      super(*attrs.values_at(*members))
+			    end
+					alias keys members
+					
+					def fetch(key, default = nil)
+						value = members.include?(key) && send(key)
+						
+						if block_given? 
+							value || yield(key)
+						else
+							value || default
+						end
+					end
+					
+				})
+			end
+
     end
 
-    
+
+    attr_reader :attributes
+
+		def_delegators :attributes, :[], :[]=, :values, :values_at, :length, :size
+		
     def initialize(attributes = {})
-      super(*attributes.values_at(*members))
+			@attributes = self.class.create_attributes(attributes)
     end
     
-    # Returns the node's attributes as a hash/
-    def attributes
-      Hash[*each_pair.to_a]
-    end
     
+		def each
+			if block_given?
+				attributes.each_pair(&Proc.new)
+				self
+			else
+				to_enum
+			end
+		end
+		alias each_pair each
+
+		# Returns true if the node contains an attribute with the passed-in name;
+		# false otherwise.
+    def attribute?(name)
+      attributes.fetch(name, false)
+    end
+		
     def has_attributes?
       !values.reject { |v| v.nil? || v.respond_to?(:empty) && v.empty? }.empty?
     end
-    
+
     
     # Returns the node' XML tags (including attribute assignments) as an
     # array of strings.
@@ -48,6 +106,8 @@ module CSL
       "#<#{self.class.name} attributes={#{size}} children=[#{children.length}]>"
     end
     
+    alias to_s pretty_print
+
     
     private
         

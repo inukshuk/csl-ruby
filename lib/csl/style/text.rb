@@ -1,7 +1,8 @@
 module CSL
   class Style
     
-    Text = Node.new(*Schema.attr(:text)) do
+    class Text < Node
+      attr_struct *Schema.attr(:text)
     end
     
   end

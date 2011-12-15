@@ -1,7 +1,8 @@
 module CSL
   class Style
     
-    Macro = Node.new(:name) do
+    class Macro < Node
+      attr_struct :name
     end
   
   end

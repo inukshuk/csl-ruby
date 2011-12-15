@@ -1,23 +1,30 @@
 module CSL
   class Style
     
-    Names = Node.new(:variable, *Schema.attr(:names)) do
+    class Names < Node
+      
+      attr_struct :variable, *Schema.attr(:names)      
       
     end
     
-    Name = Node.new(:form, *Schema.attr(:name, :affixes, :font, :delimiter)) do
-      
+    
+    class Name < Node
+    
+      attr_struct :form, *Schema.attr(:name, :affixes, :font, :delimiter)
+
     end
-   
-    NamePart = Node.new(:name, *Schema.attr(:textcase, :affixes, :font)) do
-      
-    end
-        
-    EtAl = Node.new(:term, *Schema.attr(:affixes, :font)) do
+
+    class NamePart < Node
+      attr_struct :name, *Schema.attr(:textcase, :affixes, :font)
     end
     
-    # Substitute = Node.new() do
-    # end
+    class EtAl < Node
+      attr_struct :term, *Schema.attr(:affixes, :font)
+    end
+
+    class Substitute < Node
+    end
+    
     
   end
 end

@@ -1,7 +1,8 @@
 module CSL
   class Style
     
-    Layout = Node.new(*Schema.attr(:affixes, :font, :delimiter)) do
+    class Layout < Node
+      attr_struct *Schema.attr(:affixes, :font, :delimiter)
     
     end
     

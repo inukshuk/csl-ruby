@@ -1,8 +1,9 @@
 module CSL
   class Locale
     
-    Term = Node.new(:name, :form, :gender, :'gender-form') do
-      extend Forwardable
+    class Term < Node
+
+      attr_struct :name, :form, :gender, :'gender-form'
   
       attr_accessor :value
       

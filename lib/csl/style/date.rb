@@ -1,13 +1,14 @@
 module CSL
   class Style
     
-    Date = Node.new(*Schema.attr(:date)) do
-      
+    class Date < Node
+      attr_struct *Schema.attr(:date)      
     end
-
-    DatePart = Node.new(:name, :form, :'range-delimiter', *Schema.attr(:affixes, :textcase, :font, :periods)) do
-      
+    
+    class DatePart < Node
+      attr_struct :name, :form, :'range-delimiter', *Schema.attr(:affixes, :textcase, :font, :periods)
     end
+    
     
   end
 end

@@ -207,7 +207,12 @@ module CSL
       [self, children.map(&:to_a)]
     end
 
-    # Add memoized methods
+		
+    # Add memoized methods. When processing citations, styles will
+		# typically remain stable; therefore cite processors may opt
+		# to use memoized versions of the following methods. These
+		# versions are marked with an exclamation mark as a reminder
+		# that the return values are cached and potentially outdated.
     %w{ ancestors descendants siblings root depth }.each do |name|
       ivar = "@#{name}"
       define_method("#{name}!") do

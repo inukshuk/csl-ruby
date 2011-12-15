@@ -1,7 +1,9 @@
 module CSL
   class Style
     
-    Citation = Node.new(*Schema.attr(:citation)) do
+    class Citation < Node
+      
+      attr_struct *Schema.attr(:citation)
     
     end
     
