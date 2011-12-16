@@ -79,9 +79,6 @@ module CSL
       attributes.fetch(name, false)
     end
 		
-    def has_attributes?
-      !values.reject { |v| v.nil? || v.respond_to?(:empty) && v.empty? }.empty?
-    end
 
     
     # Returns the node' XML tags (including attribute assignments) as an

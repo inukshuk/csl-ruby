@@ -48,10 +48,10 @@ module CSL
 		undef_method :attributes
 		undef_method :[]=
 		
-		attr_reader :options, :terms, :dates, :metadata
+		attr_reader :options, :terms, :dates, :info
 		attr_accessor :language, :region
 		
-		alias info metadata
+		alias metadata info
 		
 		def initialize(locale = Locale.default, options = {})
 		  @options = Locale.options.merge(options)
@@ -78,9 +78,9 @@ module CSL
 		    terms[node.code] = node
 		  when Date
 		    dates[node.form] = node
-		  when Metadata
+		  when Info
 		    delete_child metadata unless metadata.nil?
-		    @metadata = node
+		    @info = node
 		  else
 		    raise "cannot add node to locale: #{node.inspect}"
 		  end
@@ -92,8 +92,8 @@ module CSL
 		    term.delete(node.code)
 		  when Date
 		    dates.delete(node.form)
-		  when Metadata
-		    @metadata = nil
+		  when Info
+		    @info = nil
 		  end		  
 		end
 		

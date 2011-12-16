@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module CSL
   
-  describe Metadata do
+  describe Info do
     
     it { should_not be_nil }
     
@@ -19,19 +19,19 @@ module CSL
       end
       
       it 'prints the id if present' do
-        Metadata.new(:id => 'apa').to_xml.should == '<info><id>apa</id></info>'
+        Info.new(:id => 'apa').to_xml.should == '<info><id>apa</id></info>'
       end
       
     end
     
   end
   
-  describe Metadata::Contributor do
+  describe Info::Contributor do
     
     it { should_not be_nil }
     
-    let(:bruce) { Metadata::Contributor.new(:name => "Bruce D'Arcus") }
-    let(:poe) { Metadata::Contributor.new(:email => 'poe@baltimore.com', :role => 'author', :name => 'E. A. Poe') }
+    let(:bruce) { Info::Contributor.new(:name => "Bruce D'Arcus") }
+    let(:poe) { Info::Contributor.new(:email => 'poe@baltimore.com', :role => 'author', :name => 'E. A. Poe') }
     
     describe '#name' do
       it 'returns the name' do

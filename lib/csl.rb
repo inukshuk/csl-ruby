@@ -13,7 +13,7 @@ require 'csl/loader'
 require 'csl/treelike'
 require 'csl/node'
 
-require 'csl/metadata'
+require 'csl/info'
 
 require 'csl/locale'
 require 'csl/locale/date'

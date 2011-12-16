@@ -1,6 +1,6 @@
 module CSL
   
-  class Metadata < Node
+  class Info < Node
     
     attr_struct *Schema.metadata
 
@@ -38,7 +38,7 @@ module CSL
   end
   
     
-  Metadata::Contributor = Struct.new(:name, :email, :uri, :role) do
+  Info::Contributor = Struct.new(:name, :email, :uri, :role) do
 
     include PrettyPrinter
 
