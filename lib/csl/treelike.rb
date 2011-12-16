@@ -123,6 +123,7 @@ module CSL
     def has_children?
       !children.empty?
     end
+    alias empty? has_children?
     
     # Unlinks the node and all its children from its parent node. Returns
     # the old parent node or nil.

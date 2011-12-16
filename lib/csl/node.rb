@@ -5,6 +5,7 @@ module CSL
     extend Forwardable
     
     include Enumerable
+    include Comparable
     
     include Treelike
     include PrettyPrinter
@@ -82,7 +83,18 @@ module CSL
     def attribute?(name)
       attributes.fetch(name, false)
     end
+    
+    # Returns true if the node contains any attributes (ignores nil values);
+    # false otherwise.
+    def has_attributes?
+      !detect { |a| !a.nil? }.nil?
+    end
 
+    def <=>(other)
+      [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
+    rescue
+      nil
+    end
     
     # Returns the node' XML tags (including attribute assignments) as an
     # array of strings.
@@ -135,15 +147,15 @@ module CSL
     alias to_s  content
 
     # TextNodes quack like a string.
-    def_delegators :to_s, *String.instance_methods(false).reject do |m|
-      m.to_s =~ /^\W|!$|(?:^(?:hash|eql?|to_s|length|size|inspect)$)/
-    end
-    
-    String.instance_methods(false).select { |m| m.to_s =~ /!$/ }.each do |m|
-      define_method(m) do
-        content.send(m) if content.respond_to?(m)
-      end
-    end
+    # def_delegators :to_s, *String.instance_methods(false).reject do |m|
+    #   m.to_s =~ /^\W|!$|(?:^(?:hash|eql?|to_s|length|size|inspect)$)/
+    # end
+    # 
+    # String.instance_methods(false).select { |m| m.to_s =~ /!$/ }.each do |m|
+    #   define_method(m) do
+    #     content.send(m) if content.respond_to?(m)
+    #   end
+    # end
     
     def initialize(argument = '')
       case
@@ -152,6 +164,7 @@ module CSL
       when argument.respond_to?(:to_s)
         super({})
         @content = argument.to_s
+        yield self if block_given?
       else
         raise ArgumentError, "failed to create text node from #{argument.inspect}"
       end

@@ -1,6 +1,18 @@
 module CSL
   class Locale
     
+    class Terms < Node
+      attr_children :term
+      
+      alias terms term
+      
+      def initialize(attributes = {})
+        super
+        children[:term] = []
+      end
+
+    end
+    
     class Term < Node
 
       attr_struct :name, :form, :gender, :'gender-form'
