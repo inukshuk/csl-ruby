@@ -5,6 +5,7 @@ module CSL
   describe Info do
     
     it { should_not be_nil }
+    it { should_not have_children }
     
     describe '#nodename' do
       it 'returns "info"' do
@@ -12,14 +13,33 @@ module CSL
       end
     end
     
-    describe '#to_xml' do
+    describe '#children' do
+      it 'returns a Info::Children instance' do
+        Info.new.children.should be_a(Info::Children)
+      end
       
+      it 'allows to set the id by writer method' do
+        lambda { Info.new.children.id = 'foo' }.should_not raise_error
+      end
+
+      it 'allows to set the id by array accessor' do
+        lambda { Info.new.children[:id] = 'foo' }.should_not raise_error
+      end
+    end
+
+    describe '#id' do
+      it 'returns nil by default' do
+        Info.new.id.should be nil
+      end
+    end
+    
+    describe '#to_xml' do
       it 'returns an empty info element by default' do
-        subject.to_xml.should == '<info></info>'
+        subject.to_xml.should == '<info />'
       end
       
       it 'prints the id if present' do
-        Info.new(:id => 'apa').to_xml.should == '<info><id>apa</id></info>'
+        Info.new { |i| i.id = 'apa' }.to_xml.should == '<info><id>apa</id></info>'
       end
       
     end

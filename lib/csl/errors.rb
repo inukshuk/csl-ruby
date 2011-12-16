@@ -10,5 +10,6 @@ module CSL
   end
   
 	class ParseError < Error; end
+	class ValidationError < Error; end
 
 end

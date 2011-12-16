@@ -4,7 +4,13 @@ module CSL
 	describe 'Treelike' do
   
 	  before(:all) do 
-			class TestTree; include Treelike; end
+			class TestTree
+			  include Treelike
+			  
+			  def initialize
+			    @children = self.class.create_children
+			  end
+			end
 		end
   
 	  let(:node) { TestTree.new }
@@ -90,25 +96,50 @@ module CSL
       
     end
 
-    describe 'named child accessors' do
-      before(:all) { TestTree.instance_eval { attr_children :'test-tree' } }
-
-      context 'when it has no children' do
-        it 'returns an empty list by default' do
-          node.test_tree.should be_empty
+    describe 'named children' do
+      before(:all) do
+        class TestTree
+          attr_children :'test-tree'
+        end
+        class AnotherTree
+          include Treelike
+        end     
+      end
+    
+      it 'the class contains a children struct' do
+        TestTree.const_defined?(:Children, false).should be true
+      end
+      
+      describe '.create_children' do
+        it 'returns the children struct' do
+          TestTree.create_children.should be_a(Struct)
         end
       end
-
-      context 'when it has children' do
-        it 'returns a list of a single child with the matching name' do
-          lvl1.parent.test_tree.should have(1).item
-        end
-
-        it 'returns a list of all children with the matching name' do
-          node.add_children(TestTree.new, TestTree.new)
-          node.test_tree.should have(2).items
+      
+      describe '#children' do
+        it 'returns a children struct instance' do
+          TestTree.new.children.should be_a(Struct)
         end
       end
+      
+      it 'has no children by default' do
+        TestTree.new.should_not have_children
+      end
+      
+      it 'has children when adding child nodes' do
+        expect { node << TestTree.new }.to change { node.has_children? }.to(true)
+      end
+
+      it 'raises an error when adding a child with an invalid name' do
+        expect { node << AnotherTree.new }.to raise_error(ValidationError)
+      end 
+    
+      it 'accepts multiple nodes of the same name' do
+        expect { node << TestTree.new << TestTree.new }.to change {
+          node.children.each.to_a.length
+        }.from(0).to(2)
+      end
+      
     end
     
 	end

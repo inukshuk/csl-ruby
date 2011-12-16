@@ -3,8 +3,11 @@ module CSL
   module Treelike
     
     attr_accessor :parent
+    attr_reader :children
     attr_writer :nodename
     
+		protected :parent=
+		
     def self.included(base)
       base.extend(ClassMethods)
     end
@@ -13,12 +16,7 @@ module CSL
     def nodename
       @nodename ||= self.class.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase
     end
-    
-    # Returns the array of child nodes.
-    def children
-      @children ||= []
-    end
-    
+        
     def each_child
       if block_given?
         children.each(&Proc.new)
@@ -103,6 +101,15 @@ module CSL
       self
     end
     
+    # Returns the first immediate child node whose nodename matches the
+    # passed-in name or pattern; returns nil there is no match.
+    def find_child_by_name(name)
+      children.detect do |child|
+        name === child.nodename
+      end
+    end
+    alias > find_child_by_name
+    
     # Returns all immediate child nodes whose nodename matches the passed-in
     # name or pattern; returns an empty array if there is no match.
     def find_children_by_name(name)
@@ -110,7 +117,7 @@ module CSL
         name === child.nodename
       end
     end
-    alias > find_children_by_name
+    alias >> find_children_by_name
 
     # Returns true if the node has child nodes; false otherwise.
     def has_children?
@@ -202,11 +209,6 @@ module CSL
       parent.nil?
     end
 
-    # Returns the current node and its subtree as a nested array.
-    def to_ast
-      [self, children.map(&:to_a)]
-    end
-
 		
     # Add memoized methods. When processing citations, styles will
 		# typically remain stable; therefore cite processors may opt
@@ -222,22 +224,186 @@ module CSL
     
     module ClassMethods
       
-      # TODO add self-closing tag macro
-      # TODO add children type validator
+      # Returns a new instance of an Array or Struct to manage the Node's
+      # children. This method is called automatically by the Node's
+      # constructor.
+      def create_children
+        if const_defined?(:Children, false)
+          const_get(:Children).new
+        else
+          []
+        end
+      end
+            
+      private
       
-      def attr_children(*arguments)
-        arguments.each do |name|
-          name = name.to_s
-          method_id = name.tr('-', '_')
-          unless method_defined?(method_id)
-            ivar = "@#{method_id}"
-            define_method(method_id) do
-              instance_variable_set(ivar, find_children_by_name(name))
+      # Creates a Struct for the passed-in child node names that will be
+      # used internally by the Node to manage its children. The Struct
+      # will be automatically initialized and is used similarly to the
+      # standard Array that normally holds the child nodes. The benefit of
+      # using the Struct is that all child nodes are accessible by name and
+      # need not be looked up; this improves performance, however, note that
+      # a node defining it's children that way can only contain nodes of the
+      # given types.
+      #
+      # This method also generates accessors for each child.
+      #
+      def attr_children(*names)
+        
+        names.each do |name|
+          name   = name.to_sym
+          reader = name.to_s.downcase.tr('-', '_')
+          writer = "#{reader}="
+          
+          unless method_defined?(reader) || method_defined?(writer)
+            define_method(reader) do
+              children[name]
+            end
+            
+            define_method(writer) do |value|
+
+              begin
+                klass = name.to_s.capitalize.gsub(/(\w)-(\w)/) { [$1, $2.upcase].join }
+                
+                if self.class.const_defined?(klass)
+                  value = self.class.const_get(klass).new(value)
+                else
+                  # try to force convert value
+                  if value.is_a?(String)
+                    value = TextNode.new(value)
+                    value.nodename = name.to_s
+                  else
+                    value = Node.new(value)
+                    value.nodename = name.to_s
+                  end
+                end
+                
+              rescue => e
+                raise ArgumentError, "failed to convert #{value.inspect} to node: #{e.message}"
+              end unless value.respond_to?(:nodename)
+                            
+              unless name == value.nodename.to_sym
+                raise ValidationError "not allowed to add #{value.inspect} to #{inspect}"
+              end
+
+              children[name] = value
             end
           end
         end
+        
+        const_set(:Children, Struct.new(*names) {
+          
+          def initialize(attrs = {})
+            super(*attrs.values_at(*members))
+          end
+      
+          alias keys members
+          alias original_each each
+          
+          # Iterates through all children. Nil values are skipped and Arrays
+          # expanded.
+          def each
+            if block_given?
+              original_each do |node|
+                if node.kind_of?(Array)
+                  node.select { |n| !n.nil? }.each(&Proc.new)
+                else
+                  yield node unless node.nil?
+                end
+              end
+            else
+              to_enum
+            end
+          end
+          
+          def empty?
+            !detect { |node| !node.nil? }
+          end
+          
+          # Adds the node as a child node. Raises ValidationError if none
+          # of the Struct members matches the node's name. If there is
+          # already a node set with this node name, the node will be pushed
+          # to an array for that name.
+          def push(node)
+            unless node.respond_to?(:nodename) && members.include?(node.nodename.to_sym)
+              raise ValidationError, "not allowed to add #{node.inspect} to #{inspect}"
+            end
+            
+            current = self[node.nodename]
+            case current
+            when Array
+              current.push(node)
+            when nil
+              self[node.nodename] = node
+            else
+              self[node.nodename] = [current, node]
+            end
+            
+            self
+          end
+          alias << push
+          
+          
+          # Delete items from self that are equal to node. If any items are
+          # found, returns the deleted items. If the items is not found,
+          # returns nil. If the optional code block is given, returns the
+          # result og block if the item is not found.
+          def delete(node)
+            return nil unless node.respond_to?(:nodename)
+            
+            deleted = resolve(node.nodename)
+            if deleted.kind_of?(Array)
+              deleted = deleted.delete(node)
+            else
+              if deleted == node
+                self[node.nodename] = nil
+              else
+                deleted = nil
+              end
+            end
+            
+            if deleted.nil? && block_given?
+              yield
+            else
+              deleted
+            end
+          end
+          
+          def fetch(name, default = nil)
+            if block_given? 
+              resolve(name) || yield(key)
+            else
+              resolve(name) || default
+            end
+          end
+          
+          private
+          
+          def resolve(nodename)
+            members.include?(nodename.to_sym) && send(nodename)
+          end
+        })
       end
       
+      # Turns the Node into a leaf-node.
+      def has_no_children   
+        undef_method :add_child
+        undef_method :added_child
+        undef_method :add_children
+        undef_method :<<
+
+        undef_method :delete_child
+        undef_method :deleted_child
+        undef_method :delete_children
+        
+        private :children
+        
+        define_method(:has_children?) do
+          false
+        end
+
+      end
+            
     end
         
   end

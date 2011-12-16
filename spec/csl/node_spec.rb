@@ -2,11 +2,14 @@ require 'spec_helper'
 
 module CSL
 	
-	describe 'Node' do
+	describe Node do
 		
 		describe '#' do
     end
 
 	end
 
+  describe TextNode do
+  end
+  
 end
