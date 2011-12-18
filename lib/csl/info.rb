@@ -23,6 +23,11 @@ module CSL
       attr_struct :href, :rel
     end
 
+    class DependentStyle < TextNode
+      attr_struct :href, :rel
+    end
+
+
     class Category < TextNode
       attr_struct :field, :'citation-format'
     end    

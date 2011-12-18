@@ -18,6 +18,7 @@ require 'csl/info'
 require 'csl/locale'
 require 'csl/locale/date'
 require 'csl/locale/term'
+require 'csl/locale/style_options'
 
 require 'csl/style'
 require 'csl/style/bibliography'

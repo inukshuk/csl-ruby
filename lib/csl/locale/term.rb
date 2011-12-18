@@ -7,8 +7,10 @@ module CSL
       alias terms term
       
       def initialize(attributes = {})
-        super
+        super(attributes)
         children[:term] = []
+
+				yield self if block_given?
       end
 
     end

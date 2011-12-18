@@ -125,7 +125,7 @@ module CSL
         
     def attribute_assignments
       each_pair.map { |name, value|
-        value ? [name, value.to_s.inspect].join('=') : nil
+        value.nil? ? nil: [name, value.to_s.inspect].join('=')
       }.compact
     end
     
