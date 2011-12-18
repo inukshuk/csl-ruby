@@ -22,6 +22,10 @@ module CSL
       node.should_not have_children
     end
     
+    it 'is empty by default' do
+      node.should be_empty
+    end
+    
     describe '#children' do
       
       it 'is empty by default' do

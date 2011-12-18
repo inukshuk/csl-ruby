@@ -10,6 +10,7 @@ require 'csl/errors'
 
 require 'csl/pretty_printer'
 require 'csl/loader'
+require 'csl/parser'
 require 'csl/treelike'
 require 'csl/node'
 

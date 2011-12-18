@@ -14,10 +14,6 @@ module CSL
 		@extension = '.xml'.freeze
 		@prefix = 'locales-'.freeze
 		
-		@options = {
-			:'punctuation-in-quote' => true
-		}.freeze
-
     
 		# Default languages/regions.
 		# Auto-detection is based on these lists.
@@ -37,7 +33,7 @@ module CSL
 		  
 			extend Loader
 			
-			attr_accessor :default, :options
+			attr_accessor :default
 			attr_reader :languages, :regions
 			
 			def parse(data)
@@ -45,20 +41,27 @@ module CSL
 			
 		end
 		
-		undef_method :attributes
-		undef_method :[]=
+		attr_defaults :version => Schema.version, :xmlns => Schema.namespace
 		
-		attr_reader :options, :terms, :dates, :info
+		attr_children :info, :date, :terms, :'style-options'
+		
 		attr_accessor :language, :region
 		
 		alias metadata info
+		alias dates    date
+		alias options  style_options
+
+		private :attributes
+		undef_method :[]=
+		
 		
 		def initialize(locale = Locale.default, options = {})
-		  @options = Locale.options.merge(options)
-		  @terms, @dates = {}, {}
-		  
+			super({})
 		  set(locale) unless locale.nil?
-		
+
+			children[:date] = []
+			children[:terms] = Terms.new
+			
 			yield self if block_given?
 		end
 
@@ -72,30 +75,6 @@ module CSL
 		  raise "cannot add locale to #{node.inspect}" unless node.is_a?(Style)
 		end
 		
-		def added_child(node)
-		  case node
-		  when Term
-		    terms[node.code] = node
-		  when Date
-		    dates[node.form] = node
-		  when Info
-		    delete_child metadata unless metadata.nil?
-		    @info = node
-		  else
-		    raise "cannot add node to locale: #{node.inspect}"
-		  end
-		end
-
-		def deleted_child(node)
-		  case node
-		  when Term
-		    term.delete(node.code)
-		  when Date
-		    dates.delete(node.form)
-		  when Info
-		    @info = nil
-		  end		  
-		end
 		
 		# call-seq:
 		#   locale.set('en')    -> sets language to :en, region to :US
@@ -149,7 +128,7 @@ module CSL
 		# given, an enumerator is returned instead.
 		def each_term
 			if block_given?
-				terms.values.each(&Proc.new)
+				terms.each_child(&Proc.new)
 				self
 			else
 				enum_for :each_term
@@ -164,7 +143,7 @@ module CSL
 		# block is given, an enumerator is returned instead.
 		def each_date
 			if block_given?
-				dates.values.each(&Proc.new)
+				date.each(&Proc.new)
 			else
 				enum_for :each_date
 			end
@@ -230,15 +209,7 @@ module CSL
 		private
 		
 		def attribute_assignments
-		  as = []
-		  
-		  if root?
-		    as.push('xmlns="%s"' % Schema.namespace)
-		    as.push('version="%s"'  % (version || Schema.version))		    
-		  end
-		  
-		  as.push('xml:lang="%s"' % to_s)
-		  as
+		  super << ('xml:lang="%s"' % to_s)
 		end
 		
 	end

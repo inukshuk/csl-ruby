@@ -13,10 +13,33 @@ module CSL
     
     class << self
 
+			def inherited(subclass)
+				types << subclass
+			end
+			
+			def types
+				@types ||= []
+			end
+			
       def default_attributes
         @default_attributes ||= {}
       end
       
+			# Returns a new node with the passed in name and attributes.
+			def create(name, attributes = {}, &block)
+				klass = types.detect do |t|
+					t.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase == name
+				end
+				
+				if klass
+					klass.new(attributes, &block)
+				else
+					node = new(attributes, &block)
+					node.nodename = name
+					node
+				end
+			end
+			
       def create_attributes(attributes)
         if const_defined?(:Attributes, false)
           const_get(:Attributes).new(default_attributes.merge(attributes))

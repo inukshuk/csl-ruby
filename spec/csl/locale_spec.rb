@@ -43,10 +43,6 @@ module CSL
 				Locale.new.region.should == Locale.default.split(/-/)[1].to_sym
 			end
 
-      it 'has the default options by default' do
-        Locale.new.options.should == Locale.options
-      end
-
       it 'contains no dates by default' do
         Locale.new.dates.should be_empty
       end

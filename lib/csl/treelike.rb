@@ -121,9 +121,12 @@ module CSL
 
     # Returns true if the node has child nodes; false otherwise.
     def has_children?
-      !children.empty?
+      !empty?
     end
-    alias empty? has_children?
+
+		def empty?
+			children.empty?
+		end
     
     # Unlinks the node and all its children from its parent node. Returns
     # the old parent node or nil.
