@@ -142,7 +142,7 @@ module CSL
     end
     
     def inspect
-      "#<#{self.class.name} attributes={#{length}} children=[#{children.length}]>"
+      "#<#{attribute_assignments.unshift(self.class.name).join(' ')} children=[#{children.length}]>"
     end
     
     alias to_s pretty_print
