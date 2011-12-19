@@ -24,3 +24,4 @@ Feature: Parse CSL info elements
 		Then the nodename should be "info"
 		And the title should be "American Medical Association"
 		And the author name should be "Julian Onions"
+		And the author email should be "julian.onions@gmail.com"

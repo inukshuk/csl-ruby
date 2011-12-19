@@ -10,10 +10,11 @@ module CSL
 		  alias parts date_part
 		  
 		  def initialize(attributes = {})
-		    super
+		    super(attributes)
 		    children[:'date-part'] = []
+		    yield self if block_given?
 		  end
-		  
+	  
       %w{ text numeric }.each do |type|
         define_method("#{type}?") { attributes.form == type }
       end

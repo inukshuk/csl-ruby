@@ -113,7 +113,7 @@ module CSL
       !detect { |a| !a.nil? }.nil?
     end
 
-    def text?
+    def textnode?
       false
     end
     
@@ -197,7 +197,7 @@ module CSL
       end
     end
     
-    def text?
+    def textnode?
       true
     end
     

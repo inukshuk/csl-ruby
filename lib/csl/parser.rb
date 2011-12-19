@@ -1,10 +1,10 @@
 module CSL
-	#
-	# A relatively straightforward XML parser that parses CSL using either
-	# Nokogiri or REXML.
-	#
-	class Parser
-		include Singleton
+  #
+  # A relatively straightforward XML parser that parses CSL using either
+  # Nokogiri or REXML.
+  #
+  class Parser
+    include Singleton
 
     attr_accessor :parser
     
@@ -23,17 +23,16 @@ module CSL
     end
     
     def initialize
-		  require 'nokogiri'
-		  @parser = Parser.engines[:nokogiri]
-  	rescue LoadError
-  		require 'rexml/document'
-  		@parser = Parser.engines[:default]
-  	end
-		
-	  def parse(source)
-	    parse_tree parser[source].children[0]
-	  end
-		alias p parse
+      require 'nokogiri'
+      @parser = Parser.engines[:nokogiri]
+    rescue LoadError
+      require 'rexml/document'
+      @parser = Parser.engines[:default]
+    end
+    
+    def parse(source)
+      parse_tree parser[source].children[0]
+    end
 
     private
     
@@ -48,34 +47,32 @@ module CSL
         n
       end
     end
-		
-		def parse_attributes(node)
-		  Hash[*node.attributes.map { |n, a|
-		    [n.to_sym, a.respond_to?(:value) ? a.value : a.to_s]
-		  }.flatten]
-		end
-		
-		def parse_tree(node)
-		  root = parse_node node
-		  
-		  unless root.text?
-  		  node.children.each do |child|
-  		    root << parse_tree(child)
-  		  end
-		  end
-		  
-		  root
-		end
-		
-		def parse_text(node)
-		  if node.respond_to?(:has_text?)
-		    node.has_text? && node.text
-		  else
-		    child = node.children[0]
-		    child && child.text? && child.text
-		  end
-		end
-		
-	end
-	
+    
+    def parse_attributes(node)
+      Hash[*node.attributes.map { |n, a|
+        [n.to_sym, a.respond_to?(:value) ? a.value : a.to_s]
+      }.flatten]
+    end
+    
+    def parse_tree(node)
+      root = parse_node node
+
+      node.children.each do |child|
+        root << parse_tree(child)
+      end unless root.textnode?
+      
+      root
+    end
+    
+    def parse_text(node)
+      if node.respond_to?(:has_text?)
+        node.has_text? && node.text
+      else
+        child = node.children[0]
+        child && child.text? && child.text
+      end
+    end
+    
+  end
+  
 end

@@ -56,12 +56,12 @@ module CSL
             let(:source) { '<foo>Foo Bar</foo>' }
             
             it 'returns text node' do
-              Parser.instance.parse(source).should be_text
+              Parser.instance.parse(source).should be_textnode
             end
           end
 
           it 'returns a regular node for <x>\n <y/></x>' do
-            Parser.instance.parse("<x>\n <y/></x>").should_not be_text
+            Parser.instance.parse("<x>\n <y/></x>").should_not be_textnode
           end
           
         end

@@ -13,7 +13,7 @@ module CSL
   
     describe '#parts' do
       
-      it 'returns an empty list by default' do
+      it 'returns nil by default' do
         date.parts.should be_empty
       end
       
