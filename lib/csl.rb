@@ -1,6 +1,7 @@
 
 require 'forwardable'
 require 'open-uri'
+require 'singleton'
 
 require 'csl/version'
 require 'csl/schema'
@@ -33,3 +34,13 @@ require 'csl/style/macro'
 require 'csl/style/names'
 require 'csl/style/number'
 require 'csl/style/text'
+
+module CSL
+  
+  module_function
+  
+  def parse(source)
+    Parser.instance.parse(source)
+  end
+  
+end

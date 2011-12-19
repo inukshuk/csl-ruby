@@ -1,5 +1,8 @@
 require 'csl'
 
+require 'rexml/document'
+require 'nokogiri'
+
 module SilentWarnings
   require 'stringio'
   #

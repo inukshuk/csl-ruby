@@ -9,7 +9,7 @@ module CSL
     
     include Treelike
     include PrettyPrinter
-        
+    
     
     class << self
 
@@ -113,6 +113,10 @@ module CSL
       !detect { |a| !a.nil? }.nil?
     end
 
+    def text?
+      false
+    end
+    
     def <=>(other)
       [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
     rescue
@@ -191,6 +195,10 @@ module CSL
       else
         raise ArgumentError, "failed to create text node from #{argument.inspect}"
       end
+    end
+    
+    def text?
+      true
     end
     
     def to_tags
