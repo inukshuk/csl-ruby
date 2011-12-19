@@ -251,7 +251,6 @@ module CSL
       # given types.
       #
       # This method also generates accessors for each child.
-      #
       def attr_children(*names)
         
         names.each do |name|

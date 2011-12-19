@@ -45,7 +45,7 @@ module CSL
 			parse(data)
 			
 		rescue => e
-			raise Error, "failed to load #{input.inspect}: #{e.message}"
+			raise ParseError, "failed to load #{input.inspect}: #{e.message}"
     end
     
     # Extends the passed-in string to a full path.

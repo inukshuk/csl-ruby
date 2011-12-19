@@ -125,24 +125,24 @@ module CSL
     
     # Returns the node' XML tags (including attribute assignments) as an
     # array of strings.
-    def to_tags
+    def tags
       if has_children?
         tags = []
-        tags << "<#{attribute_assignments.unshift(nodename).join(' ')}>"
+        tags << "<#{[nodename, *attribute_assignments].join(' ')}>"
         
         tags << children.map do |node|
-          node.respond_to?(:to_tags) ? node.to_tags : [node.to_s]
+          node.respond_to?(:tags) ? node.tags : [node.to_s]
         end
         
         tags << "</#{nodename}>"
         tags
       else
-        ["<#{nodename} #{attribute_assignments.join(' ')}/>"]
+        ["<#{[nodename, *attribute_assignments].join(' ')}/>"]
       end
     end
     
     def inspect
-      "#<#{attribute_assignments.unshift(self.class.name).join(' ')} children=[#{children.length}]>"
+      "#<#{[self.class.name, *attribute_assignments].join(' ')} children=[#{children.length}]>"
     end
     
     alias to_s pretty_print
@@ -167,11 +167,8 @@ module CSL
       undef_method :attr_children
     end
     
-    attr_accessor :content
-    
-    alias text  content
-    alias text= content= 
-    alias to_s  content
+    attr_accessor :text
+    alias to_s text
 
     # TextNodes quack like a string.
     # def_delegators :to_s, *String.instance_methods(false).reject do |m|
@@ -190,7 +187,7 @@ module CSL
         super
       when argument.respond_to?(:to_s)
         super({})
-        @content = argument.to_s
+        @text = argument.to_s
         yield self if block_given?
       else
         raise ArgumentError, "failed to create text node from #{argument.inspect}"
@@ -201,16 +198,16 @@ module CSL
       true
     end
     
-    def to_tags
+    def tags
       tags = []
       tags << "<#{attribute_assignments.unshift(nodename).join(' ')}>"
-      tags << content
+      tags << text
       tags << "</#{nodename}>"
       tags
     end
     
     def inspect
-      "#<#{self.class.name} #{content.inspect} attributes={#{attributes.length}}>"
+      "#<#{[self.class.name, text.inspect, *attribute_assignments].join(' ')}>"
     end
     
   end

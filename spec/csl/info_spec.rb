@@ -35,7 +35,7 @@ module CSL
     
     describe '#to_xml' do
       it 'returns an empty info element by default' do
-        subject.to_xml.should == '<info />'
+        subject.to_xml.should == '<info/>'
       end
       
       it 'prints the id if present' do
@@ -74,7 +74,7 @@ module CSL
     
     describe '#to_xml' do
       it 'returns an empty author by default' do
-        subject.to_xml.should == '<author />'
+        subject.to_xml.should == '<author/>'
       end
             
       it 'prints all children' do
@@ -99,7 +99,7 @@ module CSL
     
     describe '#to_xml' do
       it 'returns an empty contributor by default' do
-        subject.to_xml.should == '<contributor />'
+        subject.to_xml.should == '<contributor/>'
       end
       
       it 'prints the name tag if present' do

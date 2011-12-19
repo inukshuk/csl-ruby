@@ -44,11 +44,11 @@ module CSL
 			end
 
       it 'contains no dates by default' do
-        Locale.new.dates.should be_empty
+        Locale.new.dates.should be_nil
       end
 
       it 'contains no terms by default' do
-        Locale.new.terms.should be_empty
+        Locale.new.terms.should be_nil
       end
       
 		end

@@ -30,7 +30,13 @@ module CSL
       @parser = Parser.engines[:default]
     end
     
-    def parse(source)
+    def parse(*arguments)
+      parse!(*arguments)
+    rescue
+      nil
+    end
+    
+    def parse!(source)
       parse_tree parser[source].children[0]
     end
 
@@ -58,7 +64,7 @@ module CSL
       root = parse_node node
 
       node.children.each do |child|
-        root << parse_tree(child)
+        root << parse_tree(child) unless child.respond_to?(:comment) && child.comment?
       end unless root.textnode?
       
       root

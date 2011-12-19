@@ -42,5 +42,9 @@ module CSL
   def parse(source)
     Parser.instance.parse(source)
   end
+
+  def parse!(source)
+    Parser.instance.parse!(source)
+  end
   
 end

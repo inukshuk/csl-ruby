@@ -21,8 +21,8 @@ module CSL
     
     describe '#to_xml' do
       
-      it 'returns <date /> by default' do
-        Locale::Date.new.to_xml.should == '<date />'
+      it 'returns <date/> by default' do
+        Locale::Date.new.to_xml.should == '<date/>'
       end
 
       it 'returns <date form="numeric"/> for an empty numeric date' do
@@ -43,8 +43,8 @@ module CSL
   
     describe '#to_xml' do
       
-      it 'returns <date-part /> by default' do
-        Locale::DatePart.new.to_xml.should == "<date-part />"
+      it 'returns <date-part/> by default' do
+        Locale::DatePart.new.to_xml.should == "<date-part/>"
       end
       
       it 'returns <date-part name="year"/> when the name is "year"' do

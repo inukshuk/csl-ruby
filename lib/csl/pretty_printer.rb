@@ -1,16 +1,16 @@
 module CSL
   module PrettyPrinter
     
-    def to_tags
+    def tags
       raise 'not implemened by base class'
     end
     
     def to_xml
-      to_tags.flatten.join
+      tags.flatten.join
     end
     
     def pretty_print
-      pp(to_tags).join("\n")
+      pp(tags).join("\n")
     end
 
     private
