@@ -15,23 +15,30 @@ module CSL
 
 			def inherited(subclass)
 				types << subclass
+				subclass.nesting.each do |klass|
+					klass.types << subclass if klass < Node
+				end
 			end
 			
 			def types
-				@types ||= []
+				@types ||= Set.new
 			end
 			
       def default_attributes
         @default_attributes ||= {}
       end
       
-			# Returns a new node with the passed in name and attributes.
-			def create(name, attributes = {}, &block)
-				klass = types.detect do |t|
+			def constantize(name)
+				types.detect do |t|
 					t.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase == name
 				end
+			end
+			
+			# Returns a new node with the passed in name and attributes.
+			def create(name, attributes = {}, &block)
+				klass = constantize(name)
 				
-				if klass
+				unless klass.nil?
 					klass.new(attributes, &block)
 				else
 					node = new(attributes, &block)

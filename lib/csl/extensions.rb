@@ -27,11 +27,21 @@ module CSL
         replace(symbolize_keys)
       end
     end
-    
+
+		module Nesting
+			def nesting
+				name.split(/::/).inject([]) { |ns, n| ns << (ns[-1] || Object).const_get(n) }
+			end
+		end
+
   end
 end
 
 class Hash
   include CSL::Extensions::SymbolizeKeys unless method_defined?(:symbolize_keys)
   include CSL::Extensions::StringifyKeys unless method_defined?(:stringify_keys)
+end
+
+class Module
+	include CSL::Extensions::Nesting
 end

@@ -242,7 +242,7 @@ module CSL
     private
     
     def attribute_assignments
-      super << ('xml:lang="%s"' % to_s)
+      super.push('xml:lang="%s"' % to_s)
     end
     
   end

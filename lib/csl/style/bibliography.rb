@@ -3,7 +3,9 @@ module CSL
     
     class Bibliography < Node
       
-      attr_struct *Schema.attr(:bibliography)
+      attr_struct :'hanging-indent', :'second-field-align', :'line-spacing',
+        :'entry-spacing', :'note-distance', :'subsequent-author-substitute',
+        :'subsequent-author-substitute-rule', *Schema.attr(:name, :names)
       
     end
     

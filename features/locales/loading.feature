@@ -21,9 +21,6 @@ Feature: Loading CSL Locales
         <terms>
           <term name="accessed">zugegriffen</term>
           <term name="and others">und andere</term>
-          <term name="circa">circa</term>
-          <term name="circa" form="short">ca.</term>
-          <term name="cited">zitiert</term>
           <term name="edition">
             <single>Auflage</single>
             <multiple>Auflagen</multiple>
@@ -44,9 +41,17 @@ Feature: Loading CSL Locales
             <multiple>Ref.</multiple>
           </term>
           <term name="retrieved">abgerufen</term>
+          
+          <!-- LONG ROLE FORMS -->
+          <term name="author">
+            <single/>
+            <multiple/>
+          </term>
         </terms>
       </locale>
       """
     Then the language should be "de"
     And the region should be "AT"
     And the attribute "version" should be "1.0"
+    And the locale should should have 14 terms
+    And the plural of the term "reference" should be "Referenzen"

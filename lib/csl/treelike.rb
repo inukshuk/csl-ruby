@@ -238,7 +238,21 @@ module CSL
           []
         end
       end
-            
+      
+			def constantize_nodename(name)
+        klass = name.to_s.capitalize.gsub(/(\w)-(\w)/) { [$1, $2.upcase].join }
+				
+				case
+				when respond_to?(:constantize)
+					constantize(klass)
+				when const_defined?(klass)
+					const_get(klass)
+				else
+					nil
+				end
+			end
+			
+			
       private
       
       # Creates a Struct for the passed-in child node names that will be
@@ -264,32 +278,22 @@ module CSL
             end
             
             define_method(writer) do |value|
-
               begin
-                klass = name.to_s.capitalize.gsub(/(\w)-(\w)/) { [$1, $2.upcase].join }
-                
-                if self.class.const_defined?(klass)
-                  value = self.class.const_get(klass).new(value)
+                klass = self.class.constantize_nodename(name)
+								
+                if klass
+                  value = klass.new(value)
                 else
-                  # try to force convert value
-                  if value.is_a?(String)
-                    value = TextNode.new(value)
-                    value.nodename = name.to_s
-                  else
-                    value = Node.new(value)
-                    value.nodename = name.to_s
-                  end
+                	# try to force convert value
+                	value = (value.is_a?(String) ? TextNode : Node).new(value)
+                	value.nodename = name.to_s
                 end
                 
               rescue => e
                 raise ArgumentError, "failed to convert #{value.inspect} to node: #{e.message}"
               end unless value.respond_to?(:nodename)
-                            
-              unless name == value.nodename.to_sym
-                raise ValidationError "not allowed to add #{value.inspect} to #{inspect}"
-              end
 
-              children[name] = value
+              children << value
             end
           end
         end

@@ -3,7 +3,8 @@ module CSL
     
     class Label < Node
       
-      attr_struct :variable, :form, *Schema.attr(:label)
+      attr_struct :variable, :form, :plural,
+        *Schema.attr(:affixes, :font, :textcase, :periods)
       
     end
     

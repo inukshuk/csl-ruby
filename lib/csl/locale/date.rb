@@ -7,14 +7,20 @@ module CSL
 		  attr_struct :form, *Schema.attr(:font, :delimiter, :textcase)
 		  attr_children :'date-part'
 		  
-		  alias parts date_part
-		  
+		  alias parts  date_part
+		  alias locale parent
+		
 		  def initialize(attributes = {})
 		    super(attributes)
 		    children[:'date-part'] = []
+		
 		    yield self if block_given?
 		  end
 	  
+			def added_to(node)
+				raise ValidationError, "parent must be locale node: was #{node.inspect}" unless node.is_a?(Locale)
+			end
+			
       %w{ text numeric }.each do |type|
         define_method("#{type}?") { attributes.form == type }
       end

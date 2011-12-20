@@ -2,6 +2,7 @@
 require 'forwardable'
 require 'open-uri'
 require 'singleton'
+require 'set'
 
 require 'csl/version'
 require 'csl/schema'
