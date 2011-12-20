@@ -16,6 +16,7 @@ module CSL
     end
     
     class Term < Node
+		
       attr_struct :name, :form, :gender, :'gender-form'
       attr_children :single, :multiple
 
@@ -66,6 +67,9 @@ module CSL
 				textnode? ? text : [singular, plural].compact.join('/')
 			end
 			
+			class Single   < TextNode; end
+			class Multiple < TextNode; end
+				
     end
        
   

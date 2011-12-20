@@ -64,6 +64,24 @@ module CSL
             Parser.instance.parse("<x>\n <y/></x>").should_not be_textnode
           end
           
+					describe 'xml comments' do
+						it 'ignores comment-only documents' do
+							Parser.instance.parse("<!--x></x-->").should be_nil
+						end
+
+						it 'ignores comments in normal nodes' do
+							Parser.instance.parse("<x><!-- comment --></x>").should_not have_children
+						end
+
+						it 'ignores comments in text nodes' do
+							node = Parser.instance.parse("<x>foo<!-- comment --></x>")
+							node.should be_textnode
+							node.should_not have_children
+							node.text.should == 'foo'
+						end
+						
+					end
+					
         end
         
       end

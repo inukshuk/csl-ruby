@@ -37,7 +37,7 @@ module CSL
     end
     
     def parse!(source)
-      parse_tree parser[source].children[0]
+      parse_tree parser[source].children.detect { |child| !comment?(child) }
     end
 
     private
@@ -61,10 +61,12 @@ module CSL
     end
     
     def parse_tree(node)
+			return nil if node.nil?
+			
       root = parse_node node
 
       node.children.each do |child|
-        root << parse_tree(child) unless child.respond_to?(:comment) && child.comment?
+        root << parse_tree(child) unless comment?(child)
       end unless root.textnode?
       
       root
@@ -75,10 +77,15 @@ module CSL
         node.has_text? && node.text
       else
         child = node.children[0]
-        child && child.text? && child.text
+        child && child.respond_to?(:text?) && child.text? && child.text
       end
     end
     
+		def comment?(node)
+			node.respond_to?(:comment?) && node.comment? ||
+				node.respond_to?(:node_type) && node.node_type == :comment
+		end
+		
   end
   
 end

@@ -116,7 +116,8 @@ module CSL
     def textnode?
       false
     end
-    
+    alias has_text? textnode?
+
     def <=>(other)
       [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
     rescue
