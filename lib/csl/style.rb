@@ -36,10 +36,13 @@ module CSL
     
     alias metadata info
     alias options  style_options
+    alias locales  locale
     
     def initialize(attributes = {})
       super(attributes)
-      children[:macro] = []
+      
+      children[:locale] = []
+      children[:macro]  = []
       
       yield self if block_given?
     end

@@ -6,6 +6,8 @@ module CSL
       :issnl, :link, :published, :rights, :summary, :title, :'title-short',
       :updated, :'link-dependent-style'
     
+    alias contributors contributor
+    
     
     class Contributor < Node
       attr_children :name, :email, :uri

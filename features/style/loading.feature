@@ -47,3 +47,7 @@ Feature: Loading CSL Style
       </style>
       """
     Then the info title should be "American Psychological Association 6th Edition"
+    And the locale 1 should should have 1 term
+    And the locale 1 language should be "en"
+    And the locale 1 region should be "US"
+    And the style should have 4 contributors
