@@ -53,6 +53,27 @@ module CSL
       
 		end
 
+    describe '.load' do
+      
+      describe 'when called with "en-GB" ' do
+        let(:locale) { Locale.load('en-GB') }
+        
+        it 'the returned locale has the correct IETF tag' do
+          locale.to_s.should == 'en-GB'
+        end
+      
+        it 'the locale has language :en' do
+          locale.language.should == :en
+        end
+
+        it 'the locale has region :GB' do
+          locale.region.should == :GB
+        end
+        
+      end
+      
+    end
+
 		describe '#set' do			
 			
 			it 'when passed "en-GB" sets language to :en and region to :GB' do
