@@ -11,7 +11,7 @@ module CSL
     
     describe '#to_xml' do
       it 'returns an empty style' do
-        Style.new.to_xml.should match(/<style[^>]*><info\/><\/style>/)
+        Style.new.to_xml.should match(/<style[^>]*\/>/)
       end
     end
   

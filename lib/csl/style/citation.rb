@@ -9,6 +9,8 @@ module CSL
         :'givenname-disambiguation-rule', :'names-delimiter',
         *Schema.attr(:names, :name)
     
+      attr_children :sort, :layout
+      
     end
     
   end

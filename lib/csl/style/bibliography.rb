@@ -7,6 +7,8 @@ module CSL
         :'entry-spacing', :'note-distance', :'subsequent-author-substitute',
         :'subsequent-author-substitute-rule', *Schema.attr(:name, :names)
       
+      attr_children :sort, :layout
+      
     end
     
   end

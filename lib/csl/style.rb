@@ -39,7 +39,6 @@ module CSL
     
     def initialize(attributes = {})
       super(attributes)
-      children[:info] = Info.new
       children[:macro] = []
       
       yield self if block_given?
