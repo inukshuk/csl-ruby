@@ -16,15 +16,7 @@ module CSL
 				yield self if block_given?
       end
 
-			def each_term
-				if block_given?
-					terms.each(&Proc.new)
-					self
-				else
-					enum_for :each_term
-				end
-			end
-			alias each each_term
+			alias each each_child
 			
 			def [](query)
 				detect { |t| t.matches?(query) }

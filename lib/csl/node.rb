@@ -13,40 +13,40 @@ module CSL
     
     class << self
 
-			def inherited(subclass)
-				types << subclass
-				subclass.nesting.each do |klass|
-					klass.types << subclass if klass < Node
-				end
-			end
-			
-			def types
-				@types ||= Set.new
-			end
-			
+      def inherited(subclass)
+        types << subclass
+        subclass.nesting.each do |klass|
+          klass.types << subclass if klass < Node
+        end
+      end
+      
+      def types
+        @types ||= Set.new
+      end
+      
       def default_attributes
         @default_attributes ||= {}
       end
       
-			def constantize(name)
-				types.detect do |t|
-					t.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase == name
-				end
-			end
-			
-			# Returns a new node with the passed in name and attributes.
-			def create(name, attributes = {}, &block)
-				klass = constantize(name)
-				
-				unless klass.nil?
-					klass.new(attributes, &block)
-				else
-					node = new(attributes, &block)
-					node.nodename = name
-					node
-				end
-			end
-			
+      def constantize(name)
+        types.detect do |t|
+          t.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase == name
+        end
+      end
+      
+      # Returns a new node with the passed in name and attributes.
+      def create(name, attributes = {}, &block)
+        klass = constantize(name)
+        
+        unless klass.nil?
+          klass.new(attributes, &block)
+        else
+          node = new(attributes, &block)
+          node.nodename = name
+          node
+        end
+      end
+      
       def create_attributes(attributes)
         if const_defined?(:Attributes, false)
           const_get(:Attributes).new(default_attributes.merge(attributes))

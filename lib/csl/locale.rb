@@ -198,7 +198,6 @@ module CSL
     end
         
     def ordinalize(integer)
-      raise 'Not Implemented'
     end
     
     # Locales are sorted first by language, then by region; sort order is
