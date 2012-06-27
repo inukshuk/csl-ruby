@@ -12,11 +12,11 @@ module CSL
       base.extend(ClassMethods)
     end
     
-    # Returns the node's name.
+    # @eturn [String] the node's name.
     def nodename
       @nodename ||= self.class.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase
     end
-        
+
     def each_child
       if block_given?
         children.each(&Proc.new)

@@ -9,10 +9,10 @@ Gem::Specification.new do |s|
   s.version     = CSL::VERSION.dup
   s.platform    = Gem::Platform::RUBY
   s.authors     = ['Sylvester Keil']
-  s.email       = 'http://sylvester.keil.or.at'
+  s.email       = ['http://sylvester.keil.or.at']
   s.homepage    = 'https://github.com/inukshuk/csl-ruby'
-  s.summary     = 'A Ruby CSL parser and library.'
-  s.description = <<-END
+  s.summary     = 'A Ruby CSL parser and library'
+  s.description = <<-END.gsub(/\s+/, ' ')
 		A Ruby parser and library for the Citation Style Language (CSL), an open
 		XML-based language to describe the formatting of citations and
 		bibliographies.
@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency('cucumber', ['~>1.1'])
   s.add_development_dependency('rspec', ['~>2.7'])
   s.add_development_dependency('watchr', ['~>0.7'])
+  s.add_development_dependency('yard', ['~>0.8'])
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = `git ls-files -- {test,spec,features}/*`.split("\n")

@@ -1,6 +1,11 @@
+
+# Some methods in this file are taken from ActiveSupport
+# and are copyright (c) 2005-2010 David Heinemeier Hansson.
+# They are loaded only if ActiveSupport is not present.
+
 module CSL
   module Extensions
-    # shamelessly copied from active_support
+
     module SymbolizeKeys
       def symbolize_keys
         inject({}) do |options, (key, value)|
@@ -33,7 +38,7 @@ module CSL
 				name.split(/::/).inject([]) { |ns, n| ns << (ns[-1] || Object).const_get(n) }
 			end
 		end
-
+		
   end
 end
 

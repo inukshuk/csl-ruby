@@ -2,11 +2,12 @@ CSL-Ruby
 ========
 
 
+Copyright
+---------
+Copyright 2012 President and Fellows of Harvard College.
+
+Copyright 2009-2012 Sylvester Keil. All rights reserved.
+
 License
 -------
-
-Copyright (c) 2009-2012 [Sylvester Keil](http://sylvester.keil.or.at).
-All Rights Reserved.
-
-CSL-Ruby is distributed under the terms of the Free BSD license; for details,
-see the LICENSE file.
+CiteProc is dual licensed under the AGPL and the FreeBSD license.
