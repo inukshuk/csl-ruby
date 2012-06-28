@@ -38,7 +38,7 @@ module CSL
 				name.split(/::/).inject([]) { |ns, n| ns << (ns[-1] || Object).const_get(n) }
 			end
 		end
-		
+
   end
 end
 

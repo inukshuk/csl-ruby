@@ -48,7 +48,7 @@ module CSL
       end
       
       def create_attributes(attributes)
-        if const_defined?(:Attributes, false)
+        if const?(:Attributes)
           const_get(:Attributes).new(default_attributes.merge(attributes))
         else
           default_attributes.merge(attributes)
@@ -61,17 +61,40 @@ module CSL
         @default_attributes = attributes
       end
 
+      # Creates a new Struct for the passed-in attributes. Node instances
+      # will create an instance of this struct to manage their respective
+      # attributes.
+      #
+      # The new Struct will be available as Attributes in the current node's
+      # class scope.
       def attr_struct(*attributes)
         const_set(:Attributes, Struct.new(*attributes) {
+
+          # 1.8 Compatibility
+          @keys = attributes.map(&:to_sym).freeze
           
-          def initialize(attrs = {})
-            super(*attrs.values_at(*members))
+          class << self
+            attr_reader :keys
           end
-      
-          alias keys members
+                    
+          def initialize(attrs = {})
+            super(*attrs.symbolize_keys.values_at(*keys))
+          end
+
+          # @return [<Symbol>] a list of symbols representing the names/keys
+          #   of the attribute variables.
+          def keys
+            self.class.keys
+          end
+          
+          # @return [Boolean] true if all the attribute values are nil;
+          #   false otherwise.
+          def empty?
+            values.compact.empty?
+          end
           
           def fetch(key, default = nil)
-            value = members.include?(key.to_sym) && send(key)
+            value = keys.include?(key.to_sym) && send(key)
             
             if block_given? 
               value || yield(key)
@@ -80,6 +103,37 @@ module CSL
             end
           end
           
+          # Merges the current with the passed-in attributes.
+          #
+          # @param other [#each_pair] the other attributes
+          # @return [self]
+          def merge(other)
+            raise ArgumentError, "failed to merge #{other.class} into Attributes" unless
+              other.respond_to?(:each_pair)
+
+            other.each_pair do |part, value|
+              writer = "#{part}="
+              send(writer, value) if !value.nil? && respond_to?(writer)
+            end
+
+            self
+          end
+
+          # @overload values_at(selector, ... )
+          #   Returns an array containing the attributes in self according
+          #   to the given selector(s). The selectors may be either integer
+          #   indices, ranges (functionality inherited from Struct) or
+          #   symbols idenifying valid keys (similar to Hash#values_at).
+          #
+          # @example
+          #   attributes.values_at(:family, :nick) #=> ['Matsumoto', 'Matz']
+          #
+          # @see Struct#values_at
+          # @return [Array] the list of values
+          def values_at(*arguments)
+            super(*arguments.flatten.map { |k| k.is_a?(Symbol) ? keys.index(k) : k })
+          end
+
         })
       end
 
@@ -117,7 +171,7 @@ module CSL
     # Returns true if the node contains any attributes (ignores nil values);
     # false otherwise.
     def has_attributes?
-      !detect { |a| !a.nil? }.nil?
+      !attributes.empty?
     end
 
     def textnode?

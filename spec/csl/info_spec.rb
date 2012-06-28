@@ -27,9 +27,9 @@ module CSL
       end
     end
 
-    describe '#id' do
+    describe '#category' do
       it 'returns nil by default' do
-        Info.new.id.should be nil
+        Info.new.category.should be nil
       end
     end
     
@@ -39,7 +39,11 @@ module CSL
       end
       
       it 'prints the id if present' do
-        Info.new { |i| i.id = 'apa' }.to_xml.should == '<info><id>apa</id></info>'
+        Info.new { |i| i.set_child_id 'apa' }.to_xml.should == '<info><id>apa</id></info>'
+      end
+
+      it 'prints the category if present' do
+        Info.new { |i| i.category = 'author' }.to_xml.should == '<info><category>author</category></info>'
       end
       
     end

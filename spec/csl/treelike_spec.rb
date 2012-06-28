@@ -111,7 +111,7 @@ module CSL
       end
     
       it 'the class contains a children struct' do
-        TestTree.const_defined?(:Children, false).should be true
+        TestTree.const?(:Children).should be true
       end
       
       describe '.create_children' do

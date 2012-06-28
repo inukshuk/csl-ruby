@@ -5,7 +5,7 @@ module CSL
   
     describe '.new' do
       it 'returns an empty number tag by default' do
-        Style::Number.new.should be_empty
+        Style::Number.new.should_not have_attributes
       end
       
       it 'accepts a form attribute' do

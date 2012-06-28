@@ -232,7 +232,7 @@ module CSL
       # children. This method is called automatically by the Node's
       # constructor.
       def create_children
-        if const_defined?(:Children, false)
+        if const?(:Children)
           const_get(:Children).new
         else
           []
@@ -270,13 +270,14 @@ module CSL
         names.each do |name|
           name   = name.to_sym
           reader = name.to_s.downcase.tr('-', '_')
-          writer = "#{reader}="
+          writer = "set_child_#{reader}"
           
-          unless method_defined?(reader) || method_defined?(writer)
-            define_method(reader) do
-              children[name]
-            end
-            
+
+          define_method(reader) do
+            children[name]
+          end unless method_defined?(reader)
+
+          unless method_defined?(writer)
             define_method(writer) do |value|
               begin
                 klass = self.class.constantize_nodename(name)
@@ -295,16 +296,31 @@ module CSL
 
               children << value
             end
+            
+            alias_method :"#{reader}=", writer
+            
           end
         end
         
         const_set(:Children, Struct.new(*names) {
           
-          def initialize(attrs = {})
-            super(*attrs.values_at(*members))
+          # 1.8 Compatibility
+          @keys = members.map(&:to_sym).freeze
+          
+          class << self
+            attr_reader :keys
           end
-      
-          alias keys members
+                    
+          def initialize(attrs = {})
+            super(*attrs.symbolize_keys.values_at(*keys))
+          end
+
+          # @return [<Symbol>] a list of symbols representing the names/keys
+          #   of the attribute variables.
+          def keys
+            self.class.keys
+          end
+          
           alias original_each each
           
           # Iterates through all children. Nil values are skipped and Arrays
@@ -324,7 +340,7 @@ module CSL
           end
           
           def empty?
-            !detect { |node| !node.nil? }
+            all?(&:nil?)
           end
           
           # Adds the node as a child node. Raises ValidationError if none
@@ -332,7 +348,7 @@ module CSL
           # already a node set with this node name, the node will be pushed
           # to an array for that name.
           def push(node)
-            unless node.respond_to?(:nodename) && members.include?(node.nodename.to_sym)
+            unless node.respond_to?(:nodename) && keys.include?(node.nodename.to_sym)
               raise ValidationError, "not allowed to add #{node.inspect} to #{inspect}"
             end
             
@@ -348,8 +364,8 @@ module CSL
             
             self
           end
-          alias << push
           
+          alias << push
           
           # Delete items from self that are equal to node. If any items are
           # found, returns the deleted items. If the items is not found,
@@ -387,7 +403,7 @@ module CSL
           private
           
           def resolve(nodename)
-            members.include?(nodename.to_sym) && send(nodename)
+            keys.include?(nodename.to_sym) && send(nodename)
           end
         })
       end

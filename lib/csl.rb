@@ -1,14 +1,17 @@
 
+require 'enumerator'
 require 'forwardable'
 require 'open-uri'
 require 'singleton'
 require 'set'
 
 require 'csl/version'
-require 'csl/schema'
 
+require 'csl/compatibility'
 require 'csl/extensions'
 require 'csl/errors'
+
+require 'csl/schema'
 
 require 'csl/pretty_printer'
 require 'csl/loader'
