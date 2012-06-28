@@ -90,6 +90,7 @@ module CSL
         
       super(attributes)
       
+      warn "trying to set locale to #{locale} (#{arguments.length}) (#{arguments.inspect})"
       set(locale) unless locale.nil?
       
       unless options.nil?

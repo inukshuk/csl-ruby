@@ -37,7 +37,6 @@ module CSL
 					location = input
 				end
 
-        warn "trying to open #{location}"
 				Kernel.open(location, 'r:UTF-8') do |io|
           data = io.read
         end
