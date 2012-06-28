@@ -2,7 +2,7 @@ require 'spec_helper'
 
 module CSL
   describe Style::Names do
-  
+    
   end
 
   describe Style::Name do

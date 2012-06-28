@@ -37,7 +37,7 @@ module CSL
       # Returns a new node with the passed in name and attributes.
       def create(name, attributes = {}, &block)
         klass = constantize(name)
-        
+
         unless klass.nil?
           klass.new(attributes, &block)
         else
@@ -56,11 +56,11 @@ module CSL
       end
 
       private
-      
+
       def attr_defaults(attributes)
         @default_attributes = attributes
       end
-      
+
       def attr_struct(*attributes)
         const_set(:Attributes, Struct.new(*attributes) {
           
