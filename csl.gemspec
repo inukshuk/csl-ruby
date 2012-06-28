@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency('cucumber', ['~>1.1'])
   s.add_development_dependency('rspec', ['~>2.7'])
+  s.add_development_dependency('rake', ['~>0.9'])
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = `git ls-files -- {test,spec,features}/*`.split("\n")
