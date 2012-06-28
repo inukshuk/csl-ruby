@@ -45,6 +45,7 @@ module CSL
 			parse(data)
 			
 		rescue => e
+		  warn e.backtrace.join("\n")
 			raise ParseError, "failed to load #{input.inspect}: #{e.message}"
     end
     
