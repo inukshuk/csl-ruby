@@ -12,6 +12,8 @@ end
 
 group :development do
   gem 'simplecov', '~>0.6'
+  gem 'guard', '~>1.2'
+  gem 'guard-rspec', '~>1.1'
 end
 
 # vim: syntax=ruby
