@@ -6,9 +6,11 @@ group :debug do
   gem 'debugger', :platforms => [:mri_19]
 end
 
-group :extra do
+group :optional do
   gem 'nokogiri', '~>1.5'
+end
 
+group :extra do
   gem 'simplecov', '~>0.6'
 
   gem 'guard', '~>1.2'
