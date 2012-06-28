@@ -10,7 +10,7 @@ group :optional do
   gem 'nokogiri', '~>1.5'
 end
 
-gem :development do
+group :development do
   gem 'simplecov', '~>0.6'
 end
 
