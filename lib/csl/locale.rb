@@ -77,7 +77,11 @@ module CSL
         locale, attributes, options = Locale.default, {}, nil
       when 1
         if arguments[0].is_a?(Hash)
-          locale = arguments[0].delete(:lang) || Locale.default
+          arguments[0] = arguments[0].symbolize_keys
+          
+          locale = arguments[0].delete(:lang) ||
+            arguments[0].delete(:'xml:lang') || Locale.default
+            
           attributes, options = arguments
         else
           attributes, locale, options = {}, arguments
@@ -90,7 +94,6 @@ module CSL
         
       super(attributes)
       
-      warn "trying to set locale to #{locale} (#{arguments.length}) (#{arguments.inspect})"
       set(locale) unless locale.nil?
       
       unless options.nil?
