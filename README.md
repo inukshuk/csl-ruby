@@ -1,5 +1,10 @@
 CSL-Ruby
 ========
+CSL-Ruby is a Ruby parser and library for the Citation Style Language (CSL),
+an XML-based format to describe the formatting of citations, notes and
+bibliographies.
+
+[![Build Status](https://secure.travis-ci.org/inukshuk/csl-ruby.png?branch=master)](http://travis-ci.org/inukshuk/csl-ruby)
 
 
 Copyright
