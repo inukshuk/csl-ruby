@@ -83,7 +83,7 @@ module CSL
     
 		def comment?(node)
 			node.respond_to?(:comment?) && node.comment? ||
-				node.respond_to?(:node_type) && node.node_type == :comment
+				node.respond_to?(:node_type) && [:comment, :xmldecl].include?(node.node_type)
 		end
 		
   end
