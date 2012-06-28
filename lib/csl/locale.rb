@@ -150,8 +150,10 @@ module CSL
     
     def translate(*arguments)
       raise 'not implemented'
-    end    
+    end
+
     alias _ translate
+    alias t translate
     
     # call-seq:
     #   locale.each_term { |term| block } -> locale
