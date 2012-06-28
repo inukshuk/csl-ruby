@@ -34,6 +34,3 @@ require 'cucumber/rake/task'
 Cucumber::Rake::Task.new(:cucumber)
 
 task :default => :spec
-
-require 'yard'
-YARD::Rake::YardocTask.new
