@@ -6,14 +6,16 @@ group :debug do
   gem 'debugger', :platforms => [:mri_19]
 end
 
-group :optional do
+group :extra do
   gem 'nokogiri', '~>1.5'
-end
 
-group :development do
   gem 'simplecov', '~>0.6'
+
   gem 'guard', '~>1.2'
   gem 'guard-rspec', '~>1.1'
+
+	gem 'yard', '~>0.8'
+	gem 'redcarpet', '~>2.1'
 end
 
 # vim: syntax=ruby

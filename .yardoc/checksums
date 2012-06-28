@@ -1,15 +1,15 @@
-lib/csl.rb f9984e9d703b9eb62d6091c92b6eb6ca9563f838
+lib/csl.rb ba4f06599deb316a51904aa7f437ee30e7e28dc1
 lib/csl/info.rb 92d7d684e6980fd9cad0c52e06ae22125da3b007
-lib/csl/node.rb 669d73ba2ad0e50ec84405a4818d11c1b1a6ec55
-lib/csl/style.rb 0783c4ebb9e41063e07362bb76b16a2d5e7512d8
+lib/csl/node.rb 7f5c84837d12f3ee416bf3c914ac9e1eded5d4de
+lib/csl/style.rb ce801c4bfbc3c87cd023b82a751737fff269a048
 lib/csl/schema.rb 1087a4d02f8c7ca325105aff64b755cb85f49494
 lib/csl/loader.rb cab9576e6b5406fdec2dc8d6c73fc42d3b8a6ea3
 lib/csl/parser.rb c4b768f1a7ef2a1295d7eac317a3e638d546ee1d
 lib/csl/locale.rb ab725a271b4ed623ec1d27c605e09aab09387865
 lib/csl/errors.rb 103d0022c5862e70fd4a19e4a733cc8d7320aba8
 lib/csl/version.rb bfd27ba1f5ca2c1ec9a12539eec6360012a694b9
-lib/csl/treelike.rb 3ad645ce7f2830154e871dec659e9dd6b635659f
-lib/csl/extensions.rb 0cd350b8e35f75036c9f06a50716f6f5afdfbe86
+lib/csl/treelike.rb 868f48810b14cc20b9b8a24d250a50ebfb450d44
+lib/csl/extensions.rb 593f387af7003e61a539e3d47cd00024d3c2dfc9
 lib/csl/style/date.rb e1dc0f2a460038ac7377ebf412fff299d63d23ff
 lib/csl/style/text.rb 73f544a57d3c1bf01e5cd70bbdc8d467647fe9e5
 lib/csl/style/sort.rb 6cf56a343e1176274ab05c54215f87ae359c44d3
@@ -26,3 +26,4 @@ lib/csl/pretty_printer.rb ece3a018e43f6063c5bfa8cd4bed27971bab72ae
 lib/csl/style/conditional.rb 659fca570d6ea0147ef131c593f1bb3d336a9aa9
 lib/csl/style/bibliography.rb 1ad945c4d43160fb610324e96da8f1fbb0e4aec3
 lib/csl/locale/style_options.rb d198d9adda4971f675456ae1fb069e48fbf7c68f
+lib/csl/compatibility.rb 4d32db0b251cdb96283a4e2a3a2f0942f16931d9

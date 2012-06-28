@@ -3,3 +3,5 @@ Gemfile.lock
 /coverage
 /pkg
 /doc
+/.rbx
+*.rbc
