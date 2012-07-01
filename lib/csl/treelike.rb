@@ -25,23 +25,7 @@ module CSL
         enum_for :each_child
       end
     end
-    
-    # Called after the node was added to another node.
-    def added_to(node)
-    end
-    
-    # Called when the node was deleted from an other node.
-    def deleted_from(node)
-    end
-    
-    # Called when the passed-in node was added to this node as a child.
-    def added_child(node)
-    end
-    
-    # Called when the passed-in node was deleted from this node's child nodes.
-    def deleted_child(node)
-    end
-    
+        
     def delete_children(*nodes)
       nodes.each do |node|
         delete_child node
@@ -226,6 +210,31 @@ module CSL
       end
     end
     
+    protected
+    
+    # @abstract
+    # Called after the node was added to another node.
+    def added_to(node)
+    end
+    
+    # @abstract
+    # Called when the node was deleted from an other node.
+    def deleted_from(node)
+    end
+    
+    private
+    
+    # @abstract
+    # Called when the passed-in node was added to this node as a child.
+    def added_child(node)
+    end
+    
+    # @abstract
+    # Called when the passed-in node was deleted from this node's child nodes.
+    def deleted_child(node)
+    end
+    
+
     module ClassMethods
       
       # Returns a new instance of an Array or Struct to manage the Node's

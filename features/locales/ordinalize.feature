@@ -36,6 +36,7 @@ Feature: Converting numbers to ordinals using CSL locales
       | 111    |
       | 112    |
       | 113    |
+      | -102   |
     Then the ordinals should be:
       | ordinal |
       | 0th     |
@@ -55,6 +56,7 @@ Feature: Converting numbers to ordinals using CSL locales
       | 111th   |
       | 112th   |
       | 113th   |
+      | -102nd  |
 
   @v1.0.1 @locale @ordinals @i18n @lang:en
   Scenario: English CSL 1.0.1 locales
@@ -92,6 +94,7 @@ Feature: Converting numbers to ordinals using CSL locales
       | 111    |
       | 112    |
       | 113    |
+      | -102   |
     Then the ordinals should be:
       | ordinal |
       | 0th     |
@@ -111,6 +114,7 @@ Feature: Converting numbers to ordinals using CSL locales
       | 111th   |
       | 112th   |
       | 113th   |
+      | -102nd  |
 
   @v1.0.1 @locale @ordinals @i18n @gender @lang:de
   Scenario: Gendered German CSL 1.0.1 locales

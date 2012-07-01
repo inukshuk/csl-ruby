@@ -235,26 +235,81 @@ module CSL
     # requested but not available, the regular ordinal will be returned
     # instead.
     #
+    # @example
+    #   Locale.load('en').ordinalize(13)
+    #   #-> "13th"
+    #
+    #   de = Locale.load('de')
+    #   de.ordinalize(13)
+    #   #-> "13."
+    #
+    #   de.ordinalize(3, :form => :long, :gender => :feminine)
+    #   #-> "dritte"
+    #
+    # @note
+    #   For CSL 1.0 (and older) locales that do not define an "ordinal-00"
+    #   term the algorithm specified by CSL 1.0 is used; otherwise uses the
+    #   CSL 1.0.1 algorithm with improved support for languages other than
+    #   English.
+    #
     # @param number [#to_i] the number to ordinalize
     # @param options [Hash] formatting options
     #
-    # @option options [:ordinal,:'long-ordinal'] :form
-    # @option options [:feminine,:masculine,:neutral] :'gender-form'
+    # @option options [:short,:long] :form (:short) which ordinals form to use
+    # @option options [:feminine,:masculine,:neutral] :gender (:neutral)
+    #   which ordinals gender-form to use
     #
     # @raise [ArgumentError] if number cannot be converted to an integer
     #
     # @return [String] the ordinal for the passed-in number
-    def ordinalize(number, options = nil)
+    def ordinalize(number, options = {})
       raise ArgumentError, "unable to ordinalize #{number}; integer expected" unless
         number.respond_to?(:to_i)
         
       number, query = number.to_i, ordinalize_query_for(options)
       
-      # Use legacy algorithm for CSL 1.0 locales that do no define 'ordinal-00'
-      return legacy_ordinalize(number, query[:name].start_with?('l')) if
-        legacy? && terms['ordinal-00'].blank?
+      key = query[:name]
       
+      # try to match long-ordinals first
+      if key.start_with?('l')
+        query[:name] = key % number.abs 
+        ordinal = terms[query]
         
+        if ordinal.nil?
+          key.sub!(/long-/, '')
+        else
+          return ordinal.to_s
+        end
+      end
+      
+      # CSL 1.0
+      if legacy? || terms['ordinal-00'].nil? 
+        return legacy_ordinalize(number)
+      end
+      
+      # CSL 1.0.1
+      # 1. try to find exact match
+      # 2. if no match is found, try to match modulus of number,
+      #    dividing mod by 10 at each iteration
+      # 3. repeat until a match is found or mod reaches 0
+
+      mod = 10 ** Math.log10([number.abs, 1].max).to_i
+
+      query[:name] = key % number.abs
+      ordinal = terms[query]
+      
+      while ordinal.nil? && mod > 0
+        query[:name] = key % (number.abs % mod)
+        ordinal = terms[query]
+        mod = mod / 10
+      end
+      
+      if ordinal.nil? && query.key?(:'gender-form')
+        query.delete(:'gender-form')
+        ordinal = terms[query]
+      end
+      
+      [number, ordinal].join
     end
     
     # Locales are sorted first by language, then by region; sort order is
@@ -323,18 +378,14 @@ module CSL
       q
     end
     
-    def legacy_ordinalize(number, prefer_long_form = false)
-      if prefer_long_form && number > 0 && number < 11
-        [number, terms['long-ordinal-%02d' % number]].join
+    def legacy_ordinalize(number)
+      case
+      when (11..13).include?(number.abs % 100)
+        [number, terms['ordinal-04']].join
+      when (1..3).include?(number.abs % 10)
+        [number, terms['ordinal-%02d' % (number.abs % 10)]].join
       else
-        case
-        when (11..13).include?(number.abs % 100)
-          [number, terms['ordinal-04']].join
-        when (1..3).include?(number.abs % 10)
-          [number, terms['ordinal-%02d' % (number.abs % 10)]].join
-        else
-          [number, terms['ordinal-04']].join
-        end
+        [number, terms['ordinal-04']].join
       end
     end
   end

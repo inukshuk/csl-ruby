@@ -10,19 +10,44 @@ module CSL
 			undef_method :[]=
 			
       def initialize(attributes = {})
-        super(attributes)
-        children[:term] = []
+        super(attributes)      
+        @registry, children[:term] = Hash.new { |h,k| h[k] = [] }, []
 
 				yield self if block_given?
       end
 
 			alias each each_child
 			
-			def find(query)
-				detect { |t| t.matches?(query) }
+			def lookup(query)
+			  terms = if Regexp === query
+			    registry.keys.select { |t| t =~ query }.flatten(1)
+			  else
+			    registry[(Hash === query) ? query[:name] : query.to_s]
+			  end
+
+			  terms.detect { |t| t.matches?(query) }
 			end
-			alias [] find
 			
+			alias [] lookup
+			
+			private
+			
+			# @!attribute [r] registry
+			# @return [Hash] a private registry to map term names to the respective
+			#   term objects for quick term look-up
+			attr_reader :registry
+			
+			def added_child(term)
+			  raise ValidationError, "failed to register term #{term.inspect}: name attribute missing" unless
+			    term.attribute?(:name)
+			    
+			  registry[term[:name]].push(term)
+			  term
+			end
+			
+			def deleted_child(term)
+			  registry[term[:name]].delete(term)
+			end
     end
     
     class Term < Node
