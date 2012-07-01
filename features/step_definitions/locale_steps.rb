@@ -6,7 +6,7 @@ When /^I load the locale from the string$/ do |string|
   @locale = CSL::Locale.load(string)
 end
 
-When /^I ordinalize the number (\d+)(?: using the (short|long) form(?: and (female|male|neutral) gender))?$/ do |num, form, gender|
+When /^I ordinalize the number (\d+)(?: using the (long) form(?: and (feminine|masculine) gender))?$/ do |num, form, gender|
   @ordinal = @locale.ordinalize(num, :form => form, :gender => gender)
 end
 

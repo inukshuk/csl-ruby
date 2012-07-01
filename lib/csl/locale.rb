@@ -254,7 +254,7 @@ module CSL
       end
     end
 
-    # @return [String] the locale tag
+    # @return [String] the Locale's IETF tag
     def to_s
       [language, region].compact.join('-')
     end

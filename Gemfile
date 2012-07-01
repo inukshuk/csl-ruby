@@ -15,6 +15,7 @@ group :extra do
 
   gem 'guard', '~>1.2'
   gem 'guard-rspec', '~>1.1'
+  gem 'guard-cucumber', '~>1.2'
 
 	gem 'yard', '~>0.8'
 	gem 'redcarpet', '~>2.1'
