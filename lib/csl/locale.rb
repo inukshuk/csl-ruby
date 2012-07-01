@@ -276,7 +276,7 @@ module CSL
         ordinal = terms[query]
         
         if ordinal.nil?
-          key.sub!(/long-/, '')
+          key = 'ordinal-%02d'
         else
           return ordinal.to_s
         end
@@ -366,7 +366,7 @@ module CSL
 
       unless options.nil?
         if options.key?(:form) && options[:form].to_s =~ /^long(-ordinal)?$/i
-          q[:name].prepend('long-')
+          q[:name] = 'long-ordinal-%02d'
         end
       
         gender = (options[:'gender-form'] || options[:gender]).to_s
