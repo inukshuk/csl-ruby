@@ -1,6 +1,6 @@
 module CSL
   #
-  # CSL Locales contain locale specific date formatting options, term
+  # CSL::Locales contain locale specific date formatting options, term
   # translations, and a number ordinalizer.
   #
   class Locale < Node
@@ -35,7 +35,7 @@ module CSL
       
       attr_accessor :default
       attr_reader :languages, :regions
-      
+
       def parse(data)
         node = CSL.parse!(data)
         
@@ -48,7 +48,7 @@ module CSL
     end
     
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
-    
+
     attr_children :'style-options', :info, :date, :terms
     
     attr_accessor :language, :region
@@ -59,7 +59,7 @@ module CSL
 
     private :attributes
     undef_method :[]=
-    
+        
     # call-seq:
     #   Locale.new                                         -> default
     #   Locale.new('en')                                   -> American English
@@ -115,6 +115,31 @@ module CSL
     end
     
     
+    def version
+      attributes[:version]
+    end
+    
+    def version=(version)
+      raise ArgumentError, "failed to set version to #{version}" unless
+        version.respond_to?(:to_s)
+        
+      version = version.to_s.strip
+      
+      raise ArgumentError, "failed to set version to #{version}: not a version string" unless
+        version =~ /^\d[\d\.]+$/
+
+      if version > Schema.version
+        warn "setting version to #{version}; latest supported version is #{Schema.version}"
+      end
+      
+      attributes[:version] = version
+    end
+
+    # @return [Boolean] whether or not the Locale's version is less than CSL-Ruby's default version
+    def legacy?
+      version < Schema.version
+    end
+    
     # call-seq:
     #   locale.set('en')    -> sets language to :en, region to :US
     #   locale.set('de-AT') -> sets language to :de, region to :AT
@@ -167,7 +192,7 @@ module CSL
     # given, an enumerator is returned instead.
     def each_term
       if block_given?
-        terms.each_child(&Proc.new)
+        terms.each(&Proc.new)
         self
       else
         enum_for :each_term
@@ -219,7 +244,17 @@ module CSL
     # @raise [ArgumentError] if number cannot be converted to an integer
     #
     # @return [String] the ordinal for the passed-in number
-    def ordinalize(number, options = {})
+    def ordinalize(number, options = nil)
+      raise ArgumentError, "unable to ordinalize #{number}; integer expected" unless
+        number.respond_to?(:to_i)
+        
+      number, query = number.to_i, ordinalize_query_for(options)
+      
+      # Use legacy algorithm for CSL 1.0 locales that do no define 'ordinal-00'
+      return legacy_ordinalize(number, query[:name].start_with?('l')) if
+        legacy? && terms['ordinal-00'].blank?
+      
+        
     end
     
     # Locales are sorted first by language, then by region; sort order is
@@ -270,6 +305,38 @@ module CSL
       super.push('xml:lang="%s"' % to_s)
     end
     
+    # @return [Hash] a valid ordinalize query; the name attribute is a format string
+    def ordinalize_query_for(options)
+      q = { :name => 'ordinal-%02d' }
+
+      unless options.nil?
+        if options.key?(:form) && options[:form].to_s =~ /^long(-ordinal)?$/i
+          q[:name].prepend('long-')
+        end
+      
+        gender = (options[:'gender-form'] || options[:gender]).to_s
+        unless gender.empty? || gender =~ /^n/i
+          q[:'gender-form'] = (gender =~ /^m/i) ? 'masculine' : 'feminine'
+        end
+      end
+      
+      q
+    end
+    
+    def legacy_ordinalize(number, prefer_long_form = false)
+      if prefer_long_form && number > 0 && number < 11
+        [number, terms['long-ordinal-%02d' % number]].join
+      else
+        case
+        when (11..13).include?(number.abs % 100)
+          [number, terms['ordinal-04']].join
+        when (1..3).include?(number.abs % 10)
+          [number, terms['ordinal-%02d' % (number.abs % 10)]].join
+        else
+          [number, terms['ordinal-04']].join
+        end
+      end
+    end
   end
   
 end

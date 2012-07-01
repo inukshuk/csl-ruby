@@ -18,41 +18,43 @@ Feature: Converting numbers to ordinals using CSL locales
       </locale>
       """
     When I ordinalize these numbers:
-      | 0     |
-      | 1     |
-      | 2     |
-      | 3     |
-      | 4     |
-      | 5     |
-      | 10    |
-      | 11    |
-      | 12    |
-      | 13    |
-      | 20    |
-      | 21    |
-      | 22    |
-      | 23    |
-      | 111   |
-      | 112   |
-      | 113   |
+      | number |
+      | 0      |
+      | 1      |
+      | 2      |
+      | 3      |
+      | 4      |
+      | 5      |
+      | 10     |
+      | 11     |
+      | 12     |
+      | 13     |
+      | 20     |
+      | 21     |
+      | 22     |
+      | 23     |
+      | 111    |
+      | 112    |
+      | 113    |
     Then the ordinals should be:
-      | 0th   |
-      | 1st   |
-      | 2nd   |
-      | 3rd   |
-      | 4th   |
-      | 5th   |
-      | 10th  |
-      | 11th  |
-      | 12th  |
-      | 13th  |
-      | 20th  |
-      | 21st  |
-      | 22nd  |
-      | 23rd  |
-      | 111th |
-      | 112th |
-      | 113th |
+      | ordinal |
+      | 0th     |
+      | 1st     |
+      | 2nd     |
+      | 3rd     |
+      | 4th     |
+      | 5th     |
+      | 10th    |
+      | 11th    |
+      | 12th    |
+      | 13th    |
+      | 20th    |
+      | 21st    |
+      | 22nd    |
+      | 23rd    |
+      | 111th   |
+      | 112th   |
+      | 113th   |
 
   @v1.0.1 @locale @ordinals @i18n @lang:en
   Scenario: English CSL 1.0.1 locales
@@ -72,41 +74,43 @@ Feature: Converting numbers to ordinals using CSL locales
       </locale>
       """
     When I ordinalize these numbers:
-      | 0     |
-      | 1     |
-      | 2     |
-      | 3     |
-      | 4     |
-      | 5     |
-      | 10    |
-      | 11    |
-      | 12    |
-      | 13    |
-      | 20    |
-      | 21    |
-      | 22    |
-      | 23    |
-      | 111   |
-      | 112   |
-      | 113   |
+      | number |
+      | 0      |
+      | 1      |
+      | 2      |
+      | 3      |
+      | 4      |
+      | 5      |
+      | 10     |
+      | 11     |
+      | 12     |
+      | 13     |
+      | 20     |
+      | 21     |
+      | 22     |
+      | 23     |
+      | 111    |
+      | 112    |
+      | 113    |
     Then the ordinals should be:
-      | 0th   |
-      | 1st   |
-      | 2nd   |
-      | 3rd   |
-      | 4th   |
-      | 5th   |
-      | 10th  |
-      | 11th  |
-      | 12th  |
-      | 13th  |
-      | 20th  |
-      | 21st  |
-      | 22nd  |
-      | 23rd  |
-      | 111th |
-      | 112th |
-      | 113th |
+      | ordinal |
+      | 0th     |
+      | 1st     |
+      | 2nd     |
+      | 3rd     |
+      | 4th     |
+      | 5th     |
+      | 10th    |
+      | 11th    |
+      | 12th    |
+      | 13th    |
+      | 20th    |
+      | 21st    |
+      | 22nd    |
+      | 23rd    |
+      | 111th   |
+      | 112th   |
+      | 113th   |
 
   @v1.0.1 @locale @ordinals @i18n @gender @lang:de
   Scenario: Gendered German CSL 1.0.1 locales
@@ -126,6 +130,7 @@ Feature: Converting numbers to ordinals using CSL locales
       </locale>
       """
     When I ordinalize these numbers:
+      | num   | form  | gender    |
       | 0     |       |           |
       | 1     |       |           |
       | 2     |       |           |
@@ -141,6 +146,7 @@ Feature: Converting numbers to ordinals using CSL locales
       | 2     | long  | masculine |
       | 3     | long  | masculine |      
     Then the ordinals should be:
+      | ordinal |
       | 0.      |
       | 1.      |
       | 2.      |

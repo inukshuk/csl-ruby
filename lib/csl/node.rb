@@ -86,6 +86,10 @@ module CSL
           def keys
             self.class.keys
           end
+
+          def values
+            super.compact
+          end
           
           # @return [Boolean] true if all the attribute values are nil;
           #   false otherwise.

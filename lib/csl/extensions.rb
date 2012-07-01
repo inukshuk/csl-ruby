@@ -6,6 +6,7 @@
 module CSL
   module Extensions
 
+    # ActiveSupport Fallback
     module SymbolizeKeys
       def symbolize_keys
         inject({}) do |options, (key, value)|
@@ -20,6 +21,7 @@ module CSL
 
     end
 
+    # ActiveSupport Fallback
     module StringifyKeys
       def stringify_keys
         inject({}) do |options, (key, value)|
@@ -39,6 +41,11 @@ module CSL
 			end
 		end
 
+    module Blank
+      def blank?
+        nil? || respond_to?(:empty?) && empty?
+      end
+    end
   end
 end
 
@@ -49,4 +56,8 @@ end
 
 class Module
 	include CSL::Extensions::Nesting
+end
+
+class Object
+  include CSL::Extensions::Blank unless method_defined?(:blank?)
 end

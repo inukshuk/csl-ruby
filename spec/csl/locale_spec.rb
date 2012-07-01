@@ -93,5 +93,36 @@ module CSL
 			
 		end
 		
+		describe '#legacy?' do
+		  it 'returns false by default' do
+		    locale.should_not be_legacy
+		  end
+		  
+		  it 'returns true if the version is less than 1.0.1' do
+		    locale.version = '1.0'
+		    locale.should be_legacy
+		  end
+		end
+		
+		describe '#ordinalize_query_for' do
+		  
+		  it 'returns { :name => "ordinal-%02d" } by default' do
+		    locale.send(:ordinalize_query_for, nil).should == { :name => "ordinal-%02d" }
+		  end
+
+		  it 'returns { :name => "ordinal-%02d" } for { :form => :short }' do
+		    locale.send(:ordinalize_query_for, { :form => :short }).should == { :name => "ordinal-%02d" }
+		  end
+
+		  it 'returns { :name => "long-ordinal-%02d" } for { :form => :long }' do
+		    locale.send(:ordinalize_query_for, { :form => :long }).should == { :name => "long-ordinal-%02d" }
+		  end
+
+		  it 'returns { :name => "ordinal-%02d", :"gender-form" => "feminine" } for { :gender => :feminine }' do
+		    locale.send(:ordinalize_query_for, { :gender => :feminine }).should == { :name => "ordinal-%02d", :'gender-form' => 'feminine' }
+		  end
+		  
+		end
+		
 	end
 end

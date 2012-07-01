@@ -18,9 +18,10 @@ module CSL
 
 			alias each each_child
 			
-			def [](query)
+			def find(query)
 				detect { |t| t.matches?(query) }
 			end
+			alias [] find
 			
     end
     
@@ -33,7 +34,7 @@ module CSL
 			def_delegators :attributes, :hash, :eql?, :name, :form, :gender
 
       def gendered?
-        !!attributes.gender
+        !attributes.gender.blank?
       end
     
       def neutral?
@@ -41,7 +42,7 @@ module CSL
       end
   
 			def textnode?
-				!(text.nil? || text.empty?)
+				!text.blank?
 			end
 			
       def singularize
@@ -54,10 +55,23 @@ module CSL
       end      
       alias plural pluralize
 
+      # Tests whether or not the Term matches the passed-in query. Tests
+      # vary slightly depending on the the query's type: if a String or
+      # Regexp is passed-in, the return value will be true if the Term's
+      # name matches the query (disregarding all other attributes); if the
+      # query is a Hash, however, the return value will only be true if
+      # all passed-in attributes
+      #
+      # @param query [Hash,Regexp,#to_s] the query
+      # @raise [ArgumentError] if the term cannot be matched using query
+      #
+      # @return [Boolean] whether or not the query matches the term
 			def match?(query)
 				case
 				when query.is_a?(Hash)
-					query.values_at(*attributes.members) == attributes.to_a
+					query.symbolize_keys.values_at(*attributes.keys) == attributes.to_a
+				when query.is_a?(Regexp)
+				  query =~ name
 				when query.respond_to?(:to_s)
 					query.to_s == name
 				else
@@ -66,12 +80,29 @@ module CSL
 			end
 			alias matches? match?
 			
+			
+			# @!method masculine?
+			# @return [Boolean] whether or not the term is masculine
+
+			# @!method masculine!
+			# @return [self,nil] the term with the gender attribute set to
+			#   'masculine', or nil if the term was already masculine
+
+			# @!method feminine?
+			# @return [Boolean] whether or not the term is feminie
+
+			# @!method feminine!
+			# @return [self,nil] the term with the gender attribute set to
+			#   'feminine', or nil if the term was already feminine
       %w{ masculine feminine }.each do |name|
         define_method("#{name}?") do
-					attributes.gender == name
+					attributes.gender.to_s == name
 				end
+				
         define_method("#{name}!") do
-					attributes.gender == name ? nil : attributes.gender = name
+					return nil if attributes.gender.to_s == name
+					attributes.gender = name
+					self
 				end
       end
 

@@ -11,7 +11,7 @@ When /^I ordinalize the number (\d+)(?: using the (long) form(?: and (feminine|m
 end
 
 Then /^the ordinal should (?:be|equal) "([^"]*)"$/ do |ord|
-  ord.should == @ordinal
+  @ordinal.should == ord
 end
 
 When /^I ordinalize these numbers:?$/ do |table|
@@ -22,7 +22,7 @@ When /^I ordinalize these numbers:?$/ do |table|
 end
 
 Then /^the ordinals should (?:be|equal):?$/ do |table|
-  table.rows.should == @ordinals
+  @ordinals.join(' ').should == table.rows.flatten.join(' ')
 end
 
 Then /^the locale should should have (\d+) terms$/ do |num|
