@@ -188,22 +188,38 @@ module CSL
       end
     end
     
-    # Returns true if the Locale is the default locale.
+    # @returns [Boolean] whether or not the Locale is the default locale
     def default?
       to_s == Locale.default
     end
     
-    # Returns true if the Locale's region is the default region for its language.
+    # @return [Boolean] whehter or not the Locale's region is the default
+    #   region for its language
     def default_region?
       region && region == Locale.regions[language]
     end
 
-    # Returns true if the Locale's language is the default language for its region.
+    # @return [Boolean] whether or not the Locale's language is the default
+    #   language for its region
     def default_language?
       language && language == Locale.languages[region]
     end
-        
-    def ordinalize(integer)
+
+    # Ordinalizes the passed-in number using either the ordinal or
+    # long-ordinal forms defined by the locale. If a long-ordinal form is
+    # requested but not available, the regular ordinal will be returned
+    # instead.
+    #
+    # @param number [#to_i] the number to ordinalize
+    # @param options [Hash] formatting options
+    #
+    # @option options [:ordinal,:'long-ordinal'] :form
+    # @option options [:feminine,:masculine,:neutral] :'gender-form'
+    #
+    # @raise [ArgumentError] if number cannot be converted to an integer
+    #
+    # @return [String] the ordinal for the passed-in number
+    def ordinalize(number, options = {})
     end
     
     # Locales are sorted first by language, then by region; sort order is
@@ -211,6 +227,9 @@ module CSL
     # prioritised; in case of a language match the default region of that
     # language will be prioritised (e.g., de-DE will come before de-AT even
     # though the alphabetical order would be different).
+    #
+    # @param other [Locale] the locale used for comparison
+    # @return [1,0,-1,nil] the result of the comparison
     def <=>(other)
       case
       when !other.is_a?(Locale)
@@ -235,11 +254,12 @@ module CSL
       end
     end
 
-    
+    # @return [String] the locale tag
     def to_s
       [language, region].compact.join('-')
     end
     
+    # @return [String] a string representation of the Locale
     def inspect
       "#<#{self.class.name} #{to_s}: dates=[#{dates.length}] terms=[#{terms.length}]>"
     end
