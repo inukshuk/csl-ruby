@@ -165,4 +165,48 @@ Feature: Converting numbers to ordinals using CSL locales
       | erster  |
       | zweiter |
       | 3.      |
-      
+
+  @v1.0.1 @locale @ordinals @i18n @gender @lang:fr
+  Scenario: Gendered French CSL 1.0.1 locales
+    Given the locale:
+      """
+      <?xml version="1.0" encoding="utf-8"?>
+      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="de">
+        <terms>
+          <term name="ordinal-00">e</term>
+          <term name="ordinal-01">e</term>
+          <term name="ordinal-01" gender-form="feminine">ère</term>
+          <term name="ordinal-01" gender-form="masculine">er</term>
+        </terms>
+      </locale>
+      """
+    When I ordinalize these numbers:
+      | num   | form  | gender    |
+      | 0     |       |           |
+      | 1     |       |           |
+      | 1     |       | feminine  |
+      | 1     |       | masculine |
+      | 1     |       | neutral   |
+      | 2     |       |           |
+      | 3     |       |           |
+      | 999   |       |           |
+      | 11    |       |           |
+      | 21    |       |           |
+      | 101   |       |           |
+      | 1001  |       |           |
+      | 301   |       |           |
+    Then the ordinals should be:
+      | ordinal |
+      | 0e      |
+      | 1e      |
+      | 1ère    |
+      | 1er     |
+      | 1e      |
+      | 2e      |
+      | 3e      |
+      | 999e    |
+      | 11e     |
+      | 21e     |
+      | 101e    |
+      | 1001e   |
+      | 301e    |
