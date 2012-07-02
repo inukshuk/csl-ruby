@@ -31,6 +31,8 @@ RSpec::Core::RakeTask.new(:spec) do |spec|
 end
 
 require 'cucumber/rake/task'
-Cucumber::Rake::Task.new(:cucumber)
+Cucumber::Rake::Task.new(:cucumber) do |t|
+  t.profile = 'default'
+end
 
-task :default => :spec
+task :default => [:spec, :cucumber]

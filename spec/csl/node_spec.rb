@@ -8,9 +8,48 @@ module CSL
     it { should_not have_children }
     it { should_not have_attributes }
 		
-		describe '#' do
-    end
+		describe 'given a FooBarNode with attributes :foo and :bar and a TestNode without defined attributes' do
+      before(:all) do
+        class FooBarNode < Node
+          attr_struct :foo, :bar
+        end
+        class TestNode < Node
+        end
+      end
+      
+      it 'creates FooBarNode::Attributes' do
+        FooBarNode.const_defined?(:Attributes).should be_true
+      end
+      
+      it 'does not create TestNode::Attributes' do
+        TestNode.const_defined?(:Attributes).should_not be_true
+      end
+		  
+		  it 'TestNode attributes are a regular Hash' do
+		    TestNode.new.attributes.should be_a(Hash)
+		  end
 
+		  it 'FooBarNode attributes are a Struct' do
+		    FooBarNode.new.attributes.should be_a(Struct)
+		  end
+		  
+  		describe '#values_at' do
+  		  it 'FooBarNode accepts attribute names' do
+  		    FooBarNode.new(:foo => 'Foo', :bar => 'Bar').values_at(:bar, :foo).should == %w{ Bar Foo }
+  		  end
+  		  
+  		  it 'TestNode accepts attribute names' do
+  		    TestNode.new(:foo => 'Foo', :bar => 'Bar').values_at(:bar, :foo).should == %w{ Bar Foo }
+  		  end
+      end
+      
+      describe 'attributes.keys' do
+        it 'returns all attribute names as symbols' do
+          TestNode.new.attributes.keys.should be_empty
+          FooBarNode.new.attributes.keys.should == [:foo, :bar]
+        end
+      end
+    end
 	end
 
   describe TextNode do

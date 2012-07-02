@@ -91,6 +91,10 @@ module CSL
             super.compact
           end
           
+          # def to_a
+          #   values_at(*keys)
+          # end
+          
           # @return [Boolean] true if all the attribute values are nil;
           #   false otherwise.
           def empty?
