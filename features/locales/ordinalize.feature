@@ -175,7 +175,7 @@ Feature: Converting numbers to ordinals using CSL locales
         <terms>
           <term name="ordinal-00">e</term>
           <term name="ordinal-01">e</term>
-          <term name="ordinal-01" gender-form="feminine">ère</term>
+          <term name="ordinal-01" gender-form="feminine">re</term>
           <term name="ordinal-01" gender-form="masculine">er</term>
         </terms>
       </locale>
@@ -201,7 +201,7 @@ Feature: Converting numbers to ordinals using CSL locales
       | ordinal |
       | 0e      |
       | 1e      |
-      | 1ère    |
+      | 1re     |
       | 1er     |
       | 1e      |
       | 2e      |
