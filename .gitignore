@@ -6,3 +6,4 @@ Gemfile.lock
 /.yardoc
 /.rbx
 *.rbc
+*.gem
