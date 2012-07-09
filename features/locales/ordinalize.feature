@@ -125,8 +125,14 @@ Feature: Converting numbers to ordinals using CSL locales
         <terms>
           <term name="ordinal-00">.</term>
           <term name="long-ordinal-01">erstes</term>
-          <term name="long-ordinal-01" gender-form="feminine">erste</term>
-          <term name="long-ordinal-01" gender-form="masculine">erster</term>
+          <term name="long-ordinal-01" gender-form="feminine">
+            <single>erste</single>
+            <multiple>ersten</multiple>            
+          </term>
+          <term name="long-ordinal-01" gender-form="masculine">
+            <single>erster</single>
+            <multiple>ersten</multiple>            
+          </term>
           <term name="long-ordinal-02">zweites</term>
           <term name="long-ordinal-02" gender-form="feminine">zweite</term>
           <term name="long-ordinal-02" gender-form="masculine">zweiter</term>
@@ -134,21 +140,23 @@ Feature: Converting numbers to ordinals using CSL locales
       </locale>
       """
     When I ordinalize these numbers:
-      | num   | form  | gender    |
-      | 0     |       |           |
-      | 1     |       |           |
-      | 2     |       |           |
-      | 3     |       |           |
-      | 101   |       |           |
-      | 1     | long  |           |
-      | 2     | long  |           |
-      | 3     | long  |           |
-      | 1     | long  | feminine  |
-      | 2     | long  | feminine  |
-      | 3     | long  | feminine  |
-      | 1     | long  | masculine |
-      | 2     | long  | masculine |
-      | 3     | long  | masculine |      
+      | num   | form  | gender    | number   |
+      | 0     |       |           |          |
+      | 1     |       |           |          |
+      | 2     |       |           |          |
+      | 3     |       |           |          |
+      | 101   |       |           |          |
+      | 1     | long  |           |          |
+      | 2     | long  |           |          |
+      | 3     | long  |           |          |
+      | 1     | long  | feminine  |          |
+      | 1     | long  | feminine  | plural   |
+      | 1     | long  | feminine  | singular |
+      | 2     | long  | feminine  |          |
+      | 3     | long  | feminine  |          |
+      | 1     | long  | masculine |          |
+      | 2     | long  | masculine |          |
+      | 3     | long  | masculine |          |
     Then the ordinals should be:
       | ordinal |
       | 0.      |
@@ -159,6 +167,8 @@ Feature: Converting numbers to ordinals using CSL locales
       | erstes  |
       | zweites |
       | 3.      |
+      | erste   |
+      | ersten  |
       | erste   |
       | zweite  |
       | 3.      |
@@ -564,9 +574,9 @@ Feature: Converting numbers to ordinals using CSL locales
       <?xml version="1.0" encoding="utf-8"?>
       <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="es">
         <terms>
-          <term name="ordinal-00">.o</term>
-          <term name="ordinal-00" gender-form="masculine">.o</term>
-          <term name="ordinal-00" gender-form="feminine">.a</term>
+          <term name="ordinal-00">.º</term>
+          <term name="ordinal-00" gender-form="masculine">.º</term>
+          <term name="ordinal-00" gender-form="feminine">.ª</term>
         </terms>
       </locale>
       """
@@ -604,43 +614,122 @@ Feature: Converting numbers to ordinals using CSL locales
       | 1001  |       | masculine |          |
     Then the ordinals should be:
       | ordinal |
-      | 0.o     |
-      | 1.o     |
+      | 0.º     |
+      | 1.º     |
 #      | 1.er    |
-      | 2.o     |
-      | 3.o     |
-      | 4.o     |
-      | 5.o     |
-      | 6.o     |
-      | 7.o     |
-      | 8.o     |
-      | 9.o     |
-      | 10.o    |
-      | 1.a     |
-      | 1.o     |
-      | 1.o     |
+      | 2.º     |
+      | 3.º     |
+      | 4.º     |
+      | 5.º     |
+      | 6.º     |
+      | 7.º     |
+      | 8.º     |
+      | 9.º     |
+      | 10.º    |
+      | 1.ª     |
+      | 1.º     |
+      | 1.º     |
 #      | 1.er    |
 #      | 1.er    |
-      | 1.o     |
-      | 3.a     |
-      | 3.o     |
+      | 1.º     |
+      | 3.ª     |
+      | 3.º     |
 #      | 3.er    |
-      | 2.a     |
-      | 23.o    |
-      | 999.o   |
-      | 11.o    |
-      | 11.a    |
-      | 11.o    |
-      | 21.o    |
-      | 101.o   |
+      | 2.ª     |
+      | 23.º    |
+      | 999.º   |
+      | 11.º    |
+      | 11.ª    |
+      | 11.º    |
+      | 21.º    |
+      | 101.º   |
 #      | 21.er   |
 #      | 101.er  |
-      | 1001.a  |
-      | 301.o   |
+      | 1001.ª  |
+      | 301.º   |
 #      | 301.er  |
-      | 21.o    |
+      | 21.º    |
 #      | 21.er   |
-      | 21.o    |
-      | 1001.o  |
+      | 21.º    |
+      | 1001.º  |
 #      | 1001.er |
+
+
+  @v1.0.1 @locale @ordinals @i18n @gender @lang:it
+  Scenario: Gendered Italian CSL 1.0.1 locales
+    Given the locale:
+      """
+      <?xml version="1.0" encoding="utf-8"?>
+      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="it">
+        <terms>
+          <term name="ordinal-00">º</term>
+          <term name="ordinal-00" gender-form="masculine">º</term>
+          <term name="ordinal-00" gender-form="feminine">ª</term>
+        </terms>
+      </locale>
+      """
+    When I ordinalize these numbers:
+      | num   | form  | gender    | number   |
+      | 0     |       |           |          |
+      | 1     |       |           |          |
+      | 2     |       |           |          |
+      | 3     |       |           |          |
+      | 4     |       |           |          |
+      | 5     |       |           |          |
+      | 6     |       |           |          |
+      | 7     |       |           |          |
+      | 8     |       |           |          |
+      | 9     |       |           |          |
+      | 10    |       |           |          |
+      | 1     |       | feminine  |          |
+      | 1     |       | masculine |          |
+      | 1     |       | masculine | singular |
+      | 1     |       | masculine | plural   |
+      | 3     |       | feminine  |          |
+      | 3     |       | masculine |          |
+      | 2     |       | feminine  |          |
+      | 23    |       |           |          |
+      | 999   |       |           |          |
+      | 11    |       |           |          |
+      | 11    |       | feminine  |          |
+      | 11    |       | masculine |          |
+      | 21    |       |           |          |
+      | 101   |       |           |          |
+      | 1001  |       | feminine  |          |
+      | 301   |       |           |          |
+      | 21    |       | masculine | singular |
+      | 21    |       | masculine | plural   |
+      | 1001  |       | masculine |          |
+    Then the ordinals should be:
+      | ordinal |
+      | 0º     |
+      | 1º     |
+      | 2º     |
+      | 3º     |
+      | 4º     |
+      | 5º     |
+      | 6º     |
+      | 7º     |
+      | 8º     |
+      | 9º     |
+      | 10º    |
+      | 1ª     |
+      | 1º     |
+      | 1º     |
+      | 1º     |
+      | 3ª     |
+      | 3º     |
+      | 2ª     |
+      | 23º    |
+      | 999º   |
+      | 11º    |
+      | 11ª    |
+      | 11º    |
+      | 21º    |
+      | 101º   |
+      | 1001ª  |
+      | 301º   |
+      | 21º    |
+      | 21º    |
+      | 1001º  |
 

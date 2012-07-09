@@ -278,7 +278,7 @@ module CSL
         if ordinal.nil?
           key = 'ordinal-%02d'
         else
-          return ordinal.to_s
+          return ordinal.to_s(options)
         end
       end
       
