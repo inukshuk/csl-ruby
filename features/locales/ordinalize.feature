@@ -183,28 +183,42 @@ Feature: Converting numbers to ordinals using CSL locales
       <?xml version="1.0" encoding="utf-8"?>
       <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="de">
         <terms>
-          <term name="ordinal-00">e</term>
+          <term name="ordinal-00">
+            <single>e</single>
+            <multiple>es</multiple>
+          </term>
+          
           <term name="ordinal-01">e</term>
-          <term name="ordinal-01" gender-form="feminine">re</term>
-          <term name="ordinal-01" gender-form="masculine">er</term>
+          <term name="ordinal-01" gender-form="feminine">
+            <single>re</single>
+            <multiple>res</multiple>
+          </term>
+          <term name="ordinal-01" gender-form="masculine">
+            <single>er</single>
+            <multiple>ers</multiple>
+          </term>
+          
         </terms>
       </locale>
       """
     When I ordinalize these numbers:
-      | num   | form  | gender    |
-      | 0     |       |           |
-      | 1     |       |           |
-      | 1     |       | feminine  |
-      | 1     |       | masculine |
-      | 1     |       | neutral   |
-      | 2     |       |           |
-      | 3     |       |           |
-      | 999   |       |           |
-      | 11    |       |           |
-      | 21    |       |           |
-      | 101   |       |           |
-      | 1001  |       |           |
-      | 301   |       |           |
+      | num   | form  | gender    | number   |
+      | 0     |       |           |          |
+      | 1     |       |           |          |
+      | 1     |       | feminine  |          |
+      | 1     |       | masculine |          |
+      | 1     |       | neutral   |          |
+      | 1     |       | feminine  | plural   |
+      | 1     |       | masculine | plural   |
+      | 2     |       |           |          |
+      | 3     |       |           |          |
+      | 3     |       |           | plural   |
+      | 999   |       |           |          |
+      | 11    |       |           |          |
+      | 21    |       |           |          |
+      | 101   |       |           |          |
+      | 1001  |       |           |          |
+      | 301   |       |           |          |
 #      | 21    |       | masculine |
 #      | 1001  |       | masculine |
     Then the ordinals should be:
@@ -214,8 +228,11 @@ Feature: Converting numbers to ordinals using CSL locales
       | 1re     |
       | 1er     |
       | 1e      |
+      | 1res    |
+      | 1ers    |
       | 2e      |
       | 3e      |
+      | 3es     |
       | 999e    |
       | 11e     |
       | 21e     |

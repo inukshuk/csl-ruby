@@ -309,7 +309,7 @@ module CSL
         ordinal = terms[query]
       end
       
-      [number, ordinal].join
+      [number, ordinal.to_s(options)].join
     end
     
     # Locales are sorted first by language, then by region; sort order is
