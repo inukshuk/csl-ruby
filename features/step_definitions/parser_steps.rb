@@ -1,6 +1,6 @@
 
-When /^I parse the CSL string$/ do |string|
-  @csl = CSL.parse string
+When /^I parse the CSL string(?: in the (\w+) scope)?$/ do |scope, string|
+  @csl = CSL.parse string, CSL.const_get(scope || 'Node')
 end
 
 Then /^(?:the )?(\w+[\?!]?) should be "([^"]*)"$/ do |name, expected|

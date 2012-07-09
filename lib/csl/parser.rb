@@ -36,21 +36,22 @@ module CSL
       nil
     end
     
-    def parse!(source)
-      parse_tree parser[source].children.detect { |child| !comment?(child) }
+    def parse!(source, scope = Node)
+      root = parser[source].children.detect { |child| !comment?(child) }
+      parse_tree root, scope
     end
 
     private
     
-    def parse_node(node)
+    def parse_node(node, scope = Node)
       attributes, text = parse_attributes(node), parse_text(node)
       
-      unless text
-        Node.create node.name, attributes
-      else
+      if text
         n = TextNode.create node.name, attributes
         n.text = text
         n
+      else
+        scope.create node.name, attributes
       end
     end
     
@@ -60,13 +61,13 @@ module CSL
       }.flatten]
     end
     
-    def parse_tree(node)
+    def parse_tree(node, scope = Node)
 			return nil if node.nil?
 			
-      root = parse_node node
+      root = parse_node node, scope
 
       node.children.each do |child|
-        root << parse_tree(child) unless comment?(child)
+        root << parse_tree(child, scope) unless comment?(child)
       end unless root.textnode?
       
       root

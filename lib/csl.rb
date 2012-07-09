@@ -43,12 +43,12 @@ module CSL
   
   module_function
   
-  def parse(source)
-    Parser.instance.parse(source)
+  def parse(*arguments)
+    Parser.instance.parse(*arguments)
   end
 
-  def parse!(source)
-    Parser.instance.parse!(source)
+  def parse!(*arguments)
+    Parser.instance.parse!(*arguments)
   end
   
 end

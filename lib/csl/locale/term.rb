@@ -142,7 +142,13 @@ module CSL
           super
         end
       end
-      
+
+      # @param options [Hash,nil] an optional configuration hash
+      #
+      # @option options [:singular,:plural] :number (:singular) whether to
+      #   return the term's singular or plural variant.
+      #
+      # @return [String] the term as a string
       def to_s(options = nil)
         if textnode?
           text

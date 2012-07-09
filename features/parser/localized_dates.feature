@@ -3,7 +3,7 @@ Feature: Parse CSL localized date elements
 	I want to be able to parse CSL localized date strings
 	
 	Scenario: A text date
-		When I parse the CSL string
+		When I parse the CSL string in the Locale scope
 			"""
 			<date form="text">
 		    <date-part name="month" suffix=" "/>
@@ -18,7 +18,7 @@ Feature: Parse CSL localized date elements
 		And the part number 1 should have the attribute "name" set to "month"
 
 	Scenario: A numeric date
-		When I parse the CSL string
+		When I parse the CSL string in the Locale scope
 			"""
 		  <date form="numeric">
 		    <date-part name="month" form="numeric-leading-zeros" suffix="/"/>
