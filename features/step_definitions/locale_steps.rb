@@ -16,8 +16,8 @@ end
 
 When /^I ordinalize these numbers:?$/ do |table|
   @ordinals = table.rows.map do |row|
-    num, form, gender = *row
-    @csl.ordinalize(num, :form => form, :gender => gender)
+    num, form, gender, number = *row
+    @csl.ordinalize(num, :form => form, :gender => gender, :number => number)
   end
 end
 

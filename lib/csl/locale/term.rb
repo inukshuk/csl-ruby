@@ -143,12 +143,34 @@ module CSL
         end
       end
       
-      def to_s
-        textnode? ? text : [singular, plural].compact.join('/')
+      def to_s(options = nil)
+        if textnode?
+          text
+        else
+          if pluralize?(options)
+            pluralize
+          else
+            singularize
+          end
+        end
       end
       
       class Single   < TextNode; end
       class Multiple < TextNode; end
+      
+      private
+      
+      def pluralize?(options)
+        return false if options.nil?
+        
+        key = options[:number] || options['number']
+        
+        if key.is_a?(Fixnum) || key.to_s =~ /^[+-]?\d+$/
+          key.to_i > 1
+        else
+          !key.blank? && key.to_s =~ /^plural/i
+        end
+      end
         
     end
        
