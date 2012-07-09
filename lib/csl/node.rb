@@ -92,7 +92,7 @@ module CSL
           end
           
           # def to_a
-          #   values_at(*keys)
+          #   keys.zip(values_at(*keys)).reject { |k,v| v.nil? }
           # end
           
           # @return [Boolean] true if all the attribute values are nil;

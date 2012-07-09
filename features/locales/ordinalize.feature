@@ -750,12 +750,12 @@ Feature: Converting numbers to ordinals using CSL locales
       | 21º    |
       | 1001º  |
 
-  @v1.0.1 @locale @ordinals @i18n @gender @lang:se
+  @v1.0.1 @locale @ordinals @i18n @gender @lang:sv
   Scenario: Gendered Swedish CSL 1.0.1 locales
     Given the locale:
       """
       <?xml version="1.0" encoding="utf-8"?>
-      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="se">
+      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="sv">
         <terms>
           <term name="ordinal-00">:e</term>
 

@@ -98,7 +98,7 @@ module CSL
       def match?(query)
         case
         when query.is_a?(Hash)
-          query.symbolize_keys.values_at(*attributes.keys) == attributes.to_a
+          query.symbolize_keys.values_at(*attributes.keys) == attributes.values_at(*attributes.keys)
         when query.is_a?(Regexp)
           query =~ name
         when query.respond_to?(:to_s)

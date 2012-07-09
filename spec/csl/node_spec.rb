@@ -43,6 +43,28 @@ module CSL
   		  end
       end
       
+      describe '#to_a' do
+        it 'returns an empty list by default' do
+          Node.new.attributes.to_a.should == []
+        end
+
+        it 'TestNode returns an empty list by default' do
+          TestNode.new.attributes.to_a.should == []
+        end
+        
+        # it 'TestNode returns a list of all key/value pairs' do
+        #   TestNode.new(:foo => 'Foo', :bar => 'Bar').attributes.to_a.map(&:last).sort.should == %w{ Bar Foo }
+        # end
+
+        # it 'FooBarNode returns an empty list by default' do
+        #   FooBarNode.new.attributes.to_a.should == []
+        # end
+  		  
+        # it 'FooBarNode returns a list of all key/value pairs' do
+        #   FooBarNode.new(:foo => 'Foo', :bar => 'Bar').attributes.to_a.map(&:last).sort.should == %w{ Bar Foo }
+        # end
+      end
+      
       describe 'attributes.keys' do
         it 'returns all attribute names as symbols' do
           TestNode.new.attributes.keys.should be_empty
