@@ -147,6 +147,9 @@ module CSL
       #
       # @option options [:singular,:plural] :number (:singular) whether to
       #   return the term's singular or plural variant.
+      # @option options [Boolean] :plural (false) whether or not to return
+      #   the term's plural variant (this option, if set, takes precedence
+      #   over :number).
       #
       # @return [String] the term as a string
       def to_s(options = nil)
@@ -169,12 +172,19 @@ module CSL
       def pluralize?(options)
         return false if options.nil?
         
-        key = options[:number] || options['number']
+        case
+        when options.key?(:plural) || options.key?('plural')
+          options[:plural] || options['plural']
+        when options.key?(:number) || options.key?('number')
+          key = options[:number] || options['number']
         
-        if key.is_a?(Fixnum) || key.to_s =~ /^[+-]?\d+$/
-          key.to_i > 1
+          if key.is_a?(Fixnum) || key.to_s =~ /^[+-]?\d+$/
+            key.to_i > 1
+          else
+            !key.blank? && key.to_s =~ /^plural/i
+          end
         else
-          !key.blank? && key.to_s =~ /^plural/i
+          false
         end
       end
         

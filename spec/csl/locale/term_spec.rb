@@ -84,6 +84,45 @@ module CSL
       end
     end
     
+    describe '#to_s' do
+      it 'returns an empty string by default' do
+        Locale::Term.new.to_s.should == ''
+      end
+      
+      describe 'given a simple term' do
+        let(:node) { Locale::Term.new { |t| t.text = 'foo' } }
+        
+        it "returns the term's text" do
+          node.to_s.should == node.text
+        end
+      end
+
+      describe 'given a compound term' do
+        let(:node) { Locale::Term.new { |t| t.single = 'shoe'; t.multiple = 'shoes' } }
+
+        it "returns the term's singular form by default" do
+          node.to_s.should == node.singularize
+        end
+        
+        it "returns the term's plural form when passed :number => :plural" do
+          node.to_s(:number => :plural).should == node.pluralize
+        end
+
+        it "returns the term's plural form when passed :number => 2" do
+          node.to_s(:number => 2).should == node.pluralize
+        end
+
+        it "returns the term's singular form when passed :number => 1" do
+          node.to_s(:number => 1).should == node.singularize
+        end
+
+        it "returns the term's plural form when passed :plural => true" do
+          node.to_s(:plural => true).should == node.pluralize
+        end
+
+      end
+    end
+    
 		describe '#to_xml' do
 			it 'returns <term/> by default' do
 				subject.to_xml.should == '<term/>'
