@@ -10,4 +10,8 @@ rvm:
   - 1.8.7
   - ree
 notifications:
-  email: false
+  email:
+    recipients:
+      - i@nukshuk.io
+    on_success: change
+    on_failure: always

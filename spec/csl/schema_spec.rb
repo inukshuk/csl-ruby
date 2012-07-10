@@ -3,6 +3,10 @@ require 'spec_helper'
 module CSL
   describe 'Schema' do
   
+    it 'cannot be instantiated' do
+      Schema.should_not respond_to(:new)
+    end
+    
     describe '.version' do
       it 'returns a version string' do
         Schema.version.should match(/^\d+\.\d+\.\d+/)
@@ -54,10 +58,8 @@ module CSL
     
     describe '.categories' do
       it 'given a field name returns the corresponding type' do
-        Schema.categories[:author].should == :names
-        Schema.categories[:issued].should == :date
-        Schema.categories[:abstract].should == :text
-        Schema.categories[:issue].should == :number
+        Schema.categories.values_at(:author, :issued, :abstract, :issue).should ==
+          [:names, :date, :text, :number]
       end
       
       it 'accepts either string or symbol input' do

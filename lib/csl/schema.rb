@@ -104,6 +104,7 @@ module CSL
       
     end
     
+    private :initialize
   end
   
 end
