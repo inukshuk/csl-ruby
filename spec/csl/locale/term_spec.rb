@@ -78,7 +78,7 @@ module CSL
       end
       
       describe 'attributes#to_a' do
-        it 'returns an array of all attribute values' do
+        it 'returns an array of all attribute values of underlying struct' do
           f.attributes.to_a.should == ['edition', nil, 'feminine', nil]
         end
       end
