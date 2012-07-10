@@ -72,11 +72,11 @@ module CSL
 
           # 1.8 Compatibility
           @keys = attributes.map(&:to_sym).freeze
-          
+
           class << self
             attr_reader :keys
           end
-                    
+
           def initialize(attrs = {})
             super(*attrs.symbolize_keys.values_at(*keys))
           end

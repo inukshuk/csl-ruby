@@ -76,6 +76,12 @@ module CSL
           f.matches?(:name => 'edition', :gender => 'feminine').should be_true
         end
       end
+      
+      describe 'attributes#to_a' do
+        it 'returns an array of all attribute values' do
+          f.attributes.to_a.should == ['edition', nil, 'feminine', nil]
+        end
+      end
     end
     
 		describe '#to_xml' do
