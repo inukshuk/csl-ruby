@@ -51,4 +51,12 @@ module CSL
     Parser.instance.parse!(*arguments)
   end
   
+  def validate(node)
+    Schema.validate(node)
+  end
+
+  def valid?(node)
+    Schema.valid?(node)
+  end
+
 end

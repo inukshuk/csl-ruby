@@ -2,7 +2,8 @@ module CSL
   class Style
     
     class Number < Node
-      attr_struct :form, *Schema.attr(:affixes, :display, :font, :textcase)
+      attr_struct :variable, :form, :'text-case',
+        *Schema.attr(:affixes, :display, :font)
       
 
       # @return [Boolean] whether or not the number's format is set to

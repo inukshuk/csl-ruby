@@ -3,7 +3,7 @@ module CSL
     
     class Names < Node
       
-      attr_struct :variable, *Schema.attr(:names)      
+      attr_struct :variable, *Schema.attr(:names, :delimiter, :affixes, :display, :font)      
       
       attr_children :name, :'et-al', :label, :substitute
       
@@ -38,7 +38,7 @@ module CSL
 
     class NamePart < Node
       has_no_children
-      attr_struct :name, *Schema.attr(:textcase, :affixes, :font)
+      attr_struct :name, :'text-case', *Schema.attr(:affixes, :font)
     end
     
     class EtAl < Node

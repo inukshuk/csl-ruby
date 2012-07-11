@@ -92,9 +92,11 @@ module CSL
       it 'accepts hash and yields itself to the optional block' do
         TextNode.new(:foo => 'bar') { |n| n.text = 'foo' }.to_xml.should == '<text-node foo="bar">foo</text-node>'
       end
-      
     end
     
+    describe '#pretty_print' do
+      TextNode.new(:foo => 'bar') { |n| n.text = 'foo' }.pretty_print.should == '<text-node foo="bar">foo</text-node>'
+    end
   end
   
 end

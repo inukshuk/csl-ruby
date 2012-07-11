@@ -47,13 +47,9 @@ module CSL
       def create(name, attributes = {}, &block)
         klass = constantize(name)
 
-        if klass.nil?
-          node = Node.new(attributes, &block)
-          node.nodename = name
-          node
-        else
-          klass.new(attributes, &block)
-        end
+        node = (klass || Node).new(attributes, &block)        
+        node.nodename = name
+        node
       end
       
       def create_attributes(attributes)
@@ -93,7 +89,7 @@ module CSL
           # @return [<Symbol>] a list of symbols representing the names/keys
           #   of the attribute variables.
           def keys
-            self.class.keys
+            __class__.keys
           end
 
           def values
@@ -111,7 +107,7 @@ module CSL
           end
           
           def fetch(key, default = nil)
-            value = keys.include?(key.to_sym) && send(key)
+            value = keys.include?(key.to_sym) && send(:'[]', key)
             
             if block_given? 
               value || yield(key)
@@ -129,8 +125,8 @@ module CSL
               other.respond_to?(:each_pair)
 
             other.each_pair do |part, value|
-              writer = "#{part}="
-              send(writer, value) if !value.nil? && respond_to?(writer)
+              part = part.to_sym
+              send(:'[]=', part, value) if !value.nil? && keys.include?(part)
             end
 
             self
@@ -196,6 +192,14 @@ module CSL
     end
     alias has_text? textnode?
 
+    def save_to(path, options = {})
+      File.open(path, 'w:UTF-8') do |f|
+        f << (options[:compact] ? to_xml : pretty_print)
+      end
+      
+      self
+    end
+    
     def <=>(other)
       [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
     rescue
@@ -209,9 +213,9 @@ module CSL
         tags = []
         tags << "<#{[nodename, *attribute_assignments].join(' ')}>"
         
-        tags << children.map do |node|
+        tags << children.map { |node|
           node.respond_to?(:tags) ? node.tags : [node.to_s]
-        end
+        }.flatten(1)
         
         tags << "</#{nodename}>"
         tags
@@ -249,13 +253,9 @@ module CSL
       def create(name, attributes = {}, &block)
         klass = constantize(name)
 
-        if klass.nil?
-          node = TextNode.new(attributes, &block)
-          node.nodename = name
-          node
-        else
-          klass.new(attributes, &block)
-        end
+        node = (klass || TextNode).new(attributes, &block)
+        node.nodename = name
+        node
       end
     end
 
@@ -291,11 +291,7 @@ module CSL
     end
     
     def tags
-      tags = []
-      tags << "<#{attribute_assignments.unshift(nodename).join(' ')}>"
-      tags << text
-      tags << "</#{nodename}>"
-      tags
+      ["<#{attribute_assignments.unshift(nodename).join(' ')}>#{text}</#{nodename}>"]
     end
     
     def inspect

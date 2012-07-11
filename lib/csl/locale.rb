@@ -48,6 +48,7 @@ module CSL
     end
     
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
+    attr_struct :xmlns, :version
 
     attr_children :'style-options', :info, :date, :terms
     
@@ -312,6 +313,14 @@ module CSL
       [number, ordinal.to_s(options)].join
     end
     
+    def validate
+      Schema.validate self
+    end
+    
+    def valid?
+      validate.empty?
+    end
+
     # Locales are sorted first by language, then by region; sort order is
     # alphabetical with the following exceptions: the default locale is
     # prioritised; in case of a language match the default region of that
@@ -357,9 +366,17 @@ module CSL
     private
     
     def attribute_assignments
-      super.push('xml:lang="%s"' % to_s)
+      if root?
+        super.push('xml:lang="%s"' % to_s)
+      else
+        'xml:lang="%s"' % to_s
+      end
     end
     
+    def preamble
+      Schema.preamble.dup
+    end 
+
     # @return [Hash] a valid ordinalize query; the name attribute is a format string
     def ordinalize_query_for(options)
       q = { :name => 'ordinal-%02d' }

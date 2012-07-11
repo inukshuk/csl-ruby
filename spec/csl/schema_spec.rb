@@ -89,6 +89,10 @@ module CSL
         Schema.validate(File.join(Style.root, 'apa.csl')).should == []
       end
 
+      it 'accepts and validates the xml contents of a style instance' do
+        Schema.validate(Style.load(:apa).pretty_print).should == []
+      end
+
       it 'accepts and validates a style instance' do
         Schema.validate(Style.load(:apa)).should == []
       end

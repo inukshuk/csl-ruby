@@ -22,17 +22,16 @@ module CSL
         
         node
       end
-      
     end
     
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
     
-    attr_struct :xmlns, :version, :'style-class', :'default-locale',
+    attr_struct :xmlns, :version, :class, :'default-locale',
       :'initialize-with-hyphen', :'page-range-format',
       :'demote-non-dropping-particle', *Schema.attr(:name, :names)
     
-    attr_children :'style-options', :info, :locale, :macro, :citation,
-      :bibliography
+    attr_children :'style-options', :info, :locale, :macro,
+      :citation, :bibliography
     
     alias metadata info
     alias options  style_options
@@ -46,8 +45,20 @@ module CSL
       
       yield self if block_given?
     end
+
+    def validate
+      Schema.validate self
+    end
     
+    def valid?
+      validate.empty?
+    end
     
+    private
+    
+    def preamble
+      Schema.preamble.dup
+    end 
   end
     
 end

@@ -2,9 +2,9 @@ module CSL
   
   class Info < Node
 
-    attr_children :author, :category, :contributor, :id, :issn, :eissn,
-      :issnl, :link, :published, :rights, :summary, :title, :'title-short',
-      :updated, :'link-dependent-style'
+    attr_children :title, :'title-short', :id, :issn, :eissn, :issnl,
+      :link, :author, :contributor, :category, :published, :summary,
+      :updated, :rights, :'link-dependent-style'
     
     alias contributors contributor
     
@@ -21,7 +21,7 @@ module CSL
       attr_children :name, :email, :uri
     end
     
-    class Link < TextNode
+    class Link < Node
       attr_struct :href, :rel
     end
 
@@ -30,9 +30,12 @@ module CSL
     end
 
 
-    class Category < TextNode
+    class Category < Node
       attr_struct :field, :'citation-format'
     end    
+
+    class Id < TextNode
+    end
     
     class Name < TextNode
     end
@@ -41,6 +44,12 @@ module CSL
     end
 
     class Title < TextNode
+    end
+
+    class ShortTitle < TextNode
+    end
+
+    class Summary < TextNode
     end
     
     class Rights < TextNode

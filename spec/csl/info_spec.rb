@@ -45,9 +45,28 @@ module CSL
       it 'prints the category if present' do
         Info.new { |i| i.category = 'author' }.to_xml.should == '<info><category>author</category></info>'
       end
-      
     end
     
+    describe '#pretty_print' do
+      it 'returns an empty info element by default' do
+        subject.pretty_print.should == '<info/>'
+      end
+
+      it 'prints the id indented if present' do
+        Info.new { |i| i.set_child_id 'apa' }.pretty_print.should == "<info>\n  <id>apa</id>\n</info>"
+      end
+    end
+    
+    describe '#tags' do
+      it 'returns a list with an empty info element by default' do
+        subject.tags.should == ['<info/>']
+      end
+      
+      it 'returns a nested list if id is present' do
+        Info.new { |i| i.set_child_id 'apa' }.tags.should == ['<info>', ['<id>apa</id>'], '</info>']
+      end
+      
+    end
   end
   
   describe Info::Author do

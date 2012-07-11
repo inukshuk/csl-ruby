@@ -17,3 +17,7 @@ class Module
     end
   end
 end
+
+class Struct
+  alias_method :__class__, :class
+end unless Struct.instance_methods.include?(:__class__)

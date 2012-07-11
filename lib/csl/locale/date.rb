@@ -4,7 +4,7 @@ module CSL
     # A localized Date comprises a set of formatting rules for dates.
 		class Date < Node
 		  
-		  attr_struct :form, *Schema.attr(:font, :delimiter, :textcase)
+		  attr_struct :form, :'text-case', *Schema.attr(:font, :delimiter)
 		  attr_children :'date-part'
 		  
 		  alias parts  date_part
@@ -32,8 +32,8 @@ module CSL
 		class DatePart < Node
       has_no_children    
       
-      attr_struct :name, :form, :'range-delimiter',
-        *Schema.attr(:affixes, :textcase, :font, :periods)
+      attr_struct :name, :form, :'range-delimiter', :'text-case',
+        *Schema.attr(:affixes, :font, :periods)
 
       %w{ day month year }.each do |part|
         define_method("#{part}?") do

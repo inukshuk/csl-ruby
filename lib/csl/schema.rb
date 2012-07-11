@@ -4,7 +4,7 @@ module CSL
     
     @version   = '1.0.1'.freeze
     @namespace = 'http://purl.org/net/xbiblio/csl'.freeze
-    @preamble  = '<?xml version="1.0" encoding="utf-8"?>'.freeze
+    @preamble  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n".freeze
     
     @types = %w{ article article-journal article-magazine article-newspaper
       bill book broadcast chapter entry entry-dictionary entry-encyclopedia
@@ -74,13 +74,11 @@ module CSL
       :periods => %w{
         strip-periods
       },
-      :textcase => %w{
-        lowercase uppercase capitalize-first capitalize-all title sentence
-      },
       :name => %w{
         name-form name-delimiter and delimiter-precedes-et-al initialize-with
-        delimiter-precedes-last et-al-min etal-use-first et-al-subsequent-min
-        et-al-subsequent-use-first et-al-use-last 
+        delimiter-precedes-last et-al-min et-al-use-first et-al-subsequent-min
+        et-al-subsequent-use-first et-al-use-last name-as-sort-order
+        sort-separator initialize
       },
       :names => %w{
         names-delimiter
