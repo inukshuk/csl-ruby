@@ -34,6 +34,24 @@ module CSL
       attr_struct :field, :'citation-format'
     end    
     
+    class Name < TextNode
+    end
+    
+    class Email < TextNode
+    end
+
+    class Title < TextNode
+    end
+    
+    class Rights < TextNode
+    end
+
+    class Uri < TextNode
+    end
+
+    class Updated < TextNode
+    end
+
   end
     
   

@@ -9,7 +9,10 @@ module CSL
     end    
   end
   
-	class ParseError < Error; end
-	class ValidationError < Error; end
+	class ParseError < Error
+	end
+
+	class ValidationError < Error
+	end
 
 end

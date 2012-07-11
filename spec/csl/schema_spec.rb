@@ -68,5 +68,32 @@ module CSL
       end
     end
     
+    describe '.validate' do
+      it 'accepts and validates a locale instance' do
+        Schema.validate(Locale.load('en-US')).should == []
+      end
+      
+      it 'accepts and validates a locale file path' do
+        Schema.validate(File.join(Locale.root, 'locales-en-US.xml')).should == []
+      end
+
+      it 'accepts and validates a locale file' do
+        Schema.validate(File.open(File.join(Locale.root, 'locales-en-US.xml'))).should == []
+      end
+
+      it 'accepts and validates a locale wildcard path' do
+        Schema.validate(File.join(Locale.root, 'locales-en-*.xml')).should == []
+      end
+
+      it 'accepts and validates a style file path' do
+        Schema.validate(File.join(Style.root, 'apa.csl')).should == []
+      end
+
+      it 'accepts and validates a style instance' do
+        Schema.validate(Style.load(:apa)).should == []
+      end
+      
+    end
+    
   end
 end

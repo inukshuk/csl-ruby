@@ -37,7 +37,7 @@ module CSL
       attr_reader :languages, :regions
 
       def parse(data)
-        node = CSL.parse!(data)
+        node = CSL.parse!(data, self)
         
         raise ParseError, "root node is not a locale: #{node.inspect}" unless
           node.is_a?(self)

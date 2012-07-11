@@ -25,9 +25,9 @@ module CSL
       when input.to_s =~ /^\s*</
         data = input
       else
-
+                
 				case
-				when File.exists?(input)
+				when File.exists?(input.to_s)
 					location = input
 				when File.exists?(extend_name(input))
 					location = extend_name(input)
@@ -56,7 +56,7 @@ module CSL
     # Extends the passed-in string to a style/locale name, by prefixing and
     # appending the default name prefix and extension.
     def extend_name(string)
-      if File.extname(string).empty?
+      if File.extname(string.to_s).empty?
         name = [string, extension].compact.join
       else
         name = string.to_s.dup

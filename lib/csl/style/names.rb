@@ -30,7 +30,7 @@ module CSL
       def initialize(attributes = {})
         super(attributes)
         children[:'name-part'] = []
-        
+
         yield self if block_given?
       end
       

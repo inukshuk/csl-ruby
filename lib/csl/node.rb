@@ -29,21 +29,30 @@ module CSL
       end
       
       def constantize(name)
-        types.detect do |t|
-          t.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase == name
+        klass = types.detect { |t| t.matches?(name) }
+        
+        if klass || !superclass.respond_to?(:constantize)
+          klass
+        else
+          superclass.constantize(name)
         end
+      end
+
+      # @return [Boolean] whether or not the node's name matches the passed-in name
+      def matches?(nodename)
+        name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase == nodename
       end
       
       # Returns a new node with the passed in name and attributes.
       def create(name, attributes = {}, &block)
         klass = constantize(name)
 
-        unless klass.nil?
-          klass.new(attributes, &block)
-        else
-          node = new(attributes, &block)
+        if klass.nil?
+          node = Node.new(attributes, &block)
           node.nodename = name
           node
+        else
+          klass.new(attributes, &block)
         end
       end
       
@@ -235,8 +244,21 @@ module CSL
 
     class << self
       undef_method :attr_children
+      
+      # @override
+      def create(name, attributes = {}, &block)
+        klass = constantize(name)
+
+        if klass.nil?
+          node = TextNode.new(attributes, &block)
+          node.nodename = name
+          node
+        else
+          klass.new(attributes, &block)
+        end
+      end
     end
-    
+
     attr_accessor :text
     alias to_s text
 

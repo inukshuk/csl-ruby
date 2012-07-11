@@ -90,6 +90,25 @@ module CSL
     @attributes.each_value { |v| v.map!(&:to_sym).freeze }
     @attributes.freeze
     
+    @file = File.expand_path('../../../vendor/schema/csl.rng', __FILE__)
+    
+    @validators = {
+      :nokogiri => lambda { |schema, style|
+        schema.validate(Nokogiri::XML(style)).map { |e| [e.line, e.message] }
+      },
+      
+      :default => lambda { |schema, style|
+        raise ValidationError, "please `gem install nokogiri' for validation support"
+      }
+    }
+    
+    begin
+      require 'nokogiri'
+      @validator = @validators[:nokogiri]
+      @schema = Nokogiri::XML::RelaxNG(File.open(@file))
+    rescue LoadError
+      @validator = @validators[:default]
+    end
     
     class << self
       
@@ -102,9 +121,78 @@ module CSL
         attributes.values_at(*arguments).flatten(1)
       end
       
+      # Validates the passed-in style or list of styles. The style argument(s)
+      # can either be a {Style} object, a style's file handle, XML content
+      # or a valid location (wildcards are supported). The method returns
+      # a list of validation errors; the passed-in style is valid if the
+      # method returns an empty list.
+      #
+      # @example
+      #   CSL::Schema.validate(CSL::Style.load(:apa))
+      #
+      #   CSL::Schema.validate('my-styles/style.csl')
+      #   CSL::Schema.validate('my-styles/*.csl')
+      #   CSL::Schema.validate('http://www.example.org/style.csl')
+      #
+      # @param style [Node,String,IO,Array] the style (or a list of styles)
+      #   to validate.
+      #
+      # @raise [ArgumentError] if the passed-in argument is not a Style or
+      #   a valid style location.
+      # @raise [ValidationError] if the validation process fails
+      #
+      # @return [<<Fixnum,String>>] a list of validation errors
+      def validate(node)
+        case
+        when node.is_a?(Node)
+          validator[schema, node.to_xml]
+        when node.respond_to?(:read)
+          validator[schema, node.read]
+        when node.is_a?(Enumerable) && !node.is_a?(String)
+          node.map { |n| validate(n) }.flatten(1)
+        when node.respond_to?(:to_s)
+          node = node.to_s
+
+          case
+          when node =~ /^\s*</
+            validator[schema, node]
+          when File.exists?(node)
+            validator[schema, File.open(node, 'r:UTF-8')]
+          else
+            glob = Dir.glob(node)
+            
+            if glob.empty?
+              validator[schema, Kernel.open(node)]            
+            else
+              glob.map { |n| validator[schema, File.open(n, 'r:UTF-8')] }.flatten(1)
+            end
+          end
+        else
+          raise ArgumentError, "failed to validate #{node.inspect}: not a CSL node"
+        end
+      end
+      
+      # Whether or not the passed-in style (or list of styles) is valid.
+      #
+      # @see validate
+      #
+      # @param style [Style,String,IO,Array] the style (or a list of styles)
+      #   to validate.
+      #
+      # @raise [ArgumentError] if the passed-in argument is not a Style or
+      #   a valid style location.
+      # @raise [ValidationError] if the validation process fails
+      #
+      # @return [Boolean] whether or not the passed-in style (or styles)
+      #   is valid.
+      def valid?(style)
+        validate(style).empty?
+      end
+      
+      private
+      
+      attr_reader :validators, :validator, :schema
     end
     
-    private :initialize
-  end
-  
+  end  
 end

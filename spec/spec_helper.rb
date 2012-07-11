@@ -5,10 +5,10 @@ rescue LoadError
   # ignore
 end
 
-require 'csl'
-
 require 'rexml/document'
 require 'nokogiri'
+
+require 'csl'
 
 module SilentWarnings
   require 'stringio'

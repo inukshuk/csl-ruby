@@ -65,7 +65,8 @@ module CSL
 			return nil if node.nil?
 			
       root = parse_node node, scope
-
+      scope = specialize_scope(root, scope)
+      
       node.children.each do |child|
         root << parse_tree(child, scope) unless comment?(child)
       end unless root.textnode?
@@ -86,7 +87,19 @@ module CSL
 			node.respond_to?(:comment?) && node.comment? ||
 				node.respond_to?(:node_type) && [:comment, :xmldecl].include?(node.node_type)
 		end
-		
+
+		def specialize_scope(root, scope = Node)
+		  case root
+		  when Style
+		    Style
+		  when Locale
+		    Locale
+		  when Info
+		    Info
+		  else
+		    scope
+		  end
+		end
   end
   
 end
