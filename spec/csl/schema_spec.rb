@@ -97,7 +97,8 @@ module CSL
         Schema.validate(Style.load(:apa)).should == []
       end
       
-    end
+    # TODO fix nokogiri/jing validation
+    end unless RUBY_PLATFORM =~ /java/i
     
   end
 end

@@ -84,33 +84,7 @@ module CSL
         children.multiple.to_s
       end      
 
-      alias plural pluralize
-
-      # Tests whether or not the Term matches the passed-in query. Tests
-      # vary slightly depending on the the query's type: if a String or
-      # Regexp is passed-in, the return value will be true if the Term's
-      # name matches the query (disregarding all other attributes); if the
-      # query is a Hash, however, the return value will only be true if
-      # all passed-in attributes
-      #
-      # @param query [Hash,Regexp,#to_s] the query
-      # @raise [ArgumentError] if the term cannot be matched using query
-      #
-      # @return [Boolean] whether or not the query matches the term
-      # def match?(query)
-      #   case
-      #   when query.is_a?(Hash)
-      #     query.symbolize_keys.values_at(*attributes.keys) == attributes.values_at(*attributes.keys)
-      #   when query.is_a?(Regexp)
-      #     query =~ name
-      #   when query.respond_to?(:to_s)
-      #     query.to_s == name
-      #   else
-      #     raise ArgumentError, "cannot match term to query: #{query.inspect}"
-      #   end
-      # end
-      # alias matches? match?
-      
+      alias plural pluralize      
       
       # @!method masculine?
       # @return [Boolean] whether or not the term is masculine

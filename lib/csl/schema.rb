@@ -101,9 +101,14 @@ module CSL
     }
     
     begin
-      require 'nokogiri'
-      @validator = @validators[:nokogiri]
-      @schema = Nokogiri::XML::RelaxNG(File.open(@file))
+      # TODO enable java validator when nokogiri issue is fixed
+      if RUBY_PLATFORM =~ /java/i
+        @validator = @validators[:default]
+      else
+        require 'nokogiri'
+        @validator = @validators[:nokogiri]
+        @schema = Nokogiri::XML::RelaxNG(File.open(@file, 'r:UTF-8'))
+      end
     rescue LoadError
       @validator = @validators[:default]
     end

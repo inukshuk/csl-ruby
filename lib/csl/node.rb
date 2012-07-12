@@ -201,6 +201,29 @@ module CSL
       self
     end
 
+    # Tests whether or not the Name matches the passed-in node name and
+    # attribute conditions; if a Hash is passed as a single argument,
+    # it is taken as the conditions parameter (the name parameter is
+    # automatically matches in this case).
+    #
+    # Whether or not the arguments match the node is determined as
+    # follows:
+    #
+    # 1. The name must match {#nodename}
+    # 2. All attribute name/value pairs passed as conditions must match
+    #    the corresponding attributes of the node
+    #
+    # Note that only attributes present in the passed-in conditions
+    # influence the match – if you want to match only nodes that contain
+    # no other attributes than specified by the conditions, {#exact_match?}
+    # should be used instead.
+    #
+    # @see #exact_match?
+    #
+    # @param name [String,Regexp] must match the nodename
+    # @param conditions [Hash] the conditions
+    #
+    # @return [Boolean] whether or not the query matches the node
     def match?(name = nodename, conditions = {})
       name, conditions = match_conditions_for(name, conditions)
       
@@ -214,6 +237,27 @@ module CSL
     end
     alias matches? match?
 
+    # Tests whether or not the Name matches the passed-in node name and
+    # attribute conditions exactly; if a Hash is passed as a single argument,
+    # it is taken as the conditions parameter (the name parameter is
+    # automatically matches in this case).
+    #
+    # Whether or not the arguments match the node is determined as
+    # follows:
+    #
+    # 1. The name must match {#nodename}
+    # 2. All attribute name/value pairs of the node must match the
+    #    corresponding pairs in the passed-in Hash
+    #
+    # Note that all node attributes are used by this method – if you want
+    # to match only a subset of attributes {#match?} should be used instead.
+    #
+    # @see #match?
+    #
+    # @param name [String,Regexp] must match the nodename
+    # @param conditions [Hash] the conditions
+    #
+    # @return [Boolean] whether or not the query matches the node exactly
     def exact_match?(name = nodename, conditions = {})
       name, conditions = match_conditions_for(name, conditions)
       
