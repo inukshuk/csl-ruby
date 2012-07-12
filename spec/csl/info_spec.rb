@@ -32,6 +32,17 @@ module CSL
     describe '#self_link' do
       it { should_not have_self_link }
       
+      it 'returns nil by default' do
+        Info.new.self_link.should be_nil
+      end
+
+      it 'returns nil if there are links but no self link' do
+        Info.new {|i| i.link = {:href => 'foo', :rel => 'documentation'} }.self_link.should be_nil
+      end
+      
+      it 'returns the href value of the link if it is set' do
+        Info.new {|i| i.link = {:href => 'foo', :rel => 'self'} }.self_link.should == 'foo'
+      end
     end
     
     describe '#to_xml' do
