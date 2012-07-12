@@ -12,18 +12,18 @@ module CSL
     
     def initialize(attributes = {})
       super(attributes, &nil)
-      children[:link], children[:author], children[:contributor] = [], [], []
+      children[:link] = []
 
       yield self if block_given?
     end
     
-    # @!method self_link
+    # @!attribute self_link
     # @return [String,nil] the style's URI
 
-    # @!method template_link
+    # @!attribute template_link
     # @return [String,nil] URI of the style from which the current style is derived
     
-    # @!method documentation_link
+    # @!attribute documentation_link
     # @return [String,nil] URI of style documentation
     [:self, :template, :documentation].each do |type|
       method_id = "#{type}_link"
@@ -34,6 +34,17 @@ module CSL
       end
       
       alias_method "has_#{method_id}?", method_id
+      
+      define_method "#{method_id}=" do |value|
+        link = links.detect { |l| l.match? :rel => type.to_s }
+        
+        if link.nil?
+          set_child_link :href => value.to_s, :rel => type.to_s
+        else
+          link[:href] = value.to_s
+          link
+        end
+      end
     end
     
     class Contributor < Node

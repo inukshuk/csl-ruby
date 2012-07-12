@@ -4,6 +4,7 @@ module CSL
   # translations, and a number ordinalizer.
   #
   class Locale < Node
+    types << CSL::Info
     
     include Comparable
     
@@ -30,7 +31,6 @@ module CSL
     
     
     class << self
-      
       include Loader
       
       attr_accessor :default
@@ -43,8 +43,7 @@ module CSL
           node.is_a?(self)
         
         node
-      end
-      
+      end      
     end
     
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
@@ -93,7 +92,7 @@ module CSL
         raise ArgumentError, "wrong number of arguments (#{arguments.length} for 0..2)"
       end
         
-      super(attributes)
+      super(attributes, &nil)
       
       set(locale) unless locale.nil?
       

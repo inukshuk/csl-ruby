@@ -1,6 +1,7 @@
 module CSL
   
   class Style < Node
+    types << CSL::Info << CSL::Locale
     
     @default = :apa
 
@@ -21,7 +22,7 @@ module CSL
           node.is_a?(self)
         
         node
-      end
+      end      
     end
     
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
@@ -37,11 +38,12 @@ module CSL
     alias options  style_options
     alias locales  locale
     
-    def initialize(attributes = {})
-      super(attributes, &nil)
+    def_delegators :info, :self_link, :has_self_link?, :template_link,
+      :has_template_link?, :documentation_link, :has_documentation_link?
       
-      children[:locale] = []
-      children[:macro]  = []
+    def initialize(attributes = {})
+      super(attributes, &nil)      
+      children[:locale], children[:macro] = [], []
       
       yield self if block_given?
     end
@@ -54,11 +56,15 @@ module CSL
       validate.empty?
     end
     
+    def info
+      children[:info] ||= Info.new
+    end
+    
     private
     
     def preamble
       Schema.preamble.dup
     end 
   end
-    
+ 
 end

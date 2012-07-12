@@ -263,13 +263,12 @@ module CSL
       end
       
 			def constantize_nodename(name)
+			  return constantize(name) if respond_to?(:constantize)
+			  
         klass = name.to_s.capitalize.gsub(/(\w)-(\w)/) { [$1, $2.upcase].join }
-				
-				case
-				when respond_to?(:constantize)
-					constantize(klass)
-				when const_defined?(klass)
-					const_get(klass)
+        
+				if const_defined?(klass)
+				  const_get(klass)	
 				else
 					nil
 				end

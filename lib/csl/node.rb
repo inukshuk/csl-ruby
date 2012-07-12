@@ -29,18 +29,23 @@ module CSL
       end
       
       def constantize(name)
-        klass = types.detect { |t| t.matches?(name) }
+        pattern = /#{name.to_s.tr('-', '')}$/i
+        klass = types.detect { |t| t.matches?(pattern) }
         
-        if klass || !superclass.respond_to?(:constantize)
+        case
+        when !klass.nil?
           klass
+        when nesting[-2].respond_to?(:constantize)
+          nesting[-2].constantize(name)
         else
-          superclass.constantize(name)
+          nil
         end
       end
 
-      # @return [Boolean] whether or not the node's name matches the passed-in name
-      def match?(nodename)
-        name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase == nodename
+      # @return [Boolean] whether or not the node's name matches the
+      #   passed-in name pattern
+      def match?(name_pattern)
+        name_pattern === name
       end
       alias matches? match?
       

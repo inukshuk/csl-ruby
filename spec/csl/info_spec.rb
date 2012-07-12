@@ -7,6 +7,8 @@ module CSL
     it { should_not be_nil }
     it { should_not have_children }
     
+    let(:info) { Info.new }
+    
     describe '#nodename' do
       it 'returns "info"' do
         subject.nodename.should == 'info'
@@ -29,20 +31,33 @@ module CSL
       end
     end
 
-    describe '#self_link' do
+    describe 'link accessors' do
       it { should_not have_self_link }
+      it { should_not have_documentation_link }
+      it { should_not have_template_link }
       
-      it 'returns nil by default' do
+      it 'self_link is nil by default' do
         Info.new.self_link.should be_nil
       end
 
-      it 'returns nil if there are links but no self link' do
+      it 'returns nil if no suitable link is set' do
         Info.new {|i| i.link = {:href => 'foo', :rel => 'documentation'} }.self_link.should be_nil
       end
       
       it 'returns the href value of the link if it is set' do
         Info.new {|i| i.link = {:href => 'foo', :rel => 'self'} }.self_link.should == 'foo'
       end
+      
+      it 'setter changes the value of existing link' do
+        info = Info.new {|i| i.link = {:href => 'foo', :rel => 'self'} }
+        expect { info.self_link = 'bar' }.to change { info.self_link }.from('foo').to('bar')
+      end
+
+      it 'setter creates new link node if link did not exist' do
+        expect { info.self_link = 'bar' }.to change { info.has_self_link? }
+        info.links[0].should be_a(Info::Link)
+      end
+      
     end
     
     describe '#to_xml' do
@@ -55,7 +70,7 @@ module CSL
       end
 
       it 'prints the category if present' do
-        Info.new { |i| i.category = 'author' }.to_xml.should == '<info><category>author</category></info>'
+        Info.new { |i| i.category = {:'citation-format' => 'author'} }.to_xml.should == '<info><category citation-format="author"/></info>'
       end
     end
     
