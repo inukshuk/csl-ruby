@@ -54,9 +54,9 @@ module CSL
     
     attr_accessor :language, :region
     
-    alias metadata info
-    alias dates    date
-    alias options  style_options
+    alias_child :metadata, :info
+    alias_child :dates, :date
+    alias_child :options, :style_options
 
     private :attributes
     undef_method :[]=
@@ -360,7 +360,7 @@ module CSL
     
     # @return [String] a string representation of the Locale
     def inspect
-      "#<#{self.class.name} #{to_s}: dates=[#{dates.length}] terms=[#{terms.length}]>"
+      "#<#{self.class.name} #{to_s}>"
     end
     
     private

@@ -19,13 +19,15 @@ module CSL
       alias each each_child
       
       def lookup(query)
-        terms = if Regexp === query
-          registry.keys.select { |t| t =~ query }.flatten(1)
+        query = { :name => query } unless query.is_a?(Hash)
+        
+        terms = if query[:name].is_a?(Regexp)
+          registry.select { |name, _| name =~ query[:name] }.flatten(1)
         else
-          registry[(Hash === query) ? query[:name] : query.to_s]
+          registry[query[:name].to_s]
         end
 
-        terms.detect { |t| t.matches?(query) }
+        terms.detect { |t| t.exact_match?(query) }
       end
       
       alias [] lookup
@@ -95,19 +97,19 @@ module CSL
       # @raise [ArgumentError] if the term cannot be matched using query
       #
       # @return [Boolean] whether or not the query matches the term
-      def match?(query)
-        case
-        when query.is_a?(Hash)
-          query.symbolize_keys.values_at(*attributes.keys) == attributes.values_at(*attributes.keys)
-        when query.is_a?(Regexp)
-          query =~ name
-        when query.respond_to?(:to_s)
-          query.to_s == name
-        else
-          raise ArgumentError, "cannot match term to query: #{query.inspect}"
-        end
-      end
-      alias matches? match?
+      # def match?(query)
+      #   case
+      #   when query.is_a?(Hash)
+      #     query.symbolize_keys.values_at(*attributes.keys) == attributes.values_at(*attributes.keys)
+      #   when query.is_a?(Regexp)
+      #     query =~ name
+      #   when query.respond_to?(:to_s)
+      #     query.to_s == name
+      #   else
+      #     raise ArgumentError, "cannot match term to query: #{query.inspect}"
+      #   end
+      # end
+      # alias matches? match?
       
       
       # @!method masculine?

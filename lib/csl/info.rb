@@ -6,8 +6,8 @@ module CSL
       :link, :author, :contributor, :category, :published, :summary,
       :updated, :rights, :'link-dependent-style'
     
-    alias contributors contributor
-    
+    alias_child :contributors, :contributor
+    alias_child :links, :link
     
     class Contributor < Node
       attr_children :name, :email, :uri

@@ -39,9 +39,10 @@ module CSL
       end
 
       # @return [Boolean] whether or not the node's name matches the passed-in name
-      def matches?(nodename)
+      def match?(nodename)
         name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase == nodename
       end
+      alias matches? match?
       
       # Returns a new node with the passed in name and attributes.
       def create(name, attributes = {}, &block)
@@ -199,7 +200,33 @@ module CSL
       
       self
     end
-    
+
+    def match?(name = nodename, conditions = {})
+      name, conditions = match_conditions_for(name, conditions)
+      
+      return false unless name === nodename
+      return true  if conditions.empty?
+
+      conditions.values.zip(
+        attributes.values_at(*conditions.keys)).all? do |condition, value|
+          condition === value
+        end
+    end
+    alias matches? match?
+
+    def exact_match?(name = nodename, conditions = {})
+      name, conditions = match_conditions_for(name, conditions)
+      
+      return false unless name === nodename
+      return true  if conditions.empty?
+      
+      conditions.values_at(*attributes.keys).zip(
+        attributes.values_at(*attributes.keys)).all? do |condition, value|
+          condition === value
+        end
+    end
+    alias matches_exactly? exact_match?
+
     def <=>(other)
       [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
     rescue
@@ -239,6 +266,17 @@ module CSL
       }.compact
     end
     
+    def match_conditions_for(name, conditions)
+      case name
+      when Hash
+        conditions, name = name, nodename
+      when Symbol
+        name = name.to_s
+      end
+
+      [name, conditions.symbolize_keys]
+    end
+
   end
   
   

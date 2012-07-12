@@ -12,7 +12,7 @@ module CSL
       base.extend(ClassMethods)
     end
     
-    # @eturn [String] the node's name.
+    # @return [String] the node's name.
     def nodename
       @nodename ||= self.class.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase
     end
@@ -63,6 +63,7 @@ module CSL
       nodes.each do |node|
         add_child node
       end
+      self
     end
     
     def add_child(node)
@@ -264,6 +265,11 @@ module CSL
 			
       private
       
+      def attr_child_names_for(name)
+        reader = name.to_s.downcase.tr('-', '_')
+        [name.to_sym, reader, "set_child_#{reader}", "#{reader}?"]
+      end
+      
       # Creates a Struct for the passed-in child node names that will be
       # used internally by the Node to manage its children. The Struct
       # will be automatically initialized and is used similarly to the
@@ -277,14 +283,16 @@ module CSL
       def attr_children(*names)
         
         names.each do |name|
-          name   = name.to_sym
-          reader = name.to_s.downcase.tr('-', '_')
-          writer = "set_child_#{reader}"
-          
+          name, reader, writer, predicate = attr_child_names_for(name)
 
           define_method(reader) do
             children[name]
           end unless method_defined?(reader)
+
+          define_method(predicate) do
+            c = children[name]
+            !(c.nil? || c.is_a?(Array) && c.empty?)
+          end unless method_defined?(predicate)
 
           unless method_defined?(writer)
             define_method(writer) do |value|
@@ -306,7 +314,7 @@ module CSL
               children << value
             end
             
-            alias_method :"#{reader}=", writer
+            alias_method :"#{reader}=", writer unless method_defined?(:"#{reader}=")
             
           end
         end
@@ -327,7 +335,7 @@ module CSL
           # @return [<Symbol>] a list of symbols representing the names/keys
           #   of the attribute variables.
           def keys
-            self.class.keys
+            __class__.keys
           end
           
           alias original_each each
@@ -417,6 +425,12 @@ module CSL
         })
       end
       
+      def alias_child(new_name, old_name)
+        attr_child_names_for(new_name).zip(attr_child_names_for(old_name)).each do |nn, on|
+          alias_method nn, on if method_defined?(on)
+        end
+      end
+
       # Turns the Node into a leaf-node.
       def has_no_children   
         undef_method :add_child

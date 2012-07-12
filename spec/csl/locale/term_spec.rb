@@ -57,15 +57,15 @@ module CSL
       
       describe '#match?' do
         it 'matches the name when passed a string' do
-          m.matches?('month-05').should be_true
+          m.should be_match(:name => 'month-05')
         end
 
         it 'matches the name when passed a pattern' do
-          m.matches?(/month-\d\d/).should be_true
+          m.should be_match(:name => /month-\d\d/)
         end
         
-        it 'does not match when passed a matching hash without gender' do
-          f.matches?(:name => 'edition').should_not be_true
+        it 'matches when passed a matching hash without gender' do
+          f.should be_match(:name => 'edition')
         end
 
         it 'does not match when passed a matching hash with wrong gender' do
@@ -74,6 +74,12 @@ module CSL
         
         it 'matches when passed a matching hash with matching gender' do
           f.matches?(:name => 'edition', :gender => 'feminine').should be_true
+        end
+      end
+
+      describe '#exact_match?' do
+        it 'does not match when passed a matching hash without gender' do
+          f.should_not be_exact_match(:name => 'edition')
         end
       end
       
