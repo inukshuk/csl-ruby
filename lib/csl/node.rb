@@ -296,7 +296,7 @@ module CSL
     end
     
     def inspect
-      "#<#{[self.class.name, *attribute_assignments].join(' ')} children=[#{children.length}]>"
+      "#<#{[self.class.name, *attribute_assignments].join(' ')} children=[#{children.count}]>"
     end
     
     alias to_s pretty_print

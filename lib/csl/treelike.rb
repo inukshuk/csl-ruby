@@ -87,28 +87,40 @@ module CSL
     end
     
     # Returns the first immediate child node whose nodename matches the
-    # passed-in name or pattern; returns nil there is no match.
-    def find_child_by_name(name)
+    # passed-in name/pattern and attribute conditions.
+    #
+    # @param name [String,Regexp] the node name to match
+    # @param conditions [Hash] the attributes to match
+    #
+    # @return [Node,nil] the first matching child node
+    def find_child(name, conditions = {})
       children.detect do |child|
-        name === child.nodename
+        child.match?(name, conditions)
       end
     end
-    alias > find_child_by_name
+    alias > find_child
     
     # Returns all immediate child nodes whose nodename matches the passed-in
-    # name or pattern; returns an empty array if there is no match.
-    def find_children_by_name(name)
+    # name/pattern and attribute conditions; returns an empty array if there
+    # is no match.
+    #
+    # @param name [String,Regexp] the node name to match
+    # @param conditions [Hash] the attributes to match
+    #
+    # @return [Array<Node>] all matching child nodes
+    def find_children(name, conditions = {})
       children.select do |child|
-        name === child.nodename
+        child.match?(name, conditions)
       end
     end
-    alias >> find_children_by_name
+    alias >> find_children
 
-    # Returns true if the node has child nodes; false otherwise.
+    # @return [Boolean] true if this node has child nodes; false otherwise.
     def has_children?
       !empty?
     end
 
+    # @return [Boolean] true if this node has no child nodes; false otherwise.
 		def empty?
 			children.empty?
 		end
@@ -144,6 +156,7 @@ module CSL
       @siblings = each_sibling.to_a
     end
     
+    # Traverses the node's sub-tree in depth-first order.
     def each_descendant
       if block_given?
         each_child do |child|
@@ -157,8 +170,8 @@ module CSL
       end
     end
     
-    # Returns all descendants of the node. See #descendants1 for a memoized
-    # version.
+    # Returns all descendants of the node. See {#descendants!}
+    # for a memoized version.
     def descendants
       @descendants = each_descendant.to_a
     end
@@ -178,22 +191,22 @@ module CSL
       end
     end
     
-    # Returns this node's ancestors as an array.
+    # @returns this node's ancestors as an array
     def ancestors
       @ancestors = each_ancestor.to_a
     end
     
-    # Returns the node's current depth in the tree.
+    # @return [Fixnum] the node's current depth in the tree
     def depth
       @depth = ancestors.length
     end
     
-    # Returns the root node.
+    # @return [Node] the root node
     def root
       @root = root? ? self : parent.root!
     end
     
-    # Returns true if the node is a root node, or false.
+    # @returns [Boolean] whether or not the node is the tree's root node
     def root?
       parent.nil?
     end
@@ -312,6 +325,7 @@ module CSL
               end unless value.respond_to?(:nodename)
 
               children << value
+              value
             end
             
             alias_method :"#{reader}=", writer unless method_defined?(:"#{reader}=")
@@ -340,6 +354,10 @@ module CSL
           
           alias original_each each
           
+          def count
+            values.reject { |c| c.nil? || c.empty? }.length
+          end
+
           # Iterates through all children. Nil values are skipped and Arrays
           # expanded.
           def each

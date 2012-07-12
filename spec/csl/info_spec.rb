@@ -18,10 +18,6 @@ module CSL
         Info.new.children.should be_a(Info::Children)
       end
       
-      it 'allows to set the id by writer method' do
-        lambda { Info.new.children.id = 'foo' }.should_not raise_error
-      end
-
       it 'allows to set the id by array accessor' do
         lambda { Info.new.children[:id] = 'foo' }.should_not raise_error
       end
@@ -29,8 +25,13 @@ module CSL
 
     describe '#category' do
       it 'returns nil by default' do
-        Info.new.category.should be nil
+        Info.new.category.should be_nil
       end
+    end
+
+    describe '#self_link' do
+      it { should_not have_self_link }
+      
     end
     
     describe '#to_xml' do

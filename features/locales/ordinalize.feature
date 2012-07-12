@@ -860,52 +860,14 @@ Feature: Converting numbers to ordinals using CSL locales
 #      | 1001:e  |
 
   @v1.0.1 @locale @ordinals @i18n @gender @lang:pl
-  Scenario: Gendered Swedish CSL 1.0.1 locales
+  Scenario: Gendered Polish CSL 1.0.1 locales
     Given the locale:
       """
       <?xml version="1.0" encoding="utf-8"?>
-      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="sv">
+      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="pl">
         <terms>
           <term name="ordinal-00">:e</term>
 
-          <term name="ordinal-01">:a</term>
-          <term name="ordinal-01" gender-form="masculine">:e</term>
-          <term name="ordinal-01" gender-form="feminine">:a</term>
-
-          <term name="ordinal-02">:a</term>
-          <term name="ordinal-02" gender-form="masculine">:e</term>
-          <term name="ordinal-02" gender-form="feminine">:a</term>
-
-          <term name="ordinal-11">:e</term>
-          <term name="ordinal-11" gender-form="feminine">:e</term>
-          <term name="ordinal-12">:e</term>
-          <term name="ordinal-12" gender-form="feminine">:e</term>
-
-          <term name="ordinal-21">:e</term>
-          <term name="ordinal-21" gender-form="feminine">:e</term>
-          <term name="ordinal-22">:e</term>
-          <term name="ordinal-22" gender-form="feminine">:e</term>
-
-          <term name="ordinal-31">:e</term>
-          <term name="ordinal-32">:e</term>
-
-          <term name="ordinal-41">:e</term>
-          <term name="ordinal-42">:e</term>
-
-          <term name="ordinal-51">:e</term>
-          <term name="ordinal-52">:e</term>
-
-          <term name="ordinal-61">:e</term>
-          <term name="ordinal-62">:e</term>
-
-          <term name="ordinal-71">:e</term>
-          <term name="ordinal-72">:e</term>
-
-          <term name="ordinal-81">:e</term>
-          <term name="ordinal-82">:e</term>
-
-          <term name="ordinal-91">:e</term>
-          <term name="ordinal-92">:e</term>
         </terms>
       </locale>
       """
@@ -932,12 +894,6 @@ Feature: Converting numbers to ordinals using CSL locales
       | 11    |       | feminine  |          |
       | 11    |       | masculine |          |
       | 21    |       |           |          |
-#      | 101   |       |           |          |
-#      | 1001  |       | feminine  |          |
-#      | 301   |       |           |          |
-      | 21    |       | masculine | singular |
-      | 21    |       | masculine | plural   |
-#      | 1001  |       | masculine |          |
     Then the ordinals should be:
       | ordinal |
       | 0:e     |
@@ -961,10 +917,3 @@ Feature: Converting numbers to ordinals using CSL locales
       | 11:e    |
       | 11:e    |
       | 21:e    |
-#      | 101:e   |
-#      | 1001:e  |
-#      | 301:e   |
-      | 21:e    |
-      | 21:e    |
-#      | 1001:e  |
-

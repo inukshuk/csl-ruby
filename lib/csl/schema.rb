@@ -135,7 +135,7 @@ module CSL
       #
       #   CSL::Schema.validate('my-styles/style.csl')
       #   CSL::Schema.validate('my-styles/*.csl')
-      #   CSL::Schema.validate('http://www.example.org/style.csl')
+      #   CSL::Schema.validate('http://www.zotero.org/styles/vancouver')
       #
       # @param style [Node,String,IO,Array] the style (or a list of styles)
       #   to validate.

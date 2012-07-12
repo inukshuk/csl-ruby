@@ -38,7 +38,7 @@ module CSL
     alias locales  locale
     
     def initialize(attributes = {})
-      super(attributes)
+      super(attributes, &nil)
       
       children[:locale] = []
       children[:macro]  = []
