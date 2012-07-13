@@ -279,7 +279,7 @@ module CSL
       
       def attr_child_names_for(name)
         reader = name.to_s.downcase.tr('-', '_')
-        [name.to_sym, reader, "set_child_#{reader}", "#{reader}?"]
+        [name.to_sym, reader, "set_child_#{reader}", "has_#{reader}?"]
       end
       
       # Creates a Struct for the passed-in child node names that will be
@@ -291,7 +291,9 @@ module CSL
       # a node defining it's children that way can only contain nodes of the
       # given types.
       #
-      # This method also generates accessors for each child.
+      # This method also generates accessors for each child. The writer
+      # method will try to coerce the passed-in value into the correct
+      # node type automatically.
       def attr_children(*names)
         
         names.each do |name|
@@ -328,7 +330,6 @@ module CSL
             end
             
             alias_method :"#{reader}=", writer unless method_defined?(:"#{reader}=")
-            
           end
         end
         
@@ -448,7 +449,7 @@ module CSL
         end
       end
 
-      # Turns the Node into a leaf-node.
+      # Turns the node into a leaf-node.
       def has_no_children   
         undef_method :add_child
         undef_method :added_child
@@ -463,6 +464,10 @@ module CSL
         
         define_method(:has_children?) do
           false
+        end
+
+        define_method(:empty?) do
+          true
         end
 
       end

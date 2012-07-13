@@ -47,6 +47,13 @@ module CSL
       end
     end
     
+    def id
+      children[:id]
+    end
+    
+    alias id= set_child_id
+
+
     class Contributor < Node
       attr_children :name, :email, :uri
     end

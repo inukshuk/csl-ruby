@@ -34,12 +34,13 @@ module CSL
     attr_children :'style-options', :info, :locale, :macro,
       :citation, :bibliography
     
-    alias metadata info
     alias options  style_options
     alias locales  locale
     
-    def_delegators :info, :self_link, :has_self_link?, :template_link,
-      :has_template_link?, :documentation_link, :has_documentation_link?
+    def_delegators :info, :self_link, :self_link=, :has_self_link?,
+      :template_link, :template_link=, :has_template_link?,
+      :documentation_link, :documentation_link=, :has_documentation_link?,
+			:title=, :id=
       
     def initialize(attributes = {})
       super(attributes, &nil)      
@@ -60,6 +61,26 @@ module CSL
       children[:info] ||= Info.new
     end
     
+    alias_child :metadata, :info
+    
+    # @return [String] the style's id
+		def id
+			return nil unless info.has_id?
+			info.id.to_s
+		end
+    
+    # @return [String] the style's title
+		def title
+			return nil unless info.has_title?
+			info.title.to_s
+		end
+		
+		# @return [Time] timestamp for the time set in info.updated
+		def updated_at
+			return nil unless info.has_updated?
+			Time.parse(info.updated)
+		end
+
     private
     
     def preamble

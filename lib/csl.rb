@@ -4,6 +4,7 @@ require 'forwardable'
 require 'open-uri'
 require 'singleton'
 require 'set'
+require 'time'
 
 require 'csl/version'
 
