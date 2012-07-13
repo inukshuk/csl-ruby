@@ -91,7 +91,7 @@ module CSL
     class Title < TextNode
     end
 
-    class ShortTitle < TextNode
+    class TitleShort < TextNode
     end
 
     class Summary < TextNode

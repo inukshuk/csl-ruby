@@ -29,7 +29,7 @@ module CSL
       end
       
       def constantize(name)
-        pattern = /#{name.to_s.tr('-', '')}$/i
+        pattern = /:#{name.to_s.tr('-', '')}$/i
         klass = types.detect { |t| t.matches?(pattern) }
         
         case
