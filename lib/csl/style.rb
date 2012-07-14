@@ -96,6 +96,11 @@ module CSL
       !dependent?
     end
     
+    def independent_parent
+      return unless dependent?
+      load_related_style_from independent_parent_link
+    end
+    
     private
 
     def preamble
