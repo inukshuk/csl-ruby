@@ -1,71 +1,71 @@
 module CSL
-  
+
   class Info < Node
 
     attr_children :title, :'title-short', :id, :issn, :eissn, :issnl,
       :link, :author, :contributor, :category, :published, :summary,
       :updated, :rights, :'link-dependent-style'
-    
+
     alias_child :contributors, :contributor
     alias_child :authors, :contributor
     alias_child :links, :link
-    
+
     def initialize(attributes = {})
       super(attributes, &nil)
       children[:link] = []
 
       yield self if block_given?
     end
-    
+
     # @!attribute self_link
     # @return [String,nil] the style's URI
 
     # @!attribute template_link
     # @return [String,nil] URI of the style from which the current style is derived
-    
+
     # @!attribute documentation_link
     # @return [String,nil] URI of style documentation
-    [:self, :template, :documentation].each do |type|
-      method_id = "#{type}_link"
-      
+    %w{ self template documentation independent-parent }.each do |type|
+      method_id = "#{type.tr('-', '_')}_link"
+
       define_method method_id do
-        link = links.detect { |l| l.match? :rel => type.to_s }
+        link = links.detect { |l| l.match? :rel => type }
         link.nil? ? nil : link[:href]
       end
-      
+
       alias_method "has_#{method_id}?", method_id
-      
+
       define_method "#{method_id}=" do |value|
-        link = links.detect { |l| l.match? :rel => type.to_s }
-        
+        link = links.detect { |l| l.match? :rel => type }
+
         if link.nil?
-          set_child_link :href => value.to_s, :rel => type.to_s
+          set_child_link :href => value.to_s, :rel => type
         else
           link[:href] = value.to_s
           link
         end
       end
     end
-    
+
     def id
       children[:id]
     end
-    
+
     alias id= set_child_id
 
 
     class Contributor < Node
       attr_children :name, :email, :uri
     end
-    
+
     class Author < Node
       attr_children :name, :email, :uri
     end
-    
+
     class Translator < Node
       attr_children :name, :email, :uri
     end
-    
+
     class Link < Node
       attr_struct :href, :rel
     end
@@ -77,14 +77,14 @@ module CSL
 
     class Category < Node
       attr_struct :field, :'citation-format'
-    end    
+    end
 
     class Id < TextNode
     end
-    
+
     class Name < TextNode
     end
-    
+
     class Email < TextNode
     end
 
@@ -96,7 +96,7 @@ module CSL
 
     class Summary < TextNode
     end
-    
+
     class Rights < TextNode
     end
 
@@ -107,6 +107,6 @@ module CSL
     end
 
   end
-    
-  
+
+
 end

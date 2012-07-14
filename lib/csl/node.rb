@@ -1,16 +1,16 @@
 module CSL
-  
+
   class Node
-    
+
     extend Forwardable
-    
+
     include Enumerable
     include Comparable
-    
+
     include Treelike
     include PrettyPrinter
-    
-    
+
+
     class << self
 
       def inherited(subclass)
@@ -19,19 +19,19 @@ module CSL
           klass.types << subclass if klass < Node
         end
       end
-      
+
       def types
         @types ||= Set.new
       end
-      
+
       def default_attributes
         @default_attributes ||= {}
       end
-      
+
       def constantize(name)
         pattern = /:#{name.to_s.tr('-', '')}$/i
         klass = types.detect { |t| t.matches?(pattern) }
-        
+
         case
         when !klass.nil?
           klass
@@ -48,16 +48,16 @@ module CSL
         name_pattern === name
       end
       alias matches? match?
-      
+
       # Returns a new node with the passed in name and attributes.
       def create(name, attributes = {}, &block)
         klass = constantize(name)
 
-        node = (klass || Node).new(attributes, &block)        
+        node = (klass || Node).new(attributes, &block)
         node.nodename = name
         node
       end
-      
+
       def create_attributes(attributes)
         if const?(:Attributes)
           const_get(:Attributes).new(default_attributes.merge(attributes))
@@ -101,27 +101,27 @@ module CSL
           def values
             super.compact
           end
-          
+
           # def to_a
           #   keys.zip(values_at(*keys)).reject { |k,v| v.nil? }
           # end
-          
+
           # @return [Boolean] true if all the attribute values are nil;
           #   false otherwise.
           def empty?
             values.compact.empty?
           end
-          
+
           def fetch(key, default = nil)
             value = keys.include?(key.to_sym) && send(:'[]', key)
-            
-            if block_given? 
+
+            if block_given?
               value || yield(key)
             else
               value || default
             end
           end
-          
+
           # Merges the current with the passed-in attributes.
           #
           # @param other [#each_pair] the other attributes
@@ -162,14 +162,14 @@ module CSL
     attr_reader :attributes
 
     def_delegators :attributes, :[], :[]=, :values, :values_at, :length, :size
-    
+
     def initialize(attributes = {})
       @attributes = self.class.create_attributes(attributes)
       @children = self.class.create_children
-      
+
       yield self if block_given?
     end
-    
+
     # Iterates through the Node's attributes
     def each
       if block_given?
@@ -186,7 +186,7 @@ module CSL
     def attribute?(name)
       attributes.fetch(name, false)
     end
-    
+
     # Returns true if the node contains any attributes (ignores nil values);
     # false otherwise.
     def has_attributes?
@@ -202,7 +202,7 @@ module CSL
       File.open(path, 'w:UTF-8') do |f|
         f << (options[:compact] ? to_xml : pretty_print)
       end
-      
+
       self
     end
 
@@ -231,7 +231,7 @@ module CSL
     # @return [Boolean] whether or not the query matches the node
     def match?(name = nodename, conditions = {})
       name, conditions = match_conditions_for(name, conditions)
-      
+
       return false unless name === nodename
       return true  if conditions.empty?
 
@@ -265,10 +265,10 @@ module CSL
     # @return [Boolean] whether or not the query matches the node exactly
     def exact_match?(name = nodename, conditions = {})
       name, conditions = match_conditions_for(name, conditions)
-      
+
       return false unless name === nodename
       return true  if conditions.empty?
-      
+
       conditions.values_at(*attributes.keys).zip(
         attributes.values_at(*attributes.keys)).all? do |condition, value|
           condition === value
@@ -281,40 +281,40 @@ module CSL
     rescue
       nil
     end
-    
+
     # Returns the node' XML tags (including attribute assignments) as an
     # array of strings.
     def tags
       if has_children?
         tags = []
         tags << "<#{[nodename, *attribute_assignments].join(' ')}>"
-        
+
         tags << children.map { |node|
           node.respond_to?(:tags) ? node.tags : [node.to_s]
         }.flatten(1)
-        
+
         tags << "</#{nodename}>"
         tags
       else
         ["<#{[nodename, *attribute_assignments].join(' ')}/>"]
       end
     end
-    
+
     def inspect
       "#<#{[self.class.name, *attribute_assignments].join(' ')} children=[#{children.count}]>"
     end
-    
+
     alias to_s pretty_print
 
-    
+
     private
-        
+
     def attribute_assignments
       each_pair.map { |name, value|
         value.nil? ? nil: [name, value.to_s.inspect].join('=')
       }.compact
     end
-    
+
     def match_conditions_for(name, conditions)
       case name
       when Hash
@@ -327,15 +327,15 @@ module CSL
     end
 
   end
-  
-  
+
+
   class TextNode < Node
-    
+
     has_no_children
 
     class << self
       undef_method :attr_children
-      
+
       # @override
       def create(name, attributes = {}, &block)
         klass = constantize(name)
@@ -347,19 +347,22 @@ module CSL
     end
 
     attr_accessor :text
-    alias to_s text
+
+    def to_s
+      text.to_s.strip
+    end
 
     # TextNodes quack like a string.
     # def_delegators :to_s, *String.instance_methods(false).reject do |m|
     #   m.to_s =~ /^\W|!$|(?:^(?:hash|eql?|to_s|length|size|inspect)$)/
     # end
-    # 
+    #
     # String.instance_methods(false).select { |m| m.to_s =~ /!$/ }.each do |m|
     #   define_method(m) do
     #     content.send(m) if content.respond_to?(m)
     #   end
     # end
-    
+
     def initialize(argument = '')
       case
       when argument.is_a?(Hash)
@@ -372,19 +375,19 @@ module CSL
         raise ArgumentError, "failed to create text node from #{argument.inspect}"
       end
     end
-    
+
     def textnode?
       true
     end
-    
+
     def tags
       ["<#{attribute_assignments.unshift(nodename).join(' ')}>#{text}</#{nodename}>"]
     end
-    
+
     def inspect
       "#<#{[self.class.name, text.inspect, *attribute_assignments].join(' ')}>"
     end
-    
+
   end
-  
+
 end

@@ -42,7 +42,6 @@ module CSL
     end
     
     describe '#id accessor' do
-      
       it 'returns nil by default' do
         Style.new.id.should be_nil
       end
@@ -52,5 +51,18 @@ module CSL
       end
     end
     
+    describe 'independent and dependent styles' do
+      it 'styles are independent by default' do
+        Style.new.should be_independent
+      end
+      
+      it 'styles do not have independent-parent links by default' do
+        Style.new.should_not have_independent_parent_link
+      end
+      
+      it 'when setting an independet-parent link a style becomes dependent' do
+        expect { style.independent_parent_link = 'foo' }.to change { style.independent? }
+      end
+    end
   end
 end
