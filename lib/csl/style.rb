@@ -91,22 +91,22 @@ module CSL
     end
 
     alias dependent? has_independent_parent_link?
-    
+
     def independent?
       !dependent?
     end
-    
+
     def independent_parent
       return unless dependent?
       load_related_style_from independent_parent_link
     end
-    
+
     private
 
     def preamble
       Schema.preamble.dup
     end
-    
+
     def load_related_style_from(uri)
       # TODO try local first
       Style.load(uri)
