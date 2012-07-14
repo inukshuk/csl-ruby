@@ -380,6 +380,10 @@ module CSL
       true
     end
 
+    def empty?
+      text.nil? || text.empty?
+    end
+
     def tags
       ["<#{attribute_assignments.unshift(nodename).join(' ')}>#{text}</#{nodename}>"]
     end

@@ -26,8 +26,8 @@ module CSL
     end
 
     describe '#category' do
-      it 'returns nil by default' do
-        Info.new.category.should be_nil
+      it 'returns an empty list by default' do
+        Info.new.category.should be_empty
       end
     end
 

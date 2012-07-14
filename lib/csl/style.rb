@@ -34,24 +34,43 @@ module CSL
     attr_children :'style-options', :info, :locale, :macro,
       :citation, :bibliography
 
+    attr_reader :macros, :errors
+
     alias options  style_options
     alias locales  locale
+
+    alias has_macros? has_macro?
 
     def_delegators :info, :self_link, :self_link=, :has_self_link?,
       :template_link, :template_link=, :has_template_link?,
       :documentation_link, :documentation_link=, :has_documentation_link?,
       :independent_parent_link, :independent_parent_link=,
-      :has_independent_parent_link?, :title=, :id=, :has_title?, :has_id?
+      :has_independent_parent_link?, :title=, :id=, :has_title?, :has_id?,
+      :published_at, :updated_at
 
     def initialize(attributes = {})
       super(attributes, &nil)
-      children[:locale], children[:macro] = [], []
+      children[:locale], children[:macro], @macros, @errors = [], [], {}, []
 
       yield self if block_given?
     end
 
+    # @override
+    def added_child(node)
+      delegate = :"added_#{node.nodename}"
+      send delegate, node if respond_to?(delegate, true)
+      node
+    end
+
+    # @override
+    def deleted_child(node)
+      delegate = :"deleted_#{node.nodename}"
+      send delegate, node if respond_to?(delegate, true)
+      node
+    end
+
     def validate
-      Schema.validate self
+      @errors = Schema.validate self
     end
 
     def valid?
@@ -66,20 +85,14 @@ module CSL
 
     # @return [String] the style's id
 		def id
-			return nil unless info.has_id?
+			return unless info.has_id?
 			info.id.to_s
 		end
 
     # @return [String] the style's title
 		def title
-			return nil unless info.has_title?
+			return unless info.has_title?
 			info.title.to_s
-		end
-
-		# @return [Time] timestamp for the time set in info.updated
-		def updated_at
-			return nil unless info.has_updated?
-			Time.parse(info.updated)
 		end
 
     alias has_template? has_template_link?
@@ -110,6 +123,24 @@ module CSL
     def load_related_style_from(uri)
       # TODO try local first
       Style.load(uri)
+    end
+    
+    def added_macro(node)
+      unless node.attribute?(:name)
+        raise ValidationError,
+          "failed to register macro #{node.inspect}: name attribute missing"
+      end
+
+      if macros.key?(node[:name])
+        raise ValidationError,
+          "failed to register macro #{node.inspect}: duplicate name"
+      end
+
+      macros[node[:name]] = node
+    end
+    
+    def deleted_macro(node)
+      macros.delete node[:name]
     end
   end
 

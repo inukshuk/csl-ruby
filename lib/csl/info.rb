@@ -1,5 +1,38 @@
 module CSL
-
+  #
+  # {Info} nodes contain a {Style} (or {Locale}) metadata. Their XML structure
+  # is based on the Atom Syndication Format. For independent styles an {Info}
+  # node typically has the following child elements:
+  #
+  # * {Author} and {Contributor}: used to respectively acknowledge
+  #   style authors and contributors, may each be used multiple times.
+  # * {Category}: styles may be assigned one or more categories. One
+  #   {Category} node may be used once to describe how in-text citations
+  #   are rendered, using its citation-format attribute.
+  # * {Id}: Must appear once. The element should contain a URI to establish
+  #   the identity of the style. A stable, unique and dereferenceable URI
+  #   is desired for publicly available styles.
+  # * {Link}: Multiple links can be added to an {Info} node: self,
+  #   documentation, and template links all have dedicated accessors.
+  # * {Title}: Must appear once. The contents of this node should be the
+  #   name of the style as shown to users.
+  # * {TitleShort}: May appear once. The contents of this node should be a
+  #   shortened style name (e.g. "APA").
+  # * {Summary}: This node gives a description of the style.
+  # * {Rights}: This node specifies the license under which the style file
+  #   is released. The element may carry a license attribute to specify the
+  #   URI of the license.
+  # * {Updated}: Must appear once. This node must contain a timestamp that
+  #   shows when the style was last updated.
+  #
+  # In dependent styles, the {Info} node must contain a {Link} with rel set
+  # to "independent-parent", with the URI of the independent parent style
+  # set on href. This link is also accessible as a string using the
+  # {#independent_parent} accessors. In addition, dependent styles should
+  # not contain template links.
+  #
+  # In a {Locale} node the {Info} node typically carries only {Translator},
+  # {Rights} and {Updated} nodes.
   class Info < Node
 
     attr_children :title, :'title-short', :id, :issn, :eissn, :issnl,
@@ -7,12 +40,13 @@ module CSL
       :updated, :rights, :'link-dependent-style'
 
     alias_child :contributors, :contributor
-    alias_child :authors, :contributor
+    alias_child :authors, :author
     alias_child :links, :link
+    alias_child :categories, :category
 
     def initialize(attributes = {})
       super(attributes, &nil)
-      children[:link] = []
+      children[:link], children[:category] = [], []
 
       yield self if block_given?
     end
@@ -25,6 +59,9 @@ module CSL
 
     # @!attribute documentation_link
     # @return [String,nil] URI of style documentation
+
+    # @!attribute independent_parent_link
+    # @return [String,nil] URI of independent-parent
     %w{ self template documentation independent-parent }.each do |type|
       method_id = "#{type.tr('-', '_')}_link"
 
@@ -47,12 +84,69 @@ module CSL
       end
     end
 
+    # Ruby 1.8 still has Object#id methods so the attr_children generator
+    # has not created those; since #id is deprecated in 1.8.7 we're
+    # forcing the override anyway. Live dangerously!
+
+    # @return [Id] the id text node
     def id
       children[:id]
     end
 
     alias id= set_child_id
 
+    # @return [Time,nil] when the info node's parent was last updated
+    def updated_at
+      return unless has_updated?
+      updated.to_time
+    end
+
+    # Sets the updated_at timestamp.
+    # @return [self]
+    def update!(timestamp = Time.now)
+      ts = timestamp.respond_to?(:xmlschema) ? timestamp.xmlschema : timestamp.to_s
+      
+      if has_updated?
+        updated = Updated.new { |u| u.text = ts }
+      else
+        updated.text = ts
+      end
+      
+      self
+    end
+    
+    # @return [Time,nil] when the info node's parent was published
+    def published_at
+      return unless has_published?
+      published.to_time
+    end
+
+    # Sets the updated_at timestamp.
+    # @return [self]
+    def publish!(timestamp = Time.now)
+      ts = timestamp.respond_to?(:xmlschema) ? timestamp.xmlschema : timestamp.to_s
+      
+      if has_published?
+        published = Published.new { |u| u.text = ts }
+      else
+        published.text = ts
+      end
+      
+      self
+    end
+    
+    # @return [Symbol] the parent style's citation format
+    def citation_format
+      return unless has_categories?
+      
+    end
+    
+    def ciation_format=(new_format)
+    end
+
+    #
+    # Info Child Nodes
+    #
 
     class Contributor < Node
       attr_children :name, :email, :uri
@@ -68,6 +162,8 @@ module CSL
 
     class Link < Node
       attr_struct :href, :rel
+
+      # TODO xml:lang
     end
 
     class DependentStyle < TextNode
@@ -88,22 +184,41 @@ module CSL
     class Email < TextNode
     end
 
+    class URI < TextNode
+    end
+
     class Title < TextNode
+      # TODO xml:lang
     end
 
     class TitleShort < TextNode
+      # TODO xml:lang
     end
 
     class Summary < TextNode
+      # TODO xml:lang
     end
 
     class Rights < TextNode
-    end
-
-    class Uri < TextNode
+      attr_struct :license
+      # TODO xml:lang
     end
 
     class Updated < TextNode
+
+      def to_time
+        return if empty?
+        Time.parse(to_s)
+      end
+      alias to_date to_time
+    end
+
+    class Published < TextNode
+      def to_time
+        return if empty?
+        Time.parse(to_s)
+      end
+      alias to_date to_time
     end
 
   end
