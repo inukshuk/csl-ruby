@@ -46,7 +46,7 @@ module CSL
       :documentation_link, :documentation_link=, :has_documentation_link?,
       :independent_parent_link, :independent_parent_link=,
       :has_independent_parent_link?, :title=, :id=, :has_title?, :has_id?,
-      :published_at, :updated_at
+      :published_at, :updated_at, :citation_format, :citation_format=
 
     def initialize(attributes = {})
       super(attributes, &nil)

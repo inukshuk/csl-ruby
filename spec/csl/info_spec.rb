@@ -31,6 +31,52 @@ module CSL
       end
     end
 
+    describe 'citation-format' do
+      it 'has no citation-format by default' do
+        Info.new.citation_format.should be_nil
+      end
+      
+      it 'setting a citation-format creates a new category node' do
+        expect { info.citation_format = 'foo' }.to change { info.has_categories? }
+      end
+
+      it 'setting a citation-format actually sets the citation-format' do
+        expect { info.citation_format = 'bar' }.to change { info.citation_format }.to(:bar)
+      end
+      
+      describe 'given a category node with the citation-attribute set' do
+        before(:all) { info.add_child Info::Category.new(:'citation-format' => 'author') }
+        
+        it 'has a citation format' do
+          info.citation_format.should == :author
+        end
+        
+        it 'setting a citation-format does not create a new category node' do
+          expect { info.citation_format = 'foo' }.not_to change { info.categories.length }
+        end
+        
+        it 'setting a citation-format actually sets the citation-format' do
+          expect { info.citation_format = 'bar' }.to change { info.citation_format }.to(:bar)
+        end
+      end
+      
+      describe 'given a category node without the citation-attribute set' do
+        before(:all) { info.add_child Info::Category.new(:field => 'literature') }
+      
+        it 'has no citation-format by default' do
+          info.citation_format.should be_nil
+        end
+
+        it 'setting a citation-format creates a new category node' do
+          expect { info.citation_format = 'foo' }.to change { info.categories.length }.from(1).to(2)
+        end
+
+        it 'setting a citation-format actually sets the citation-format' do
+          expect { info.citation_format = 'bar' }.to change { info.citation_format }.to(:bar)
+        end
+      end
+    end
+    
     describe 'link accessors' do
       it { should_not have_self_link }
       it { should_not have_documentation_link }

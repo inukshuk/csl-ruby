@@ -139,9 +139,17 @@ module CSL
     def citation_format
       return unless has_categories?
       
+      cat = categories.detect { |c| c.attribute? :'citation-format' }
+      return if cat.nil?
+      
+      cat[:'citation-format'].to_sym
     end
     
-    def ciation_format=(new_format)
+    def citation_format=(new_format)
+      cat = categories.detect { |c| c.attribute? :'citation-format' }      
+      cat = add_child Info::Category.new if cat.nil?
+      
+      cat[:'citation-format'] = new_format.to_s
     end
 
     #

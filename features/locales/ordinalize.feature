@@ -127,11 +127,11 @@ Feature: Converting numbers to ordinals using CSL locales
           <term name="long-ordinal-01">erstes</term>
           <term name="long-ordinal-01" gender-form="feminine">
             <single>erste</single>
-            <multiple>ersten</multiple>            
+            <multiple>ersten</multiple>
           </term>
           <term name="long-ordinal-01" gender-form="masculine">
             <single>erster</single>
-            <multiple>ersten</multiple>            
+            <multiple>ersten</multiple>
           </term>
           <term name="long-ordinal-02">zweites</term>
           <term name="long-ordinal-02" gender-form="feminine">zweite</term>
@@ -187,17 +187,20 @@ Feature: Converting numbers to ordinals using CSL locales
             <single>e</single>
             <multiple>es</multiple>
           </term>
-          
-          <term name="ordinal-01">e</term>
-          <term name="ordinal-01" gender-form="feminine">
+
+          <term name="ordinal-01" modulo="1">
             <single>re</single>
             <multiple>res</multiple>
           </term>
-          <term name="ordinal-01" gender-form="masculine">
+          <term name="ordinal-01" gender-form="feminine" modulo="1">
+            <single>re</single>
+            <multiple>res</multiple>
+          </term>
+          <term name="ordinal-01" gender-form="masculine" modulo="1">
             <single>er</single>
             <multiple>ers</multiple>
           </term>
-          
+
         </terms>
       </locale>
       """
@@ -439,7 +442,7 @@ Feature: Converting numbers to ordinals using CSL locales
           <term name="ordinal-17">de</term>
           <term name="ordinal-18">de</term>
           <term name="ordinal-19">de</term>
-  
+
           <term name="ordinal-22">ste</term>
           <term name="ordinal-23">ste</term>
           <term name="ordinal-24">ste</term>
@@ -503,7 +506,7 @@ Feature: Converting numbers to ordinals using CSL locales
           <term name="ordinal-96">ste</term>
           <term name="ordinal-97">ste</term>
           <term name="ordinal-99">ste</term>
-  
+
         </terms>
       </locale>
       """
