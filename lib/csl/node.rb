@@ -208,7 +208,7 @@ module CSL
 
     # Tests whether or not the Name matches the passed-in node name and
     # attribute conditions; if a Hash is passed as a single argument,
-    # it is taken as the conditions parameter (the name parameter is
+    # it is taken as the conditions parameter (the name parameter
     # automatically matches in this case).
     #
     # Whether or not the arguments match the node is determined as
@@ -225,6 +225,7 @@ module CSL
     #
     # @see #exact_match?
     #
+    # If the optional
     # @param name [String,Regexp] must match the nodename
     # @param conditions [Hash] the conditions
     #
