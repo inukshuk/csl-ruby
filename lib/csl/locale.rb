@@ -282,28 +282,27 @@ module CSL
         end
       end
 
-      # CSL 1.0 (legacy algorithm)
-      if legacy? || terms['ordinal-00'].nil?
-        return legacy_ordinalize(number)
-      end
+      # CSL 1.0 (legacy algorithm)      
+      return legacy_ordinalize(number) if legacy?
 
       #
       # CSL 1.0.1
       #
 
-      # Try to find direct match
+      # Calculate initial modulus
       mod = 10 ** Math.log10([number.abs, 1].max).to_i
-      query.merge! :name => key % number.abs
 
+      # Try to find direct match first
+      query.merge! :name => key % number.abs
       ordinal = terms[query]
 
       # Try to match modulus of number, dividing mod by 10 at each
       # iteration until a match is found
-      while ordinal.nil? && mod > 0
+      while ordinal.nil? && mod > 1
         query.merge! :name => key % (number.abs % mod)
-
         ordinal = terms[query]
 
+        # Check whether the ordinal has defined any modulo restrictions
         if ordinal && ordinal.attribute?(:modulo) && ordinal[:modulo] != mod.to_s
           ordinal = nil
         end
@@ -312,13 +311,22 @@ module CSL
       end
 
       # If we have not found a match at this point, we try to match
-      # the ordinal-00 gender neutral defintion
-      if ordinal.nil? && query.key?(:'gender-form')
-        query.delete(:'gender-form')
+      # the default ordinal instead
+      if ordinal.nil?
+        query[:name] = 'ordinal'
         ordinal = terms[query]
+        
+        if ordinal.nil? && query.key?(:'gender-form')
+          query.delete(:'gender-form')
+          ordinal = terms[query]
+        end
       end
-
-      [number, ordinal.to_s(options)].join
+      
+      if ordinal.nil?
+        number.to_s
+      else
+        [number, ordinal.to_s(options)].join
+      end
     end
 
     def validate
