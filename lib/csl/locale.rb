@@ -299,13 +299,8 @@ module CSL
       # Try to match modulus of number, dividing mod by 10 at each
       # iteration until a match is found
       while ordinal.nil? && mod > 1
-        query.merge! :name => key % (number.abs % mod)
-        ordinal = terms[query]
-
-        # Check whether the ordinal has defined any modulo restrictions
-        if ordinal && ordinal.attribute?(:modulo) && ordinal[:modulo] != mod.to_s
-          ordinal = nil
-        end
+        query.merge! :name => key % (number.abs % mod)        
+        ordinal = terms.lookup_modulo(query, mod)
 
         mod = mod / 10
       end

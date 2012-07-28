@@ -78,25 +78,28 @@ Feature: Converting numbers to ordinals using CSL locales
       </locale>
       """
     When I ordinalize these numbers:
-      | number |
-      | 0      |
-      | 1      |
-      | 2      |
-      | 3      |
-      | 4      |
-      | 5      |
-      | 10     |
-      | 11     |
-      | 12     |
-      | 13     |
-      | 20     |
-      | 21     |
-      | 22     |
-      | 23     |
-      | 111    |
-      | 112    |
-      | 113    |
-      | -102   |
+      | num    | form  | gender    | number   |
+      | 0      |       |           |          |
+      | 1      |       |           |          |
+      | 2      |       |           |          |
+      | 3      |       |           |          |
+      | 4      |       |           |          |
+      | 5      |       |           |          |
+      | 10     |       |           |          |
+      | 11     |       |           |          |
+      | 12     |       |           |          |
+      | 13     |       |           |          |
+      | 20     |       |           |          |
+      | 21     |       |           |          |
+      | 22     |       |           |          |
+      | 23     |       |           |          |
+      | 111    |       |           |          |
+      | 112    |       |           |          |
+      | 113    |       |           |          |
+      | -102   |       |           |          |
+      # | 1      |       | masculine |          |
+      # | 2      |       | feminine  |          |
+      # | 3      |       |           | plural   |
     Then the ordinals should be:
       | ordinal |
       | 0th     |
@@ -117,6 +120,9 @@ Feature: Converting numbers to ordinals using CSL locales
       | 112th   |
       | 113th   |
       | -102nd  |
+      # | 1st     |
+      # | 2nd     |
+      # | 3rd     |
 
   @v1.0.1 @locale @ordinals @i18n @gender @lang-de
   Scenario: Gendered German CSL 1.0.1 locales
@@ -191,19 +197,18 @@ Feature: Converting numbers to ordinals using CSL locales
             <multiple>es</multiple>
           </term>
 
-          <term name="ordinal-01" modulo="1">
+          <term name="ordinal-01" match="whole-number">
             <single>re</single>
             <multiple>res</multiple>
           </term>
-          <term name="ordinal-01" gender-form="feminine" modulo="1">
+          <term name="ordinal-01" gender-form="feminine" match="whole-number">
             <single>re</single>
             <multiple>res</multiple>
           </term>
-          <term name="ordinal-01" gender-form="masculine" modulo="1">
+          <term name="ordinal-01" gender-form="masculine" match="whole-number">
             <single>er</single>
             <multiple>ers</multiple>
           </term>
-
         </terms>
       </locale>
       """
@@ -261,26 +266,26 @@ Feature: Converting numbers to ordinals using CSL locales
         <terms>
           <term name="ordinal">ste</term>
           
-          <term name="ordinal-00" modulo="1">de</term>
+          <term name="ordinal-00" match="whole-number">de</term>
           
-          <term name="ordinal-02" modulo="100">de</term>
-          <term name="ordinal-03" modulo="100">de</term>
-          <term name="ordinal-04" modulo="100">de</term>
-          <term name="ordinal-05" modulo="100">de</term>
-          <term name="ordinal-06" modulo="100">de</term>
-          <term name="ordinal-07" modulo="100">de</term>
-          <term name="ordinal-09" modulo="100">de</term>
+          <term name="ordinal-02" match="2-digits">de</term>
+          <term name="ordinal-03" match="2-digits">de</term>
+          <term name="ordinal-04" match="2-digits">de</term>
+          <term name="ordinal-05" match="2-digits">de</term>
+          <term name="ordinal-06" match="2-digits">de</term>
+          <term name="ordinal-07" match="2-digits">de</term>
+          <term name="ordinal-09" match="2-digits">de</term>
 
-          <term name="ordinal-10" modulo="100">de</term>
-          <term name="ordinal-11" modulo="100">de</term>
-          <term name="ordinal-12" modulo="100">de</term>
-          <term name="ordinal-13" modulo="100">de</term>
-          <term name="ordinal-14" modulo="100">de</term>
-          <term name="ordinal-15" modulo="100">de</term>
-          <term name="ordinal-16" modulo="100">de</term>
-          <term name="ordinal-17" modulo="100">de</term>
-          <term name="ordinal-18" modulo="100">de</term>
-          <term name="ordinal-19" modulo="100">de</term>
+          <term name="ordinal-10" match="2-digits">de</term>
+          <term name="ordinal-11" match="2-digits">de</term>
+          <term name="ordinal-12" match="2-digits">de</term>
+          <term name="ordinal-13" match="2-digits">de</term>
+          <term name="ordinal-14" match="2-digits">de</term>
+          <term name="ordinal-15" match="2-digits">de</term>
+          <term name="ordinal-16" match="2-digits">de</term>
+          <term name="ordinal-17" match="2-digits">de</term>
+          <term name="ordinal-18" match="2-digits">de</term>
+          <term name="ordinal-19" match="2-digits">de</term>
         </terms>
       </locale>
       """
@@ -370,24 +375,24 @@ Feature: Converting numbers to ordinals using CSL locales
         <terms>
           <term name="ordinal">ste</term>
 
-          <term name="ordinal-02" modulo="100">de</term>
-          <term name="ordinal-03" modulo="100">de</term>
-          <term name="ordinal-04" modulo="100">de</term>
-          <term name="ordinal-05" modulo="100">de</term>
-          <term name="ordinal-06" modulo="100">de</term>
-          <term name="ordinal-07" modulo="100">de</term>
-          <term name="ordinal-09" modulo="100">de</term>
+          <term name="ordinal-02" match="2-digits">de</term>
+          <term name="ordinal-03" match="2-digits">de</term>
+          <term name="ordinal-04" match="2-digits">de</term>
+          <term name="ordinal-05" match="2-digits">de</term>
+          <term name="ordinal-06" match="2-digits">de</term>
+          <term name="ordinal-07" match="2-digits">de</term>
+          <term name="ordinal-09" match="2-digits">de</term>
 
-          <term name="ordinal-10" modulo="100">de</term>
-          <term name="ordinal-11" modulo="100">de</term>
-          <term name="ordinal-12" modulo="100">de</term>
-          <term name="ordinal-13" modulo="100">de</term>
-          <term name="ordinal-14" modulo="100">de</term>
-          <term name="ordinal-15" modulo="100">de</term>
-          <term name="ordinal-16" modulo="100">de</term>
-          <term name="ordinal-17" modulo="100">de</term>
-          <term name="ordinal-18" modulo="100">de</term>
-          <term name="ordinal-19" modulo="100">de</term>
+          <term name="ordinal-10" match="2-digits">de</term>
+          <term name="ordinal-11" match="2-digits">de</term>
+          <term name="ordinal-12" match="2-digits">de</term>
+          <term name="ordinal-13" match="2-digits">de</term>
+          <term name="ordinal-14" match="2-digits">de</term>
+          <term name="ordinal-15" match="2-digits">de</term>
+          <term name="ordinal-16" match="2-digits">de</term>
+          <term name="ordinal-17" match="2-digits">de</term>
+          <term name="ordinal-18" match="2-digits">de</term>
+          <term name="ordinal-19" match="2-digits">de</term>
         </terms>
       </locale>
       """

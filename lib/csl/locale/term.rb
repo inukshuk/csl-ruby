@@ -32,6 +32,12 @@ module CSL
 
       alias [] lookup
 
+      def lookup_modulo(query, divisor)
+        term = lookup(query)
+        return if term.nil? || !term.match_modulo?(divisor)
+        term
+      end
+      
       private
 
       # @!attribute [r] registry
@@ -53,13 +59,44 @@ module CSL
     end
 
     class Term < Node
-      attr_struct :name, :form, :gender, :'gender-form', :modulo
+      attr_struct :name, :form, :gender, :'gender-form', :match
       attr_children :single, :multiple
 
       attr_accessor :text
 
       def_delegators :attributes, :hash, :eql?, :name, :form, :gender
 
+      # This method returns whether or not the ordinal term matchs the
+      # passed-in modulus. This is determined by the ordinal term's match
+      # attribute: a value of '2-digits' matches a divisor of 100, '1-digit'
+      # matches a divisor of 10 and 'whole-number' matches a divisor of 1.
+      #
+      # If the term is no ordinal term, this methods always returns false.
+      #
+      # @return [Boolean] whether or not the ordinal term matches the
+      #   passed-in divisor.
+      def match_modulo?(divisor)
+        return false unless ordinal?
+        
+        case attributes.match
+        when '2-digits'
+          divisor.to_i == 100
+        when '1-digit'
+          divisor.to_i == 10
+        when 'whole-number'
+          divisor.to_i == 1
+        else
+          true
+        end
+      end
+
+      alias matches_modulo? match_modulo?
+      
+      # @return [Boolean] whether or not this term is an ordinal term
+      def ordinal?
+        /^ordinal(-\d\d+)?$/ === attributes.name
+      end
+        
       def gendered?
         !attributes.gender.blank?
       end
