@@ -68,6 +68,28 @@ module CSL
 
       private
 
+			def has_language				
+				attr_accessor :language
+				
+				define_method :has_language? do
+					!language.nil?
+				end
+				
+				public :language, :language=, :has_language?
+				
+				alias_method :original_attribute_assignments, :attribute_assignments
+				
+				define_method :attribute_assignments do
+					if has_language?
+			  		original_attribute_assignments.unshift('xml:lang="%s"' % language)
+					else
+						original_attribute_assignments
+					end
+			  end
+			
+				private :original_attribute_assignments, :attribute_assignments
+			end
+
       def attr_defaults(attributes)
         @default_attributes = attributes
       end
@@ -192,6 +214,10 @@ module CSL
     def has_attributes?
       !attributes.empty?
     end
+
+		def has_language?
+			false
+		end
 
     def textnode?
       false

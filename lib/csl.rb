@@ -6,6 +6,8 @@ require 'singleton'
 require 'set'
 require 'time'
 
+require 'namae'
+
 require 'csl/version'
 
 require 'csl/compatibility'

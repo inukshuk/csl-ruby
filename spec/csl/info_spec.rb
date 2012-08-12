@@ -159,7 +159,13 @@ module CSL
       
       it 'returns the name if set' do
         poe.name.to_s.should == 'E. A. Poe'
-      end      
+      end
+    end
+
+    describe '#family' do
+      it "returns the author's family name" do
+        poe.family.should == 'Poe'
+      end
     end
 
     describe '#email' do

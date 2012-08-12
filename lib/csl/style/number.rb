@@ -4,7 +4,8 @@ module CSL
     class Number < Node
       attr_struct :variable, :form, :'text-case',
         *Schema.attr(:affixes, :display, :font)
-      
+
+      has_no_children
 
       # @return [Boolean] whether or not the number's format is set to
       #   :numeric; also returns true if the number's form attribute is not

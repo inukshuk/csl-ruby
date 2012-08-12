@@ -105,16 +105,16 @@ module CSL
     # @return [self]
     def update!(timestamp = Time.now)
       ts = timestamp.respond_to?(:xmlschema) ? timestamp.xmlschema : timestamp.to_s
-      
+
       if has_updated?
         updated = Updated.new { |u| u.text = ts }
       else
         updated.text = ts
       end
-      
+
       self
     end
-    
+
     # @return [Time,nil] when the info node's parent was published
     def published_at
       return unless has_published?
@@ -125,30 +125,30 @@ module CSL
     # @return [self]
     def publish!(timestamp = Time.now)
       ts = timestamp.respond_to?(:xmlschema) ? timestamp.xmlschema : timestamp.to_s
-      
+
       if has_published?
         published = Published.new { |u| u.text = ts }
       else
         published.text = ts
       end
-      
+
       self
     end
-    
+
     # @return [Symbol] the parent style's citation format
     def citation_format
       return unless has_categories?
-      
+
       cat = categories.detect { |c| c.attribute? :'citation-format' }
       return if cat.nil?
-      
+
       cat[:'citation-format'].to_sym
     end
-    
+
     def citation_format=(new_format)
-      cat = categories.detect { |c| c.attribute? :'citation-format' }      
+      cat = categories.detect { |c| c.attribute? :'citation-format' }
       cat = add_child Info::Category.new if cat.nil?
-      
+
       cat[:'citation-format'] = new_format.to_s
     end
 
@@ -158,20 +158,22 @@ module CSL
 
     class Contributor < Node
       attr_children :name, :email, :uri
+			def_delegators :name, *Namae::Name.members
     end
 
     class Author < Node
       attr_children :name, :email, :uri
+			def_delegators :name, *Namae::Name.members
     end
 
     class Translator < Node
       attr_children :name, :email, :uri
+			def_delegators :name, *Namae::Name.members
     end
 
     class Link < Node
+			has_language
       attr_struct :href, :rel
-
-      # TODO xml:lang
     end
 
     class DependentStyle < TextNode
@@ -187,6 +189,18 @@ module CSL
     end
 
     class Name < TextNode
+
+			def_delegators :namae, *Namae::Name.members
+
+			private
+
+			def namae
+				@namae || namae!
+			end
+
+			def namae!
+				@namae = Namae::Name.parse to_s
+			end
     end
 
     class Email < TextNode
@@ -196,24 +210,23 @@ module CSL
     end
 
     class Title < TextNode
-      # TODO xml:lang
+			has_language
     end
 
     class TitleShort < TextNode
-      # TODO xml:lang
+			has_language
     end
 
     class Summary < TextNode
-      # TODO xml:lang
+			has_language
     end
 
     class Rights < TextNode
+			has_language
       attr_struct :license
-      # TODO xml:lang
     end
 
     class Updated < TextNode
-
       def to_time
         return if empty?
         Time.parse(to_s)

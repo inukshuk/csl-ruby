@@ -51,7 +51,9 @@ module CSL
 
     attr_children :'style-options', :info, :date, :terms
 
-    attr_accessor :language, :region
+		has_language
+		
+    attr_accessor :region
 
     alias_child :metadata, :info
     alias_child :dates, :date
@@ -140,18 +142,21 @@ module CSL
       version < Schema.version
     end
 
-    # call-seq:
-    #   locale.set('en')    -> sets language to :en, region to :US
-    #   locale.set('de-AT') -> sets language to :de, region to :AT
-    #   locale.set('-DE')   -> sets langauge to :de, region to :DE
+    # @example
+    #   locale.set('en')    #-> sets language to :en, region to :US
+    #   locale.set('de-AT') #-> sets language to :de, region to :AT
+    #   locale.set('-DE')   #-> sets langauge to :de, region to :DE
     #
     # Sets language and region according to the passed-in locale string. If
     # the region part is not defined by the string, this method will set the
     # region to the default region for the given language.
     #
-    # Raises ArgumentError if the argument is no valid locale string. A valid
-    # locale string is based on the syntax of IETF language tags; it consists
-    # of either a language or region tag (or both), separated by a hyphen.
+    # @raise [ArgumentError] if the argument is no valid locale string.
+		# 	A valid locale string is based on the syntax of IETF language tags;
+		#   it consists of either a language or region tag (or both), separated
+		#   by a hyphen.
+		#
+		# @return [self]
     def set(locale)
       language, region = locale.to_s.scan(/([a-z]{2})?(?:-([A-Z]{2}))?/)[0].map do |tag|
         tag.respond_to?(:to_sym) ? tag.to_sym : nil
@@ -172,6 +177,7 @@ module CSL
     end
 
     # Sets the locale's language and region to nil.
+		# @return [self]
     def clear
       @language, @region = nil
       self
@@ -184,9 +190,9 @@ module CSL
     alias _ translate
     alias t translate
 
-    # call-seq:
-    #   locale.each_term { |term| block } -> locale
-    #   locale.each_term                  -> enumerator
+    # @example
+    #   locale.each_term { |term| block } #-> locale
+    #   locale.each_term                  #-> enumerator
     #
     # Calls block once for each term defined by the locale. If no block is
     # given, an enumerator is returned instead.
@@ -199,9 +205,9 @@ module CSL
       end
     end
 
-    # call-seq:
-    #   locale.each_date { |date_format| block } -> locale
-    #   locale.each_date                         -> enumerator
+    # @example
+    #   locale.each_date { |date_format| block } #-> locale
+    #   locale.each_date                         #-> enumerator
     #
     # Calls block once for each date format defined by the locale. If no
     # block is given, an enumerator is returned instead.
