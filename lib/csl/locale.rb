@@ -62,11 +62,11 @@ module CSL
     private :attributes
     undef_method :[]=
 
-    # call-seq:
-    #   Locale.new                                         -> default
-    #   Locale.new('en')                                   -> American English
-    #   Locale.new('en', :'punctuation-in-quote' => fales) -> with style-options
-    #   Locale.new(:lang => 'en-GB', :version => '1.0')    -> British English
+    # @example
+    #   Locale.new                                         #-> default
+    #   Locale.new('en')                                   #-> American English
+    #   Locale.new('en', :'punctuation-in-quote' => fales) #-> with style-options
+    #   Locale.new(:lang => 'en-GB', :version => '1.0')    #-> British English
     #
     # Returns a new locale. In the first form, the language/regions is set
     # to the default language and region. In the second form the

@@ -1,11 +1,19 @@
 module CSL
   class Style
-    
+
     class Number < Node
       attr_struct :variable, :form, :'text-case',
         *Schema.attr(:affixes, :display, :font)
 
       has_no_children
+
+			def has_variable?
+				attribute?(:variable)
+			end
+
+			def variable
+				attributes[:variable]
+			end
 
       # @return [Boolean] whether or not the number's format is set to
       #   :numeric; also returns true if the number's form attribute is not
@@ -16,19 +24,19 @@ module CSL
 
       # @return [Boolean] whether or not the number's format is set to :ordinal
       def ordinal?
-        attribute?(:form) && attributes.form.to_sym == :ordinal
+				attribute?(:form) && attributes.form.to_sym == :ordinal
       end
-      
+
       # @return [Boolean] whether or not the number's format is set to :'long-ordinal'
       def long_ordinal?
         attribute?(:form) && attributes.form.to_sym == :'long-ordinal'
       end
-      
+
       # @return [Boolean] whether or not the number's format is set to :roman
       def roman?
         attribute?(:form) && attributes.form.to_sym == :roman
       end
-            
+
     end
 
   end
