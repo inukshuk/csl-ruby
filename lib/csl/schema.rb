@@ -86,6 +86,10 @@ module CSL
     })
     
     @attributes.each_value { |v| v.map!(&:to_sym).freeze }
+
+		@attributes[:formatting] = [:'text-case'].concat(
+			@attributes.values_at(:affixes, :quotes, :font).flatten)
+
     @attributes.freeze
     
     @file = File.expand_path('../../../vendor/schema/csl.rng', __FILE__)

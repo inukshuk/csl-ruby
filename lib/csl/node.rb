@@ -277,6 +277,21 @@ module CSL
     end
     alias matches_exactly? exact_match?
 
+		# @option filter [Array] a list of attribute names
+		# @return [Hash] the node's attributes matching the filter
+		def attributes_for(*filter)
+			filter.flatten!
+
+			Hash[map { |name, value|
+				!value.nil? && filter.include?(name) ? [name, value.to_s] : nil
+			}.compact]
+		end
+
+		# @return [Hash] the node's formatting options
+		def formatting_options
+			attributes_for Schema.attr(:formatting)
+		end
+
     def <=>(other)
       [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
     rescue
@@ -312,7 +327,7 @@ module CSL
 
     def attribute_assignments
       each_pair.map { |name, value|
-        value.nil? ? nil: [name, value.to_s.inspect].join('=')
+        value.nil? ? nil : [name, value.to_s.inspect].join('=')
       }.compact
     end
 

@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
 		XML-based language to describe the formatting of citations and
 		bibliographies.
 		"""
+
   s.license     = 'AGPL'
   s.date        = Time.now.strftime('%Y-%m-%d')
 

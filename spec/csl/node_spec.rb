@@ -33,6 +33,46 @@ module CSL
 		    FooBarNode.new.attributes.should be_a(Struct)
 		  end
 		  
+		  describe '#attributes_for' do
+		    it 'returns an empty hash when there no attributes are set' do
+		      TestNode.new.attributes_for.should be_empty
+		      TestNode.new.attributes_for(:x, :y).should be_empty
+		      
+		      FooBarNode.new.attributes_for.should be_empty
+		      FooBarNode.new.attributes_for(:x, :y).should be_empty
+		      FooBarNode.new.attributes_for(:foo, :bar).should be_empty
+		    end
+		    
+		    it 'returns an empty hash when no attributes match the filter' do
+		      TestNode.new(:foo => 'foo').attributes_for.should be_empty
+		      TestNode.new(:foo => 'foo').attributes_for(:x, :y).should be_empty
+		      
+		      FooBarNode.new(:foo => 'foo').attributes_for.should be_empty
+		      FooBarNode.new(:foo => 'foo').attributes_for(:x, :y).should be_empty
+		    end
+
+		    it 'returns a hash of all set attributes that match the filter' do
+		      TestNode.new(:foo => 'foo', :bar => 'bar').attributes_for(:x, :foo).should == { :foo => 'foo' }
+		      FooBarNode.new(:foo => 'foo', :bar => 'bar').attributes_for(:x, :foo).should == { :foo => 'foo' }
+		    end
+		  end
+		  
+		  describe '#formatting_options' do
+		    it 'returns an empty hash by default' do
+		      TestNode.new.formatting_options.should be_empty
+		      FooBarNode.new.formatting_options.should be_empty
+		    end
+		    
+		    it 'returns an empty hash if there are no formatting attributes' do
+		      TestNode.new(:foo => 'foo', :bar => 'bar').formatting_options.should be_empty
+		      FooBarNode.new(:foo => 'foo', :bar => 'bar').formatting_options.should be_empty
+		    end
+		    
+		    it "returns a hash of the node's formatting attributes" do
+		      TestNode.new(:foo => 'foo', :'font-style' => 'italic').formatting_options.should == { :'font-style' => 'italic' }
+		    end
+		  end
+		  
   		describe '#values_at' do
   		  it 'FooBarNode accepts attribute names' do
   		    FooBarNode.new(:foo => 'Foo', :bar => 'Bar').values_at(:bar, :foo).should == %w{ Bar Foo }
