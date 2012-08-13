@@ -29,7 +29,6 @@ module CSL
 
         terms.detect { |t| t.match?(query) }
       end
-
       alias [] lookup
 
       def lookup_modulo(query, divisor)

@@ -44,6 +44,10 @@ module CSL
 
         node
       end
+      
+      def load(input = Locale.default)
+        super
+      end
     end
 
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
@@ -183,11 +187,9 @@ module CSL
       self
     end
 
-    def translate(*arguments)
-      raise 'not implemented'
+    def translate(query)
+      terms[query]
     end
-
-    alias _ translate
     alias t translate
 
     # @example

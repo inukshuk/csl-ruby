@@ -23,6 +23,10 @@ module CSL
 
         node
       end
+      
+      def load(input = Style.default)
+        super
+      end
     end
 
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
