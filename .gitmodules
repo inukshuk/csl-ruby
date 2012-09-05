@@ -1,6 +1,0 @@
-[submodule "vendor/styles"]
-	path = vendor/styles
-	url = https://github.com/citation-style-language/styles.git
-[submodule "vendor/locales"]
-	path = vendor/locales
-	url = https://github.com/citation-style-language/locales.git

@@ -5,7 +5,7 @@ module CSL
 
     @default = :apa
 
-    @root = File.expand_path('../../../vendor/styles', __FILE__).freeze
+    @root = '/usr/local/share/csl/styles'.freeze
 
     @extension = '.csl'.freeze
     @prefix = ''

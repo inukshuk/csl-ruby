@@ -10,7 +10,7 @@ module CSL
     
     @default = 'en-US'.freeze
 
-    @root = File.expand_path('../../../vendor/locales', __FILE__).freeze
+    @root = '/usr/local/share/csl/locales'.freeze
 
     @extension = '.xml'.freeze
     @prefix = 'locales-'.freeze
