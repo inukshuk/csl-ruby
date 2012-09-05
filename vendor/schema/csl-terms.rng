@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0">
+<grammar xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <div>
     <a:documentation>Terms</a:documentation>
     <define name="terms">
       <choice>
-        <ref name="category.field"/>
         <ref name="terms.gender-assignable"/>
         <ref name="terms.gender-variants"/>
         <ref name="terms.locator"/>
@@ -39,6 +38,7 @@
         <value>reference</value>
         <value>retrieved</value>
         <value>scale</value>
+        <value>version</value>
         <value>open-quote</value>
         <a:documentation>Punctuation</a:documentation>
         <value>close-quote</value>
@@ -50,6 +50,9 @@
         <value>season-02</value>
         <value>season-03</value>
         <value>season-04</value>
+        <ref name="category.field">
+          <a:documentation>(legacy; remove in CSL 1.1)</a:documentation>
+        </ref>
       </choice>
     </define>
     <define name="terms.gender-assignable">
@@ -75,11 +78,18 @@
     <define name="terms.gender-variants">
       <a:documentation>Terms for which gender variants may be specified</a:documentation>
       <choice>
-        <value>ordinal-01</value>
+        <ref name="terms.ordinals"/>
+        <ref name="terms.long-ordinals"/>
+      </choice>
+    </define>
+    <define name="terms.ordinals">
+      <data type="string">
         <a:documentation>Ordinals</a:documentation>
-        <value>ordinal-02</value>
-        <value>ordinal-03</value>
-        <value>ordinal-04</value>
+        <param name="pattern">ordinal(-\d{2})?</param>
+      </data>
+    </define>
+    <define name="terms.long-ordinals">
+      <choice>
         <value>long-ordinal-01</value>
         <a:documentation>Long ordinals</a:documentation>
         <value>long-ordinal-02</value>

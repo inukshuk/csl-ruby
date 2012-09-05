@@ -435,6 +435,12 @@ options that are citation or bibliography specific, the elements
 cs:citation-options and cs:bibliography-options can be added.</a:documentation>
       <element name="cs:style-options">
         <optional>
+          <attribute name="limit-day-ordinals-to-day-1" a:defaultValue="false">
+            <a:documentation>Limit the "ordinal" form to the first day of the month.</a:documentation>
+            <data type="boolean"/>
+          </attribute>
+        </optional>
+        <optional>
           <attribute name="punctuation-in-quote" a:defaultValue="false">
             <a:documentation>Specify whether punctuation (a period or comma) is placed within
 or outside (default) the closing quotation mark.</a:documentation>
@@ -512,7 +518,34 @@ or outside (default) the closing quotation mark.</a:documentation>
         </group>
         <group>
           <attribute name="name">
-            <ref name="terms.gender-variants"/>
+            <ref name="terms.ordinals"/>
+          </attribute>
+          <optional>
+            <attribute name="form">
+              <value>long</value>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="gender-form">
+              <choice>
+                <value>masculine</value>
+                <value>feminine</value>
+              </choice>
+            </attribute>
+          </optional>
+          <optional>
+            <attribute name="match">
+              <choice>
+                <value>last-digit</value>
+                <value>last-two-digits</value>
+                <value>whole-number</value>
+              </choice>
+            </attribute>
+          </optional>
+        </group>
+        <group>
+          <attribute name="name">
+            <ref name="terms.long-ordinals"/>
           </attribute>
           <optional>
             <attribute name="form">
@@ -851,9 +884,13 @@ result of "name-as-sort-order" (e.g., ", " in "Doe, John").</a:documentation>
             </choice>
           </attribute>
         </optional>
-        <ref name="affixes"/>
         <ref name="font-formatting"/>
+        <ref name="names.et-al.legacy-attributes"/>
       </element>
+    </define>
+    <define name="names.et-al.legacy-attributes">
+      <a:documentation>Ignored in CSL 1.0.1. Will be disallowed with CSL 1.1.</a:documentation>
+      <ref name="affixes"/>
     </define>
     <define name="names.label">
       <a:documentation>Inherits variable from the parent cs:names element.</a:documentation>
