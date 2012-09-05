@@ -36,11 +36,12 @@ module CSL
   class Info < Node
 
     attr_children :title, :'title-short', :id, :issn, :eissn, :issnl,
-      :link, :author, :contributor, :category, :published, :summary,
-      :updated, :rights, :'link-dependent-style'
+      :link, :author, :contributor, :translator, :category, :published,
+			:summary, :updated, :rights, :'link-dependent-style'
 
     alias_child :contributors, :contributor
     alias_child :authors, :author
+    alias_child :translators, :translator
     alias_child :links, :link
     alias_child :categories, :category
 
