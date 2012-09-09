@@ -16,9 +16,6 @@ module CSL
 
 		    yield self if block_given?
 		  end
-
-      def initialize_copy(other)
-      end
       
 			def added_to(node)
 				raise ValidationError, "parent must be locale node: was #{node.inspect}" unless node.is_a?(Locale)

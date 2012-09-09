@@ -68,17 +68,17 @@ module CSL
 
       private
 
-			def has_language				
+			def has_language
 				attr_accessor :language
-				
+
 				define_method :has_language? do
 					!language.nil?
 				end
-				
+
 				public :language, :language=, :has_language?
-				
+
 				alias_method :original_attribute_assignments, :attribute_assignments
-				
+
 				define_method :attribute_assignments do
 					if has_language?
 			  		original_attribute_assignments.unshift('xml:lang="%s"' % language)
@@ -86,7 +86,7 @@ module CSL
 						original_attribute_assignments
 					end
 			  end
-			
+
 				private :original_attribute_assignments, :attribute_assignments
 			end
 
@@ -120,13 +120,17 @@ module CSL
             __class__.keys
           end
 
+          def symbolize_keys
+            self
+          end
+
           def values
             super.compact
           end
 
-          # def to_a
-          #   keys.zip(values_at(*keys)).reject { |k,v| v.nil? }
-          # end
+          def to_hash
+            Hash[keys.zip(values_at(*keys)).reject { |_, v| v.nil? }]
+          end
 
           # @return [Boolean] true if all the attribute values are nil;
           #   false otherwise.
@@ -190,6 +194,19 @@ module CSL
       @children = self.class.create_children
 
       yield self if block_given?
+    end
+
+    def initialize_copy(other)
+      @attributes = self.class.create_attributes(other.attributes)
+      @children = self.class.create_children
+
+      @parent = nil
+
+      other.each_child do |child|
+        copy = child.dup
+        copy.parent = nil
+        add_child copy
+      end
     end
 
     # Iterates through the Node's attributes

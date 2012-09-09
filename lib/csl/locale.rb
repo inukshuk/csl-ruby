@@ -94,7 +94,7 @@ module CSL
     alias_child :dates, :date
     alias_child :options, :style_options
 
-    private :attributes
+    protected :attributes
     undef_method :[]=
 
     # @example
