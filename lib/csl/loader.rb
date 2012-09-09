@@ -6,9 +6,9 @@ module CSL
   # will be passed the contents of the asset data.
   #
   module Loader
-    
+
     attr_accessor :root, :prefix, :extension
-    
+
     # call-seq:
     #   Style.load(:apa)                         -> style
     #   Style.load('chicago-author.csl')         -> style
@@ -25,7 +25,7 @@ module CSL
       when input.to_s =~ /^\s*</
         data = input
       else
-                
+
 				case
 				when File.exists?(input.to_s)
 					location = input
@@ -43,16 +43,23 @@ module CSL
       end
 
 			parse(data)
-			
+
 		rescue => e
 			raise ParseError, "failed to load #{input.inspect}: #{e.message}"
     end
-    
+
+    def list
+      Dir["#{root}/#{prefix}*#{extension}"].map do |path|
+        File.basename(path, extension).sub(/^#{prefix}/, '')
+      end
+    end
+    alias ls list
+
     # Extends the passed-in string to a full path.
     def extend_path(string)
       File.join(root.to_s, extend_name(string))
     end
-    
+
     # Extends the passed-in string to a style/locale name, by prefixing and
     # appending the default name prefix and extension.
     def extend_name(string)
@@ -61,11 +68,11 @@ module CSL
       else
         name = string.to_s.dup
       end
-      
+
       unless name.start_with?(prefix.to_s)
         name = [prefix, name].join
       end
-      
+
       name
     end
 
@@ -74,5 +81,5 @@ module CSL
       raise 'Not Implemented'
     end
   end
-  
+
 end

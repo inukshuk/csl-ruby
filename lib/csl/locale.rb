@@ -7,7 +7,7 @@ module CSL
     types << CSL::Info
 
     include Comparable
-    
+
     @default = 'en-US'.freeze
 
     @root = '/usr/local/share/csl/locales'.freeze
@@ -15,6 +15,7 @@ module CSL
     @extension = '.xml'.freeze
     @prefix = 'locales-'.freeze
 
+    @tag_pattern = /^[a-z]{2}(-[A-Z]{2})?|-[A-Z]{2}$/
 
     # Default languages/regions.
     # Auto-detection is based on these lists.
@@ -22,11 +23,11 @@ module CSL
       af ZA ar AR bg BG ca AD cs CZ da DK de DE el GR en US es ES et EE fa IR
       fr FR he IL hu HU is IS it IT ja JP km KH ko KR mn MN nb NO nl NL nn NO
       pl PL pt PT ro RO ru RU sk SK sl SI sr RS sv SE th TH tr TR uk UA vi VN
-      zh CN zh TW
+      zh CN
     }.map(&:to_sym)].freeze
 
     @languages = @regions.invert.merge(Hash[*%w{
-      AT de BR pt CA en CH de GB en
+      AT de BR pt CA en CH de GB en TW zh
     }.map(&:to_sym)]).freeze
 
 
@@ -44,10 +45,40 @@ module CSL
 
         node
       end
-      
+
       def load(input = Locale.default)
+        input = normalize input if input.to_s =~ tag_pattern
         super
       end
+
+      # Normalizes an IETF tag; adds a language's default region or a
+      # region's default language.
+      #
+      # @example
+      #   Locale.normalize("en")  #-> "en-US"
+      #   Locale.normalize("-BR") #-> "pt-BR"
+      #
+      # @raise [ArgumentError] if the passed-in string is no IETF tag
+      #
+      # @param tag [String] an IETF tag to be normalized
+      # @return [String] the normalized IETF tag
+      def normalize(tag)
+        tag = tag.to_s.strip
+
+        raise ArgumentError "not a valid IETF tag: #{tag.inspect}" unless
+          tag =~ tag_pattern
+
+        language, region = tag.split(/-/)
+        
+        return [language, regions[language.to_sym]].join('-') if region.nil?
+        return [languages[region.to_sym], region].join('-') if language.empty?
+        
+        tag
+      end
+
+      private
+
+      attr_reader :tag_pattern
     end
 
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
@@ -56,7 +87,7 @@ module CSL
     attr_children :'style-options', :info, :date, :terms
 
 		has_language
-		
+
     attr_accessor :region
 
     alias_child :metadata, :info
@@ -245,6 +276,19 @@ module CSL
     def valid?
       validate.empty?
     end
+
+		# @return [Locale]
+		def merge(*others)
+			dup.merge!(*others)
+		end
+
+		# @return [self]
+		def merge!(*others)
+			others.each do |other|
+			end
+
+			self
+		end
 
     # Locales are sorted first by language, then by region; sort order is
     # alphabetical with the following exceptions: the default locale is

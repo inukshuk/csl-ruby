@@ -32,6 +32,19 @@ module CSL
 			
 		end
 		
+		describe '.normalize' do
+      {
+        'en' => 'en-US',
+        '-GB' => 'en-GB',
+        '-BR' => 'pt-BR',
+        'de-AT' => 'de-AT'
+      }.each_pair do |tag, expected|
+        it "converts #{tag.inspect} to #{expected.inspect}" do
+          Locale.normalize(tag).should == expected
+        end
+      end
+		end
+		
 		describe '.new' do
 			it { should_not be_nil }
 
