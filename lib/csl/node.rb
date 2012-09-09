@@ -199,14 +199,17 @@ module CSL
     def initialize_copy(other)
       @attributes = self.class.create_attributes(other.attributes)
       @children = self.class.create_children
-
       @parent = nil
+    end
 
-      other.each_child do |child|
-        copy = child.dup
-        copy.parent = nil
-        add_child copy
+    def deep_copy
+      copy = dup
+      
+      each_child do |child|
+        copy.add_child child.dup
       end
+
+      copy
     end
 
     # Iterates through the Node's attributes
