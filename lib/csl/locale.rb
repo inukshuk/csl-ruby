@@ -37,15 +37,6 @@ module CSL
       attr_accessor :default
       attr_reader :languages, :regions
 
-      def parse(data)
-        node = CSL.parse!(data, self)
-
-        raise ParseError, "root node is not a locale: #{node.inspect}" unless
-          node.is_a?(self)
-
-        node
-      end
-
       def load(input = Locale.default)
         input = normalize input if input.to_s =~ tag_pattern
         super
@@ -65,14 +56,14 @@ module CSL
       def normalize(tag)
         tag = tag.to_s.strip
 
-        raise ArgumentError "not a valid IETF tag: #{tag.inspect}" unless
+        raise ArgumentError, "not a valid IETF tag: #{tag.inspect}" unless
           tag =~ tag_pattern
 
         language, region = tag.split(/-/)
-        
-        return [language, regions[language.to_sym]].join('-') if region.nil?
+
+        return [language, regions[language.to_sym]].compact.join('-') if region.nil?
         return [languages[region.to_sym], region].join('-') if language.empty?
-        
+
         tag
       end
 
@@ -100,7 +91,7 @@ module CSL
     # @example
     #   Locale.new                                         #-> default
     #   Locale.new('en')                                   #-> American English
-    #   Locale.new('en', :'punctuation-in-quote' => fales) #-> with style-options
+    #   Locale.new('en', :'punctuation-in-quote' => false) #-> with style-options
     #   Locale.new(:lang => 'en-GB', :version => '1.0')    #-> British English
     #
     # Returns a new locale. In the first form, the language/regions is set
@@ -121,7 +112,7 @@ module CSL
 
           attributes, options = arguments
         else
-          attributes, locale, options = {}, arguments
+          attributes, locale, options = {}, *arguments
         end
       when 2
         attributes, locale, options = {}, *arguments
@@ -140,10 +131,10 @@ module CSL
       yield self if block_given?
     end
 
-    # TODO
-    # def initialize_copy(other)
-    #   @options = other.options.dup
-    # end
+    def initialize_copy(other)
+      super
+      @language, @region = other.language, other.region
+    end
 
 
     def added_to(node)
@@ -193,21 +184,7 @@ module CSL
 		#
 		# @return [self]
     def set(locale)
-      language, region = locale.to_s.scan(/([a-z]{2})?(?:-([A-Z]{2}))?/)[0].map do |tag|
-        tag.respond_to?(:to_sym) ? tag.to_sym : nil
-      end
-
-      case
-      when language && region
-        @language, @region = language, region
-      when language
-        @language, @region = language, Locale.regions[language]
-      when region
-        @language, @region = Locale.languages[region], region
-      else
-        raise ArgumentError, "not a valid locale string: #{locale.inspect}"
-      end
-
+      @language, @region = Locale.normalize(locale).split(/-/).map(&:to_sym)
       self
     end
 
@@ -279,16 +256,19 @@ module CSL
 
 		# @return [Locale]
 		def merge(*others)
-			dup.merge!(*others)
+			deep_copy.merge!(*others)
 		end
 
 		# @return [self]
 		def merge!(*others)
 			others.each do |other|
+			  merge_options other
+			  merge_dates other
 			end
 
 			self
 		end
+
 
     # Locales are sorted first by language, then by region; sort order is
     # alphabetical with the following exceptions: the default locale is
@@ -346,6 +326,38 @@ module CSL
       Schema.preamble.dup
     end
 
+		# @param other [Locale] an other locale whose options should be merged
+		# @return [self]
+		def merge_options(other)
+		  return self unless other.has_options?
+
+		  if has_options?
+		    options.attributes.merge! other.options.attributes
+		  else
+		    add_child other.options.dup
+		  end
+
+		  self
+		end
+
+		# @param other [Locale] an other locale whose date nodes should be merged
+		# @return [self]
+    def merge_dates(other)
+      return self unless other.has_dates?
+
+      if has_dates?
+        other.each_date do |date|
+          delete_children each_date.select { |d| d[:form] == date[:form] }
+          add_child date.deep_copy
+        end
+      else
+        other.each_date do |date|
+          add_child date.deep_copy
+        end
+      end
+
+      self
+    end
   end
 
 end

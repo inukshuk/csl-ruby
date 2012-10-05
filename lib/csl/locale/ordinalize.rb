@@ -37,7 +37,9 @@ module CSL
       raise ArgumentError, "unable to ordinalize #{number}; integer expected" unless
         number.respond_to?(:to_i)
 
-      number, query = number.to_i, ordinalize_query_for(options)
+      number = number.to_i
+      
+      
 
       key = query[:name]
 
@@ -97,8 +99,17 @@ module CSL
     
     private
     
-    # @return [Hash] a valid ordinalize query; the name attribute is a format string
-    def ordinalize_query_for(options)
+    def normalize_gender_options(options)
+      gender = (options[:'gender-form'] || options[:gender]).to_s
+      unless gender.empty? || gender =~ /^n/i
+        q[:'gender-form'] = (gender =~ /^m/i) ? 'masculine' : 'feminine'
+      end
+    end
+
+    def normalize_plural_options(options)
+    end
+    
+    def ordinalize_options_for(options)
       q = { :name => 'ordinal-%02d' }
 
       unless options.nil?
@@ -106,10 +117,6 @@ module CSL
           q[:name] = 'long-ordinal-%02d'
         end
 
-        gender = (options[:'gender-form'] || options[:gender]).to_s
-        unless gender.empty? || gender =~ /^n/i
-          q[:'gender-form'] = (gender =~ /^m/i) ? 'masculine' : 'feminine'
-        end
       end
 
       q

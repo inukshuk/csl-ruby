@@ -66,29 +66,44 @@ module CSL
         end
       end
 
+      def parse(data)
+        parse!(data)
+      rescue
+        nil
+      end
+
+      def parse!(data)
+        node = CSL.parse!(data, self)
+
+        raise ParseError, "root node not #{self.name}: #{node.inspect}" unless
+          node.class == self || Node.equal?(self)
+
+        node
+      end
+
       private
 
-			def has_language
-				attr_accessor :language
+      def has_language
+        attr_accessor :language
 
-				define_method :has_language? do
-					!language.nil?
-				end
+        define_method :has_language? do
+          !language.nil?
+        end
 
-				public :language, :language=, :has_language?
+        public :language, :language=, :has_language?
 
-				alias_method :original_attribute_assignments, :attribute_assignments
+        alias_method :original_attribute_assignments, :attribute_assignments
 
-				define_method :attribute_assignments do
-					if has_language?
-			  		original_attribute_assignments.unshift('xml:lang="%s"' % language)
-					else
-						original_attribute_assignments
-					end
-			  end
+        define_method :attribute_assignments do
+          if has_language?
+            original_attribute_assignments.unshift('xml:lang="%s"' % language)
+          else
+            original_attribute_assignments
+          end
+        end
 
-				private :original_attribute_assignments, :attribute_assignments
-			end
+        private :original_attribute_assignments, :attribute_assignments
+      end
 
       def attr_defaults(attributes)
         @default_attributes = attributes
@@ -197,16 +212,17 @@ module CSL
     end
 
     def initialize_copy(other)
+      super
       @attributes = self.class.create_attributes(other.attributes)
       @children = self.class.create_children
-      @parent = nil
+      @parent, @ancestors, @descendants, @siblings, @root, @depth = nil
     end
 
     def deep_copy
       copy = dup
-      
+
       each_child do |child|
-        copy.add_child child.dup
+        copy.add_child child.deep_copy
       end
 
       copy
@@ -235,9 +251,9 @@ module CSL
       !attributes.empty?
     end
 
-		def has_language?
-			false
-		end
+    def has_language?
+      false
+    end
 
     def textnode?
       false
@@ -271,8 +287,13 @@ module CSL
     #
     # @see #exact_match?
     #
-    # If the optional
-    # @param name [String,Regexp] must match the nodename
+    # @example
+    #   node.match?(name, conditions)
+    #   node.match?(conditions)
+    #   node.match?(other_node)
+    #
+    # @param name [String,Regexp,Node] must match the nodename; alternatively
+    #   you can pass a node
     # @param conditions [Hash] the conditions
     #
     # @return [Boolean] whether or not the query matches the node
@@ -306,7 +327,13 @@ module CSL
     #
     # @see #match?
     #
-    # @param name [String,Regexp] must match the nodename
+    # @example
+    #   node.exact_match?(name, conditions)
+    #   node.exact_match?(conditions)
+    #   node.exact_match?(other_node)
+    #
+    # @param name [String,Regexp,Node] must match the nodename; alternatively
+    #   you can pass a node
     # @param conditions [Hash] the conditions
     #
     # @return [Boolean] whether or not the query matches the node exactly
@@ -323,20 +350,20 @@ module CSL
     end
     alias matches_exactly? exact_match?
 
-		# @option filter [Array] a list of attribute names
-		# @return [Hash] the node's attributes matching the filter
-		def attributes_for(*filter)
-			filter.flatten!
+    # @option filter [Array] a list of attribute names
+    # @return [Hash] the node's attributes matching the filter
+    def attributes_for(*filter)
+      filter.flatten!
 
-			Hash[map { |name, value|
-				!value.nil? && filter.include?(name) ? [name, value.to_s] : nil
-			}.compact]
-		end
+      Hash[map { |name, value|
+        !value.nil? && filter.include?(name) ? [name, value.to_s] : nil
+      }.compact]
+    end
 
-		# @return [Hash] the node's formatting options
-		def formatting_options
-			attributes_for Schema.attr(:formatting)
-		end
+    # @return [Hash] the node's formatting options
+    def formatting_options
+      attributes_for Schema.attr(:formatting)
+    end
 
     def <=>(other)
       [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
@@ -369,6 +396,11 @@ module CSL
     alias to_s pretty_print
 
 
+    protected
+
+    def match_conditions
+    end
+
     private
 
     def attribute_assignments
@@ -379,6 +411,8 @@ module CSL
 
     def match_conditions_for(name, conditions)
       case name
+      when Node
+        [name.nodename, name.attributes.to_hash]
       when Hash
         conditions, name = name, nodename
       when Symbol

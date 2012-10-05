@@ -14,15 +14,6 @@ module CSL
       include Loader
 
       attr_accessor :default
-
-      def parse(data)
-        node = CSL.parse!(data, self)
-
-        raise ParseError, "root node is not a style: #{node.inspect}" unless
-          node.is_a?(self)
-
-        node
-      end
       
       def load(input = Style.default)
         super

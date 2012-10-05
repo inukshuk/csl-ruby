@@ -5,11 +5,13 @@ module CSL
   # appropriate root, prefix and extension values and a parse method that
   # will be passed the contents of the asset data.
   #
+  # @note
+  #   Base classes are exepcted to define a #parse method.
   module Loader
 
     attr_accessor :root, :prefix, :extension
 
-    # call-seq:
+    # @example
     #   Style.load(:apa)                         -> style
     #   Style.load('chicago-author.csl')         -> style
     #   Locale.load('en')                        -> locale
@@ -18,6 +20,9 @@ module CSL
     # Resolves the passed-in path/name or string and loads the asset data.
     # The data will be passed on to the #parse method of the base class.
     # Typically, this will return a new instance of the class.
+    #
+    # @note
+    #   The base class is exepcted to define a #parse method.
     def load(input)
       case
       when input.respond_to?(:read)
@@ -74,11 +79,6 @@ module CSL
       end
 
       name
-    end
-
-    # The base class is exepcted to redefine the #parse method.
-    def parse(data)
-      raise 'Not Implemented'
     end
   end
 

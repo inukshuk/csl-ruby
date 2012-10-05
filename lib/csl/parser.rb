@@ -37,7 +37,7 @@ module CSL
     end
     
     def parse!(source, scope = Node)
-      root = parser[source].children.detect { |child| !comment?(child) }
+      root = parser[source].children.detect { |child| !skip?(child) }
       parse_tree root, scope
     end
 
@@ -62,8 +62,8 @@ module CSL
     end
     
     def parse_tree(node, scope = Node)
-			return nil if node.nil?
-			
+      return nil if node.nil?
+      
       root = parse_node node, scope
       scope = specialize_scope(root, scope)
       
@@ -83,23 +83,25 @@ module CSL
       end
     end
     
-		def comment?(node)
-			node.respond_to?(:comment?) && node.comment? ||
-				node.respond_to?(:node_type) && [:comment, :xmldecl].include?(node.node_type)
-		end
+    def comment?(node)
+      node.respond_to?(:comment?) && node.comment? ||
+        node.respond_to?(:node_type) &&
+        [:comment, :xmldecl, :processing_instruction, 7].include?(node.node_type)
+    end
+    alias skip? comment?
 
-		def specialize_scope(root, scope = Node)
-		  case root
-		  when Style
-		    Style
-		  when Locale
-		    Locale
-		  when Info
-		    Info
-		  else
-		    scope
-		  end
-		end
+    def specialize_scope(root, scope = Node)
+      case root
+      when Style
+        Style
+      when Locale
+        Locale
+      when Info
+        Info
+      else
+        scope
+      end
+    end
   end
   
 end

@@ -11,32 +11,72 @@ module CSL
 
       def initialize(attributes = {})
         super(attributes)
-        @registry, children[:term] = Hash.new { |h,k| h[k] = [] }, []
+        children[:term] = []
+
+        @registry = Term::Registry.new
+        @ordinals = Term::Registry.new
 
         yield self if block_given?
       end
 
       alias each each_child
 
-      def lookup(query)
-        query = { :name => query } unless query.is_a?(Hash)
+      def lookup(name, options = {})
+        options[:name] = name = name.to_s
 
-        terms = if query[:name].is_a?(Regexp)
-          registry.select { |name, _| name =~ query[:name] }.flatten(1)
-        else
-          registry[query[:name].to_s]
-        end
-
-        terms.detect { |t| t.match?(query) }
+        term = registry[name].detect { |t| t.match?(options) }
+        return term unless term.nil? && options.delete(:'gender-form')
+  
+        registry[name].detect { |t| t.match?(options) }
       end
       alias [] lookup
+      
+      def ordinalize_modulo(number, divisor, options = {})
+        ordinal = ordinalize(number, options)
+        return unless ordinal && ordinal.match_modulo?(divisor)
+        ordinal
+      end
 
-      def lookup_modulo(query, divisor)
-        term = lookup(query)
-        return if term.nil? || !term.match_modulo?(divisor)
-        term
+      def ordinalize(number, options = {})
+        return unless has_ordinals?
+        
+        if number == :default
+          options[:name] = 'ordinal'
+        else
+          options[:name] = 'ordinal-%02d' % number
+        end
+        
+        if options[:form].to_s =~ /^long/i
+          options.delete :form
+          options[:name][0,0] = 'long-'
+        end
+        
+        ordinal = ordinals[number].detect { |t| t.match?(options) }
+        return ordinal unless ordinal.nil? && options.delete(:'gender-form')
+        
+        ordinals[number].detect { |t| t.match?(options) }
+      end
+
+      # @return [Boolean] whether or not regular terms are registered at this node
+      def has_terms?
+        not registry.empty?
+      end
+
+      # @return [Boolean] whether or not ordinal terms are registered at this node
+      def has_ordinals?
+        not ordinals.empty?
+      end
+
+      def has_legacy_ordinals?
+        has_ordinals? && !ordinals.key?(:default)
       end
       
+      def drop_ordinals
+        tmp = ordinals.values.flatten(1)
+        ordinals.clear
+        delete_children tmp
+      end
+
       private
 
       # @!attribute [r] registry
@@ -44,17 +84,36 @@ module CSL
       #   term objects for quick term look-up
       attr_reader :registry
 
+      # @!attribute [r] ordinals
+      # @return [Hash] a private registry to map ordinals to the respective
+      #   term objects for quick ordinal look-up
+      attr_reader :ordinals
+
       def added_child(term)
         raise ValidationError, "failed to register term #{term.inspect}: name attribute missing" unless
           term.attribute?(:name)
 
-        registry[term[:name]].push(term)
+        if term.ordinal?
+          store = ordinals[term.ordinal]
+        else
+          store = registry[term[:name]]
+        end
+
+        delete_children store.select { |value| term.exact_match? value }
+
+        store.push(term)
+
         term
       end
 
       def deleted_child(term)
-        registry[term[:name]].delete(term)
+        if term.ordinal?
+          ordinals[term.ordinal].delete(term)
+        else
+          registry[term[:name]].delete(term)
+        end
       end
+      
     end
 
     class Term < Node
@@ -76,7 +135,7 @@ module CSL
       #   passed-in divisor.
       def match_modulo?(divisor)
         return false unless ordinal?
-        
+
         case attributes.match
         when '2-digits'
           divisor.to_i == 100
@@ -88,24 +147,30 @@ module CSL
           true
         end
       end
-
       alias matches_modulo? match_modulo?
-      
+
       # @return [Boolean] whether or not this term is an ordinal term
       def ordinal?
-        /^ordinal(-\d\d+)?$/ === attributes.name
+        /^(long-)?ordinal(-\d\d+)?$/ === attributes.name
       end
-        
+
+      # @return [Fixnum, :default, nil]
+      def ordinal
+        return unless ordinal?
+        return :default if attributes.name == 'ordinal'
+        attributes.name[/\d+/].to_i
+      end
+
       def gendered?
-        !attributes.gender.blank?
+        not attributes.gender.blank?
       end
 
       def neutral?
-        !gendered?
+        not gendered?
       end
 
       def textnode?
-        !text.blank?
+        not text.blank?
       end
 
       def singularize
@@ -200,6 +265,11 @@ module CSL
         end
       end
 
+      class Registry < ::Hash
+        def initialize
+          super { |h,k| h[k] = [] }
+        end
+      end
     end
 
     TextNode.types << Term

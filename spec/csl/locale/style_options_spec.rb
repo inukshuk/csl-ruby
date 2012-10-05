@@ -11,7 +11,7 @@ module CSL
     
     describe '#to_xml' do
       it 'returns <style-options punctuation-in-quote="false"/> by default' do
-        subject.to_xml.should == '<style-options punctuation-in-quote="false"/>'
+        subject.to_xml.should =~ /<style-options [^\/>]+\/>/
       end
     end
     
