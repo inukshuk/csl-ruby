@@ -45,13 +45,13 @@ module CSL
   		  let(:en) do
   		    Locale::Terms.parse <<-EOS
   	      <terms>
-            <term name="page">
-              <single>page</single>
-              <multiple>pages</multiple>
-            </term>
             <term name="page" form="short">
               <single>p.</single>
               <multiple>pp.</multiple>
+            </term>
+            <term name="page">
+              <single>page</single>
+              <multiple>pages</multiple>
             </term>
   	      </terms>
   	      EOS
@@ -61,12 +61,12 @@ module CSL
   		    en.lookup(:foo).should be_nil
   		  end
 
-  		  it 'returns the long-form by default' do
-  		    en.lookup(:page).should be_long
+  		  it 'returns the first matching form by default' do
+  		    en.lookup(:page).should be_short
   		  end
   		  
-  		  it 'returns the long-form by default for plural options' do
-  		    en.lookup(:page, :plural => true).should be_long
+  		  it 'ignores irrelevant options' do
+  		    en.lookup(:page, :plural => true).should_not be_nil
   		  end
   		end
 

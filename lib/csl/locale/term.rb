@@ -21,13 +21,17 @@ module CSL
 
       alias each each_child
 
+      # @return [Term, nil] the first term that matches the query
       def lookup(name, options = {})
         options[:name] = name = name.to_s
 
-        term = registry[name].detect { |t| t.match?(options) }
-        return term unless term.nil? && options.delete(:'gender-form')
+        # specialize search conditions
+        conditions = options.select { |k,_| Term::Attributes.keys.include?(k.to_sym) }
 
-        registry[name].detect { |t| t.match?(options) }
+        term = registry[name].detect { |t| t.match?(conditions) }
+        return term unless term.nil? && conditions.delete(:'gender-form')
+
+        registry[name].detect { |t| t.match?(conditions) }
       end
       alias [] lookup
 
@@ -170,7 +174,7 @@ module CSL
       end
 
       def short?
-        attribute?(:form) && attributes.form.to_sym == :short
+        attribute?(:form) && attributes.form.to_s =~ /^short$/i
       end
 
       def long?

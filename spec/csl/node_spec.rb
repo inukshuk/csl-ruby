@@ -69,7 +69,7 @@ module CSL
 		      TestNode.new(:foo => 'Foo').match?('test-node', {}).should be_true
 		    end
 
-		    it 'does not matches other node names' do
+		    it 'does not match other node names' do
 		      FooBarNode.new.match?(:name, {}).should_not be_true
 		      FooBarNode.new(:foo => 'Foo').match?(:name, {}).should_not be_true
 		      TestNode.new.match?(:name, {}).should_not be_true
