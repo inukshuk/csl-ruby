@@ -66,11 +66,9 @@ Feature: Converting numbers to ordinals using CSL locales
       <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="en">
         <terms>
           <term name="ordinal">th</term>
-          
           <term name="ordinal-01">st</term>
           <term name="ordinal-02">nd</term>
           <term name="ordinal-03">rd</term>
-          
           <term name="ordinal-11">th</term>
           <term name="ordinal-12">th</term>
           <term name="ordinal-13">th</term>
@@ -97,9 +95,9 @@ Feature: Converting numbers to ordinals using CSL locales
       | 112    |       |           |          |
       | 113    |       |           |          |
       | -102   |       |           |          |
-      # | 1      |       | masculine |          |
-      # | 2      |       | feminine  |          |
-      # | 3      |       |           | plural   |
+      | 1      |       | masculine |          |
+      | 2      |       | feminine  |          |
+      | 3      |       |           | plural   |
     Then the ordinals should be:
       | ordinal |
       | 0th     |
@@ -120,9 +118,9 @@ Feature: Converting numbers to ordinals using CSL locales
       | 112th   |
       | 113th   |
       | -102nd  |
-      # | 1st     |
-      # | 2nd     |
-      # | 3rd     |
+      | 1st     |
+      | 2nd     |
+      | 3rd     |
 
   @v1.0.1 @locale @ordinals @i18n @gender @lang-de
   Scenario: Gendered German CSL 1.0.1 locales
@@ -196,7 +194,6 @@ Feature: Converting numbers to ordinals using CSL locales
             <single>e</single>
             <multiple>es</multiple>
           </term>
-
           <term name="ordinal-01" match="whole-number">
             <single>re</single>
             <multiple>res</multiple>
@@ -268,24 +265,23 @@ Feature: Converting numbers to ordinals using CSL locales
           
           <term name="ordinal-00" match="whole-number">de</term>
           
-          <term name="ordinal-02" match="2-digits">de</term>
-          <term name="ordinal-03" match="2-digits">de</term>
-          <term name="ordinal-04" match="2-digits">de</term>
-          <term name="ordinal-05" match="2-digits">de</term>
-          <term name="ordinal-06" match="2-digits">de</term>
-          <term name="ordinal-07" match="2-digits">de</term>
-          <term name="ordinal-09" match="2-digits">de</term>
-
-          <term name="ordinal-10" match="2-digits">de</term>
-          <term name="ordinal-11" match="2-digits">de</term>
-          <term name="ordinal-12" match="2-digits">de</term>
-          <term name="ordinal-13" match="2-digits">de</term>
-          <term name="ordinal-14" match="2-digits">de</term>
-          <term name="ordinal-15" match="2-digits">de</term>
-          <term name="ordinal-16" match="2-digits">de</term>
-          <term name="ordinal-17" match="2-digits">de</term>
-          <term name="ordinal-18" match="2-digits">de</term>
-          <term name="ordinal-19" match="2-digits">de</term>
+          <term name="ordinal-02" match="last-two-digits">de</term>
+          <term name="ordinal-03" match="last-two-digits">de</term>
+          <term name="ordinal-04" match="last-two-digits">de</term>
+          <term name="ordinal-05" match="last-two-digits">de</term>
+          <term name="ordinal-06" match="last-two-digits">de</term>
+          <term name="ordinal-07" match="last-two-digits">de</term>
+          <term name="ordinal-09" match="last-two-digits">de</term>
+          <term name="ordinal-10">de</term>
+          <term name="ordinal-11">de</term>
+          <term name="ordinal-12">de</term>
+          <term name="ordinal-13">de</term>
+          <term name="ordinal-14">de</term>
+          <term name="ordinal-15">de</term>
+          <term name="ordinal-16">de</term>
+          <term name="ordinal-17">de</term>
+          <term name="ordinal-18">de</term>
+          <term name="ordinal-19">de</term>
         </terms>
       </locale>
       """
@@ -375,24 +371,23 @@ Feature: Converting numbers to ordinals using CSL locales
         <terms>
           <term name="ordinal">ste</term>
 
-          <term name="ordinal-02" match="2-digits">de</term>
-          <term name="ordinal-03" match="2-digits">de</term>
-          <term name="ordinal-04" match="2-digits">de</term>
-          <term name="ordinal-05" match="2-digits">de</term>
-          <term name="ordinal-06" match="2-digits">de</term>
-          <term name="ordinal-07" match="2-digits">de</term>
-          <term name="ordinal-09" match="2-digits">de</term>
-
-          <term name="ordinal-10" match="2-digits">de</term>
-          <term name="ordinal-11" match="2-digits">de</term>
-          <term name="ordinal-12" match="2-digits">de</term>
-          <term name="ordinal-13" match="2-digits">de</term>
-          <term name="ordinal-14" match="2-digits">de</term>
-          <term name="ordinal-15" match="2-digits">de</term>
-          <term name="ordinal-16" match="2-digits">de</term>
-          <term name="ordinal-17" match="2-digits">de</term>
-          <term name="ordinal-18" match="2-digits">de</term>
-          <term name="ordinal-19" match="2-digits">de</term>
+          <term name="ordinal-02" match="last-two-digits">de</term>
+          <term name="ordinal-03" match="last-two-digits">de</term>
+          <term name="ordinal-04" match="last-two-digits">de</term>
+          <term name="ordinal-05" match="last-two-digits">de</term>
+          <term name="ordinal-06" match="last-two-digits">de</term>
+          <term name="ordinal-07" match="last-two-digits">de</term>
+          <term name="ordinal-09" match="last-two-digits">de</term>
+          <term name="ordinal-10">de</term>
+          <term name="ordinal-11">de</term>
+          <term name="ordinal-12">de</term>
+          <term name="ordinal-13">de</term>
+          <term name="ordinal-14">de</term>
+          <term name="ordinal-15">de</term>
+          <term name="ordinal-16">de</term>
+          <term name="ordinal-17">de</term>
+          <term name="ordinal-18">de</term>
+          <term name="ordinal-19">de</term>
         </terms>
       </locale>
       """
@@ -641,171 +636,3 @@ Feature: Converting numbers to ordinals using CSL locales
       | 21º     |
       | 21º     |
       | 1001º   |
-
-#   @v1.0.1 @locale @ordinals @i18n @gender @lang-sv
-#   Scenario: Gendered Swedish CSL 1.0.1 locales
-#     Given the locale:
-#       """
-#       <?xml version="1.0" encoding="utf-8"?>
-#       <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="sv">
-#         <terms>
-#           <term name="ordinal-00">:e</term>
-#
-#           <term name="ordinal-01">:a</term>
-#           <term name="ordinal-01" gender-form="masculine">:e</term>
-#           <term name="ordinal-01" gender-form="feminine">:a</term>
-#
-#           <term name="ordinal-02">:a</term>
-#           <term name="ordinal-02" gender-form="masculine">:e</term>
-#           <term name="ordinal-02" gender-form="feminine">:a</term>
-#
-#           <term name="ordinal-11">:e</term>
-#           <term name="ordinal-11" gender-form="feminine">:e</term>
-#           <term name="ordinal-12">:e</term>
-#           <term name="ordinal-12" gender-form="feminine">:e</term>
-#
-#           <term name="ordinal-21">:e</term>
-#           <term name="ordinal-21" gender-form="feminine">:e</term>
-#           <term name="ordinal-22">:e</term>
-#           <term name="ordinal-22" gender-form="feminine">:e</term>
-#
-#           <term name="ordinal-31">:e</term>
-#           <term name="ordinal-32">:e</term>
-#
-#           <term name="ordinal-41">:e</term>
-#           <term name="ordinal-42">:e</term>
-#
-#           <term name="ordinal-51">:e</term>
-#           <term name="ordinal-52">:e</term>
-#
-#           <term name="ordinal-61">:e</term>
-#           <term name="ordinal-62">:e</term>
-#
-#           <term name="ordinal-71">:e</term>
-#           <term name="ordinal-72">:e</term>
-#
-#           <term name="ordinal-81">:e</term>
-#           <term name="ordinal-82">:e</term>
-#
-#           <term name="ordinal-91">:e</term>
-#           <term name="ordinal-92">:e</term>
-#         </terms>
-#       </locale>
-#       """
-#     When I ordinalize these numbers:
-#       | num   | form  | gender    | number   |
-#       | 0     |       |           |          |
-#       | 1     |       |           |          |
-#       | 2     |       |           |          |
-#       | 3     |       |           |          |
-#       | 4     |       |           |          |
-#       | 5     |       |           |          |
-#       | 6     |       |           |          |
-#       | 7     |       |           |          |
-#       | 8     |       |           |          |
-#       | 9     |       |           |          |
-#       | 10    |       |           |          |
-#       | 1     |       | feminine  |          |
-#       | 1     |       | masculine |          |
-#       | 2     |       | feminine  |          |
-#       | 2     |       | masculine |          |
-#       | 23    |       |           |          |
-#       | 999   |       |           |          |
-#       | 11    |       |           |          |
-#       | 11    |       | feminine  |          |
-#       | 11    |       | masculine |          |
-#       | 21    |       |           |          |
-# #      | 101   |       |           |          |
-# #      | 1001  |       | feminine  |          |
-# #      | 301   |       |           |          |
-#       | 21    |       | masculine | singular |
-#       | 21    |       | masculine | plural   |
-# #      | 1001  |       | masculine |          |
-#     Then the ordinals should be:
-#       | ordinal |
-#       | 0:e     |
-#       | 1:a     |
-#       | 2:a     |
-#       | 3:e     |
-#       | 4:e     |
-#       | 5:e     |
-#       | 6:e     |
-#       | 7:e     |
-#       | 8:e     |
-#       | 9:e     |
-#       | 10:e    |
-#       | 1:a     |
-#       | 1:e     |
-#       | 2:a     |
-#       | 2:e     |
-#       | 23:e    |
-#       | 999:e   |
-#       | 11:e    |
-#       | 11:e    |
-#       | 11:e    |
-#       | 21:e    |
-# #      | 101:e   |
-# #      | 1001:e  |
-# #      | 301:e   |
-#       | 21:e    |
-#       | 21:e    |
-# #      | 1001:e  |
-
-  # @v1.0.1 @locale @ordinals @i18n @gender @lang-pl
-  # Scenario: Gendered Polish CSL 1.0.1 locales
-  #   Given the locale:
-  #     """
-  #     <?xml version="1.0" encoding="utf-8"?>
-  #     <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="pl">
-  #       <terms>
-  #         <term name="ordinal-00">:e</term>
-  #
-  #       </terms>
-  #     </locale>
-  #     """
-  #   When I ordinalize these numbers:
-  #     | num   | form  | gender    | number   |
-  #     | 0     |       |           |          |
-  #     | 1     |       |           |          |
-  #     | 2     |       |           |          |
-  #     | 3     |       |           |          |
-  #     | 4     |       |           |          |
-  #     | 5     |       |           |          |
-  #     | 6     |       |           |          |
-  #     | 7     |       |           |          |
-  #     | 8     |       |           |          |
-  #     | 9     |       |           |          |
-  #     | 10    |       |           |          |
-  #     | 1     |       | feminine  |          |
-  #     | 1     |       | masculine |          |
-  #     | 2     |       | feminine  |          |
-  #     | 2     |       | masculine |          |
-  #     | 23    |       |           |          |
-  #     | 999   |       |           |          |
-  #     | 11    |       |           |          |
-  #     | 11    |       | feminine  |          |
-  #     | 11    |       | masculine |          |
-  #     | 21    |       |           |          |
-    # Then the ordinals should be:
-    #   | ordinal |
-    #   | 0:e     |
-    #   | 1:a     |
-    #   | 2:a     |
-    #   | 3:e     |
-    #   | 4:e     |
-    #   | 5:e     |
-    #   | 6:e     |
-    #   | 7:e     |
-    #   | 8:e     |
-    #   | 9:e     |
-    #   | 10:e    |
-    #   | 1:a     |
-    #   | 1:e     |
-    #   | 2:a     |
-    #   | 2:e     |
-    #   | 23:e    |
-    #   | 999:e   |
-    #   | 11:e    |
-    #   | 11:e    |
-    #   | 11:e    |
-    #   | 21:e    |

@@ -202,6 +202,51 @@ module CSL
     end
     alias t translate
 
+    # Ordinalizes the passed-in number using either the ordinal or
+    # long-ordinal forms defined by the locale. If a long-ordinal form is
+    # requested but not available, the regular ordinal will be returned
+    # instead.
+    #
+    # @example
+    #   Locale.load('en').ordinalize(13)
+    #   #-> "13th"
+    #
+    #   de = Locale.load('de')
+    #   de.ordinalize(13)
+    #   #-> "13."
+    #
+    #   de.ordinalize(3, :form => :long, :gender => :feminine)
+    #   #-> "dritte"
+    #
+    # @note
+    #   For CSL 1.0 (and older) locales that do not define an "ordinal-00"
+    #   term the algorithm specified by CSL 1.0 is used; otherwise uses the
+    #   CSL 1.0.1 algorithm with improved support for languages other than
+    #   English.
+    #
+    # @param number [#to_i] the number to ordinalize
+    # @param options [Hash] formatting options
+    #
+    # @option options [:short,:long] :form (:short) which ordinals form to use
+    # @option options [:feminine,:masculine,:neutral] :gender (:neutral)
+    #   which ordinals gender-form to use
+    #
+    # @raise [ArgumentError] if number cannot be converted to an integer
+    #
+    # @return [String] the ordinal for the passed-in number
+    def ordinalize(number, options = {})
+      raise ArgumentError, "unable to ordinalize #{number}; integer expected" unless
+        number.respond_to?(:to_i)
+
+      number = number.to_i      
+      ordinal = terms.ordinalize number, options
+
+      return number.to_s if ordinal.nil?
+      return ordinal.to_s(options) if ordinal.long_ordinal?
+      
+      [number, ordinal.to_s(options)].join
+    end
+
     # @example
     #   locale.each_term { |term| block } #-> locale
     #   locale.each_term                  #-> enumerator

@@ -23,56 +23,105 @@ module CSL
 
       # @return [Term, nil] the first term that matches the query
       def lookup(name, options = {})
+        options = Term.specialize(options)
         options[:name] = name = name.to_s
 
-        # specialize search conditions
-        conditions = options.select { |k,_| Term::Attributes.keys.include?(k.to_sym) }
+        term = registry[name].detect { |t| t.match?(options) }
+        return term unless term.nil? && options.delete(:'gender-form')
 
-        term = registry[name].detect { |t| t.match?(conditions) }
-        return term unless term.nil? && conditions.delete(:'gender-form')
-
-        registry[name].detect { |t| t.match?(conditions) }
+        registry[name].detect { |t| t.match?(options) }
       end
       alias [] lookup
-
-      def ordinalize_modulo(number, divisor, options = {})
-        ordinal = ordinalize(number, options)
-        return unless ordinal && ordinal.match_modulo?(divisor)
-        ordinal
-      end
 
       def ordinalize(number, options = {})
         return unless has_ordinals?
 
-        if number == :default
-          options[:name] = 'ordinal'
+        options = Term.specialize(options)
+        number = number.to_i.abs
+
+        # try to match long-ordinals first
+        if options.delete(:form).to_s =~ /^long/i
+          ordinal = lookup_long_ordinal_for number, options
+          return ordinal unless ordinal.nil?
+        end
+
+        # select CSL 1.0 or 1.0.1 algorithm
+        algorithm = ordinalizer
+
+        ordinal = send algorithm, number, options
+        return ordinal unless ordinal.nil?
+
+        # fallback to non-gendered version
+        if options.delete(:'gender-form')
+          ordinal = send algorithm, number, options
+        end
+
+        ordinal
+      end
+
+      def ordinalizer
+        if has_legacy_ordinals?
+          :lookup_legacy_ordinals_for
         else
-          options[:name] = 'ordinal-%02d' % number
+          :lookup_ordinals_for
+        end
+      end
+
+      def lookup_long_ordinal_for(number, options = {})
+        ordinals[number].detect { |t| t.long_ordinal? && t.match?(options) }
+      end
+
+      def lookup_ordinals_for(number, options = {})
+        ordinal = lookup_ordinal_for(number, nil, options)
+        return ordinal unless ordinal.nil?
+
+        unless number < 100
+          ordinal = lookup_ordinal_for(number, 100, options)
+          return ordinal unless ordinal.nil?
         end
 
-        if options[:form].to_s =~ /^long/i
-          options.delete :form
-          options[:name][0,0] = 'long-'
+        unless number < 10
+          ordinal = lookup_ordinal_for(number, 10, options)
+          return ordinal unless ordinal.nil?
         end
 
-        ordinal = ordinals[number].detect { |t| t.match?(options) }
-        return ordinal unless ordinal.nil? && options.delete(:'gender-form')
+        default_ordinals.detect { |t| t.match?(options) }
+      end
 
-        ordinals[number].detect { |t| t.match?(options) }
+      def lookup_ordinal_for(number, divisor, options = {})
+        modulus = divisor ? (number % divisor) : number
+        ordinals[modulus].detect do |t|
+          t.short_ordinal? && t.match?(options) && t.match_modulo?(number)
+        end
+      end
+
+      def lookup_legacy_ordinals_for(number, options = {})
+        case
+        when (11..13).include?(number.abs % 100)
+          ordinals[4].detect { |t| t.match?(options) }
+        when (1..3).include?(number.abs % 10)
+          ordinals[number.abs % 10].detect { |t| t.match?(options) }
+        else
+          ordinals[4].detect { |t| t.match?(options) }
+        end
       end
 
       # @return [Boolean] whether or not regular terms are registered at this node
       def has_terms?
-        not registry.empty?
+        !registry.empty?
       end
 
       # @return [Boolean] whether or not ordinal terms are registered at this node
       def has_ordinals?
-        not ordinals.empty?
+        !ordinals.empty?
       end
 
       def has_legacy_ordinals?
         has_ordinals? && !ordinals.key?(:default)
+      end
+
+      def default_ordinals
+        ordinals[:default]
       end
 
       def drop_ordinals
@@ -128,25 +177,39 @@ module CSL
 
       def_delegators :attributes, :hash, :eql?, :name, :form, :gender
 
+      class << self
+        def specialize(options)
+          options = options.select do |k,v|
+            !v.nil? && Term::Attributes.keys.include?(k.to_sym)
+          end
+
+          options.delete :'gender-form' unless
+            options[:'gender-form'].to_s =~ /^masculine|feminine$/
+
+          options
+        end
+      end
+
       # This method returns whether or not the ordinal term matchs the
       # passed-in modulus. This is determined by the ordinal term's match
-      # attribute: a value of '2-digits' matches a divisor of 100, '1-digit'
-      # matches a divisor of 10 and 'whole-number' matches a divisor of 1.
+      # attribute: a value of 'last-two-digits' matches a modulus of 100,
+      # 'last-digit' matches a modulus of 10 and 'whole-number' matches
+      # only if the number is identical to the ordinal value.
       #
       # If the term is no ordinal term, this methods always returns false.
       #
       # @return [Boolean] whether or not the ordinal term matches the
-      #   passed-in divisor.
-      def match_modulo?(divisor)
+      #   passed-in number.
+      def match_modulo?(number)
         return false unless ordinal?
 
         case attributes.match
-        when '2-digits'
-          divisor.to_i == 100
-        when '1-digit'
-          divisor.to_i == 10
+        when 'last-two-digits'
+          ordinal == number % 100
+        when 'last-digit'
+          ordinal == number % 10
         when 'whole-number'
-          divisor.to_i == 1
+          ordinal == number
         else
           true
         end
@@ -158,13 +221,27 @@ module CSL
         /^(long-)?ordinal(-\d\d+)?$/ === attributes.name
       end
 
+      # @return [Boolean] whether or not this term is a long-ordinal term
+      def long_ordinal?
+        /^long-ordinal(-\d\d+)?$/ === attributes.name
+      end
+
+      # @return [Boolean] whether or not this term is a regular ordinal term
+      def short_ordinal?
+        /^ordinal(-\d\d+)?$/ === attributes.name
+      end
+
+      def default_ordinal?
+        attributes.name == 'ordinal'
+      end
+
       # @return [Fixnum, :default, nil]
       def ordinal
         return unless ordinal?
         return :default if attributes.name == 'ordinal'
         attributes.name[/\d+/].to_i
       end
-
+      
       def gendered?
         !attributes.gender.blank?
       end

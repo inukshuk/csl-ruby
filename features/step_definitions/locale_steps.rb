@@ -7,7 +7,7 @@ When /^I load the locale from the string$/ do |string|
 end
 
 When /^I ordinalize the number (\d+)(?: using the (long) form(?: and (feminine|masculine) gender))?$/ do |num, form, gender|
-  @ordinal = @locale.ordinalize(num, :form => form, :gender => gender)
+  @ordinal = @locale.ordinalize(num, :form => form, :'gender-form' => gender)
 end
 
 Then /^the ordinal should (?:be|equal) "([^"]*)"$/ do |ord|
@@ -17,7 +17,7 @@ end
 When /^I ordinalize these numbers:?$/ do |table|
   @ordinals = table.rows.map do |row|
     num, form, gender, number = *row
-    @csl.ordinalize(num, :form => form, :gender => gender, :number => number)
+    @csl.ordinalize(num, :form => form, :'gender-form' => gender, :number => number)
   end
 end
 

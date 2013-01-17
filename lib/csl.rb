@@ -25,7 +25,6 @@ require 'csl/node'
 require 'csl/info'
 
 require 'csl/locale'
-require 'csl/locale/ordinalize'
 require 'csl/locale/date'
 require 'csl/locale/term'
 require 'csl/locale/style_options'

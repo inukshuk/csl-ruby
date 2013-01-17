@@ -81,6 +81,10 @@ module CSL
 
     it { should be_neutral }
 
+    it { should_not be_ordinal }
+    it { should_not be_short_ordinal }
+    it { should_not be_long_ordinal }
+
 		it 'is not a textnode by default' do
 			subject.should_not be_textnode
 		end
