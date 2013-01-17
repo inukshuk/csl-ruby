@@ -36,8 +36,41 @@ module CSL
   		    end
   		  end
 		  end
+
 		end
 
+    describe '#lookup' do
+
+		  describe "given standard English terms" do
+  		  let(:en) do
+  		    Locale::Terms.parse <<-EOS
+  	      <terms>
+            <term name="page">
+              <single>page</single>
+              <multiple>pages</multiple>
+            </term>
+            <term name="page" form="short">
+              <single>p.</single>
+              <multiple>pp.</multiple>
+            </term>
+  	      </terms>
+  	      EOS
+  		  end
+  		  
+  		  it 'returns nil if there is no matching term' do
+  		    en.lookup(:foo).should be_nil
+  		  end
+
+  		  it 'returns the long-form by default' do
+  		    en.lookup(:page).should be_long
+  		  end
+  		  
+  		  it 'returns the long-form by default for plural options' do
+  		    en.lookup(:page, :plural => true).should be_long
+  		  end
+  		end
+
+    end
 	end
 
   describe Locale::Term do

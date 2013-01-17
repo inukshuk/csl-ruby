@@ -195,8 +195,10 @@ module CSL
       self
     end
 
-    def translate(query)
-      terms[query]
+    # @return [String, nil] the term's translation
+    def translate(name, options = {})
+      term = terms.lookup name, options
+      term && term.to_s(options)
     end
     alias t translate
 

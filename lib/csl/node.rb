@@ -183,7 +183,7 @@ module CSL
           #   Returns an array containing the attributes in self according
           #   to the given selector(s). The selectors may be either integer
           #   indices, ranges (functionality inherited from Struct) or
-          #   symbols idenifying valid keys (similar to Hash#values_at).
+          #   symbols identifying valid keys (similar to Hash#values_at).
           #
           # @example
           #   attributes.values_at(:family, :nick) #=> ['Matsumoto', 'Matz']
@@ -191,7 +191,13 @@ module CSL
           # @see Struct#values_at
           # @return [Array] the list of values
           def values_at(*arguments)
-            super(*arguments.flatten.map { |k| k.is_a?(Symbol) ? keys.index(k) : k })
+            arguments.flatten.inject([]) do |values, key|
+              if key.is_a?(Symbol)
+                values.push fetch(key)
+              else
+                values.concat super(key)
+              end
+            end
           end
 
         })

@@ -26,11 +26,11 @@ module CSL
 
         term = registry[name].detect { |t| t.match?(options) }
         return term unless term.nil? && options.delete(:'gender-form')
-  
+
         registry[name].detect { |t| t.match?(options) }
       end
       alias [] lookup
-      
+
       def ordinalize_modulo(number, divisor, options = {})
         ordinal = ordinalize(number, options)
         return unless ordinal && ordinal.match_modulo?(divisor)
@@ -39,21 +39,21 @@ module CSL
 
       def ordinalize(number, options = {})
         return unless has_ordinals?
-        
+
         if number == :default
           options[:name] = 'ordinal'
         else
           options[:name] = 'ordinal-%02d' % number
         end
-        
+
         if options[:form].to_s =~ /^long/i
           options.delete :form
           options[:name][0,0] = 'long-'
         end
-        
+
         ordinal = ordinals[number].detect { |t| t.match?(options) }
         return ordinal unless ordinal.nil? && options.delete(:'gender-form')
-        
+
         ordinals[number].detect { |t| t.match?(options) }
       end
 
@@ -70,7 +70,7 @@ module CSL
       def has_legacy_ordinals?
         has_ordinals? && !ordinals.key?(:default)
       end
-      
+
       def drop_ordinals
         tmp = ordinals.values.flatten(1)
         ordinals.clear
@@ -113,7 +113,7 @@ module CSL
           registry[term[:name]].delete(term)
         end
       end
-      
+
     end
 
     class Term < Node
@@ -162,15 +162,23 @@ module CSL
       end
 
       def gendered?
-        not attributes.gender.blank?
+        !attributes.gender.blank?
       end
 
       def neutral?
-        not gendered?
+        !gendered?
+      end
+
+      def short?
+        attribute?(:form) && attributes.form.to_sym == :short
+      end
+
+      def long?
+        !short?
       end
 
       def textnode?
-        not text.blank?
+        !text.blank?
       end
 
       def singularize
