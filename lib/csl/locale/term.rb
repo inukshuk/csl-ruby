@@ -26,6 +26,8 @@ module CSL
         options = Term.specialize(options)
         options[:name] = name = name.to_s
 
+        # TODO default to long form
+
         term = registry[name].detect { |t| t.match?(options) }
         return term unless term.nil? && options.delete(:'gender-form')
 

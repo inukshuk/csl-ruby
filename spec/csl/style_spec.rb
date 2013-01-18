@@ -10,11 +10,17 @@ module CSL
 
     describe '#to_xml' do
       it 'returns an empty style' do
-        Style.new.to_xml.should match(/<style[^>]*\/>/)
+        Style.new.to_xml.should match(/^<style[^>]*\/>/)
       end
 
       it 'supports round-trip for apa style' do
-        Style.parse(Style.load(:apa).to_xml).should be_a(Style)
+        apa = Style.load(:apa)
+        apa.should be_a(Style)
+
+        xml = apa.to_xml
+        xml.should match(/^<style[^>]*>/)
+
+        Style.parse(xml).should be_a(Style)
       end
     end
 
@@ -73,23 +79,23 @@ module CSL
       it 'raises a validation error when adding a macro without name' do
         expect { Style.new << Style::Macro.new }.to raise_error(ValidationError)
       end
-      
+
       describe 'when it has an "author" macro' do
         before(:all) { style << Style::Macro.new(:name => 'author') }
 
         it 'has macros' do
           style.should have_macros
         end
-        
+
         it 'the macro is registered in the macros hash' do
           style.macros.should have_key('author')
           style.macros['author'].should be_a(Style::Macro)
         end
-        
+
         it 'raises a validation error when adding a macro with a duplicate name' do
           expect { style << Style::Macro.new(:name => 'author') }.to raise_error(ValidationError)
         end
-        
+
         it 'unregisters the macro when it is deleted' do
           expect { style.delete style.macros['author'] }.to change { style.macros.length }
         end

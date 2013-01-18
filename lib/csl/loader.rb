@@ -23,16 +23,22 @@ module CSL
     #
     # @note
     #   The base class is exepcted to define a #parse method.
+    #
+    # @raise ParseError
+    #
+    # @return [Style, Locale] the parsed CSL resource
     def load(input)
       case
       when input.respond_to?(:read)
         data = input.read
       when input.to_s =~ /^\s*</
-        data = input
+        data = input.to_s
       else
 
+        input = input.to_s
+
 				case
-				when File.exists?(input.to_s)
+				when File.exists?(input)
 					location = input
 				when File.exists?(extend_name(input))
 					location = extend_name(input)
