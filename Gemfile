@@ -16,6 +16,7 @@ group :extra do
   gem 'guard', '~>1.2'
   gem 'guard-rspec', '~>1.1'
   gem 'guard-cucumber', '~>1.2'
+  gem 'rb-fsevent', '~>0.9.1', :platforms => [:mri_19, :rbx]
 
 	gem 'yard', '~>0.8', :platforms => [:mri_19]
 	gem 'redcarpet', '~>2.1', :platforms => [:mri_19]
