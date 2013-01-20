@@ -45,7 +45,7 @@ module CSL
       alias localized? has_form?
 
       def form
-        attributes[:form]
+        attributes[:form].to_s
       end
 
       def numeric?

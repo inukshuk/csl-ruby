@@ -25,6 +25,14 @@ module CSL
         attributes.fetch(:delimiter, '')
       end
 
+      def has_form?
+        attribute?(:form)
+      end
+
+      def form
+        attributes[:form].to_s
+      end
+
       def text?
         !numeric?
       end
