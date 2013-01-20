@@ -21,17 +21,36 @@ module CSL
 
       alias each each_child
 
-      # @return [Term, nil] the first term that matches the query
+      # If a style uses a term in a form that is undefined, there is a
+      # fallback to other forms: "verb-short" first falls back to "verb",
+      # "symbol" first falls back to "short", and "verb" and "short" both
+      # fall back to "long". If no form fallback is available, nil is
+      # returned instead.
+      #
+      # @return [Term, nil] the term that matches the query
       def lookup(name, options = {})
         options = Term.specialize(options)
 
         options[:name] = name = name.to_s
-				options[:form] = 'long' unless options.key?(:form)
+        options[:form] = 'long' unless options.key?(:form)
 
-        term = registry[name].detect { |t| t.match?(options) }
-        return term unless term.nil? && options.delete(:'gender-form')
+        # NB: currently only ordinals support gender-forms
+        options.delete(:'gender-form')
 
-        registry[name].detect { |t| t.match?(options) }
+        candidates = registry[name]
+        return if candidates.empty?
+
+        # loop terminates when a matching term is found or
+        # when there are no more form fallbacks left
+        while true do
+          term = candidates.detect { |t| t.match?(options) }
+          return term unless term.nil?
+
+          fallback = Term.form_fallbacks[options[:form].to_s]
+          return if fallback == options[:form]
+
+          options[:form] = fallback
+        end
       end
       alias [] lookup
 
@@ -175,13 +194,24 @@ module CSL
       attr_struct :name, :form, :gender, :'gender-form', :match
       attr_children :single, :multiple
 
-			attr_defaults :form => 'long'
+      attr_defaults :form => 'long'
 
       attr_accessor :text
 
       def_delegators :attributes, :hash, :eql?, :name, :form, :gender
 
+      @form_fallbacks = {
+        'long'       => 'long',
+        'verb'       => 'long',
+        'short'      => 'long',
+        'verb-short' => 'verb',
+        'symbol'     => 'short'
+      }.freeze
+
       class << self
+
+        attr_reader :form_fallbacks
+
         def specialize(options)
           options = options.select do |k,v|
             !v.nil? && Term::Attributes.keys.include?(k.to_sym)
@@ -245,7 +275,7 @@ module CSL
         return :default if attributes.name == 'ordinal'
         attributes.name[/\d+/].to_i
       end
-      
+
       def gendered?
         !attributes.gender.blank?
       end
