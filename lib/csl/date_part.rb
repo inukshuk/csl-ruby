@@ -29,7 +29,7 @@ module CSL
     end
 
     Schema.values[:date_part][:form].each do |type|
-      pattern = Regexp.new("^#{type}", true)
+      pattern = Regexp.new("^#{type}$", true)
 
       define_method("#{type}?".tr('-', '_')) do
         form =~ pattern
