@@ -22,7 +22,7 @@ module CSL
       private
       
       def added_child(node)
-        node.attribtes.merge formatting_options
+        node.attributes.merge formatting_options
       end
     end
     
