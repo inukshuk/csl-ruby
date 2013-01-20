@@ -22,6 +22,8 @@ module CSL
 
     attr_defaults :version => Schema.version, :xmlns => Schema.namespace
 
+		show_default_attributes!
+
     attr_struct :xmlns, :version, :class, :'default-locale',
       :'initialize-with-hyphen', :'page-range-format',
       :'demote-non-dropping-particle', *Schema.attr(:name, :names)

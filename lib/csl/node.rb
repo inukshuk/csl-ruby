@@ -28,6 +28,18 @@ module CSL
         @default_attributes ||= {}
       end
 
+			def hide_default_attributes?
+				@hide_default_attributes ||= true
+			end
+
+			def hide_default_attributes!
+				@hide_default_attributes = true
+			end
+
+			def show_default_attributes!
+				@hide_default_attributes = false
+			end
+
       def constantize(name)
         pattern = /:#{name.to_s.tr('-', '')}$/i
         klass = types.detect { |t| t.matches?(pattern) }
@@ -106,7 +118,7 @@ module CSL
       end
 
       def attr_defaults(attributes)
-        @default_attributes = attributes
+        default_attributes.merge! attributes
       end
 
       # Creates a new Struct for the passed-in attributes. Node instances
@@ -234,6 +246,12 @@ module CSL
       copy
     end
 
+		# @return [Boolean] whether or not the node has default attributes
+		def has_default_attributes?
+			!default_attributes.empty?
+		end
+		alias has_defaults? has_default_attributes?
+
     # Iterates through the Node's attributes
     def each
       if block_given?
@@ -244,6 +262,30 @@ module CSL
       end
     end
     alias each_pair each
+
+		# @param name [#to_sym] the name of the attribute
+		# @return [Boolean] whether or not key is set to the default value
+		def default_attribute?(name)
+			defaults = self.class.default_attributes
+			name, value = name.to_sym, attributes.fetch(name)
+			
+			return false unless !value.nil? || defaults.key?(name)
+			defaults[name] == value
+		end
+
+		# @return [Hash] the attributes currently set to their default values
+		def default_attributes
+			attributes.to_hash.select do |name, _|
+				default_attribute?(name)
+			end
+		end
+
+		# @return [Hash] the attributes currently not set to their default values
+		def custom_attributes
+			attributes.to_hash.reject do |name, _|
+				default_attribute?(name)
+			end
+		end
 
     # Returns true if the node contains an attribute with the passed-in name;
     # false otherwise.
@@ -410,7 +452,8 @@ module CSL
     private
 
     def attribute_assignments
-      each_pair.map { |name, value|
+			a = self.class.hide_default_attributes? ? custom_attributes : attributes
+      a.map { |name, value|
         value.nil? ? nil : [name, value.to_s.inspect].join('=')
       }.compact
     end

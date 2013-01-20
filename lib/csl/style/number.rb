@@ -1,6 +1,8 @@
 module CSL
   class Style
 
+		# Numbers are CSL rendering elements which output the number variable
+		# selected with the required variable attribute.
     class Number < Node
       attr_struct :variable, :form, :'text-case',
         *Schema.attr(:affixes, :display, :font)

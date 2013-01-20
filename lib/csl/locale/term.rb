@@ -24,9 +24,9 @@ module CSL
       # @return [Term, nil] the first term that matches the query
       def lookup(name, options = {})
         options = Term.specialize(options)
-        options[:name] = name = name.to_s
 
-        # TODO default to long form
+        options[:name] = name = name.to_s
+				options[:form] = 'long' unless options.key?(:form)
 
         term = registry[name].detect { |t| t.match?(options) }
         return term unless term.nil? && options.delete(:'gender-form')
@@ -174,6 +174,8 @@ module CSL
     class Term < Node
       attr_struct :name, :form, :gender, :'gender-form', :match
       attr_children :single, :multiple
+
+			attr_defaults :form => 'long'
 
       attr_accessor :text
 

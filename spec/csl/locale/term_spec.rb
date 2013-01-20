@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'spec_helper'
 
 module CSL
@@ -53,18 +54,37 @@ module CSL
               <single>page</single>
               <multiple>pages</multiple>
             </term>
+            <term name="section">
+              <single>section</single>
+              <multiple>sections</multiple>
+            </term>
+            <term name="section" form="short">sec.</term>
+            <term name="section" form="symbol">
+              <single>§</single>
+              <multiple>§§</multiple>
+            </term>
+            <term name="editor">
+              <single>editor</single>
+              <multiple>editors</multiple>
+            </term>
+            <term name="editor" form="short">
+              <single>ed.</single>
+              <multiple>eds.</multiple>
+            </term>
+            <term name="editor" form="verb">edited by</term>
+            <term name="editor" form="verb-short">ed.</term>
   	      </terms>
   	      EOS
   		  end
-  		  
+
   		  it 'returns nil if there is no matching term' do
   		    en.lookup(:foo).should be_nil
   		  end
 
-  		  it 'returns the first matching form by default' do
-  		    en.lookup(:page).should be_short
+  		  it 'returns the long form by default' do
+  		    en.lookup(:page).should be_long
   		  end
-  		  
+
   		  it 'ignores irrelevant options' do
   		    en.lookup(:page, :plural => true).should_not be_nil
   		  end
@@ -78,8 +98,9 @@ module CSL
     it { should_not be_nil }
 
     it { should_not be_gendered }
-
     it { should be_neutral }
+
+    it { should be_long }
 
     it { should_not be_ordinal }
     it { should_not be_short_ordinal }
@@ -149,7 +170,7 @@ module CSL
 
       describe 'attributes#to_a' do
         it 'returns an array of all attribute values of underlying struct' do
-          f.attributes.to_a.should == ['edition', nil, 'feminine', nil, nil]
+          f.attributes.to_a.should == ['edition', 'long', 'feminine', nil, nil]
         end
       end
     end

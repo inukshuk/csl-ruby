@@ -33,10 +33,6 @@ module CSL
 				attribute?(:term)
 			end
 
-			def term_options
-				attributes_for :term, :plural, :form
-			end
-
 			def has_value?
 				attribute?(:value)
 			end

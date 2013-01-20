@@ -72,8 +72,9 @@ module CSL
       end
       alias name_label? names_label?
 
+      # @return [String] the term name for the label's variable
       def term
-        Label.terms[variable]
+        Label.terms[variable.to_s]
       end
     end
 
