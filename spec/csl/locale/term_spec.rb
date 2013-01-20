@@ -85,6 +85,23 @@ module CSL
   		    en.lookup(:page).should be_long
   		  end
 
+  		  it 'returns the term in the passed-in form if available' do
+  		    en.lookup(:section, :form => 'long').should be_long
+  		    en.lookup(:section, :form => 'short').should be_short
+  		    en.lookup(:section, :form => 'symbol').should be_symbol
+
+  		    en.lookup(:editor).should be_long
+  		    en.lookup(:editor, :form => 'long').should be_long
+  		    en.lookup(:editor, :form => 'verb').should be_verb
+  		    en.lookup(:editor, :form => 'verb-short').should be_verb_short
+  		  end
+
+  		  it 'returns the right fallback form if the passed-in form is not available' do
+  		    en.lookup(:page, :form => 'verb').should be_long
+  		    en.lookup(:page, :form => 'verb-short').should be_long
+  		    en.lookup(:page, :form => 'symbol').should be_short
+        end
+
   		  it 'ignores irrelevant options' do
   		    en.lookup(:page, :plural => true).should_not be_nil
   		  end

@@ -288,8 +288,21 @@ module CSL
         attribute?(:form) && attributes.form.to_s =~ /^short$/i
       end
 
+      def verb?
+        attribute?(:form) && attributes.form.to_s =~ /^verb$/i
+      end
+
+      def verb_short?
+        attribute?(:form) && attributes.form.to_s =~ /^verb-short$/i
+      end
+
+      def symbol?
+        attribute?(:form) && attributes.form.to_s =~ /^symbol$/i
+      end
+
       def long?
-        !short?
+        return true unless attribute?(:form)
+        attributes.form.to_s =~ /^long$/i
       end
 
       def textnode?
