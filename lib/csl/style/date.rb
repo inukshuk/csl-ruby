@@ -2,7 +2,6 @@ module CSL
   class Style
 
     class Date < Node
-
       attr_defaults :'date-parts' => 'year-month-day'
 
       attr_struct :name, :form, :'range-delimiter', :'date-parts', :variable,
@@ -22,6 +21,12 @@ module CSL
         yield self if block_given?
       end
 
+      # @return [Array<String>] the localized date parts to be used
+      def date_parts_filter
+        attributes[:'date-parts'].to_s.split(/-/)
+      end
+      alias parts_filter date_parts_filter
+
       def delimiter
         attributes.fetch(:delimiter, '')
       end
@@ -37,9 +42,18 @@ module CSL
       def has_form?
         attribute?(:form)
       end
+      alias localized? has_form?
 
       def form
         attributes[:form]
+      end
+
+      def numeric?
+        attributes[:form].to_s =~ /^numeric$/i
+      end
+
+      def text?
+        attributes[:form].to_s =~ /^text$/i
       end
 
       def has_date_parts?
@@ -47,46 +61,18 @@ module CSL
       end
       alias has_parts? has_date_parts?
 
+      def has_overrides?
+        localized? && has_parts?
+      end
     end
 
     class DatePart < Node
+      has_no_children
+
       attr_struct :name, :form, :'range-delimiter',
         *Schema.attr(:formatting, :periods)
 
-      def range_delimiter
-        attributes.fetch(:'range-delimiter', '')
-      end
-
-      def name
-        attributes[:name].to_s
-      end
-
-      def has_form?
-        attribute?(:form)
-      end
-
-      def form
-        case
-        when has_form?
-          attributes[:form]
-        when has_parent?
-          parent.form
-        else
-          nil
-        end
-      end
-
-      def year?
-        name =~ /year/i
-      end
-
-      def month?
-        name =~ /month/i
-      end
-
-      def day?
-        name =~ /day/i
-      end
+      include CSL::DatePart
     end
 
   end

@@ -8,7 +8,7 @@ module CSL
     
     it { should_not be_nil }
     
-    it { should_not be_text }
+    it { should be_text }
     it { should_not be_numeric }
   
     describe '#parts' do

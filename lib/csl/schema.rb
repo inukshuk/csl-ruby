@@ -91,7 +91,15 @@ module CSL
 			@attributes.values_at(:affixes, :font).flatten)
 
     @attributes.freeze
+
+    @values = Hash.new { |h,k| h.fetch(k.to_sym, nil) }.merge({
+      :date_part => {
+        :form => %w{ numeric numeric-leading-zeros ordinal long short }
+      }
+    })
     
+    @values.freeze
+
     @file = File.expand_path('../../../vendor/schema/csl.rng', __FILE__)
     
     @validators = {
@@ -120,7 +128,7 @@ module CSL
     class << self
       
       attr_accessor :version, :namespace, :types, :variables, :categories,
-        :attributes, :preamble
+        :attributes, :preamble, :values
       
       private :new
       

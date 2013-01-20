@@ -21,10 +21,23 @@ module CSL
 				raise ValidationError, "parent must be locale node: was #{node.inspect}" unless node.is_a?(Locale)
 			end
 
-      %w{ text numeric }.each do |type|
-        define_method("#{type}?") { attributes.form == type }
+      def delimiter
+        attributes.fetch(:delimiter, '')
       end
 
+      def text?
+        !numeric?
+      end
+
+      def numeric?
+        attributes[:form].to_s =~ /^numeric$/i
+      end
+
+      def has_date_parts?
+        !date_parts.empty?
+      end
+      alias has_parts? has_date_parts?
+      
 		end
 
 		# DatePart represent the localized formatting options for an individual
@@ -35,12 +48,7 @@ module CSL
       attr_struct :name, :form, :'range-delimiter',
         *Schema.attr(:formatting, :periods)
 
-      %w{ day month year }.each do |part|
-        define_method("#{part}?") do
-          attributes.name == part
-        end
-      end
-
+      include CSL::DatePart
 		end
 
 

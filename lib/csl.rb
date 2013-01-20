@@ -23,6 +23,7 @@ require 'csl/treelike'
 require 'csl/node'
 
 require 'csl/info'
+require 'csl/date_part'
 
 require 'csl/locale'
 require 'csl/locale/date'
