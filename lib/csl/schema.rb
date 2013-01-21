@@ -82,6 +82,10 @@ module CSL
       },
       :names => %w{
         names-delimiter
+      },
+      :conditionals => %w{
+        disambiguate is-numeric  is-uncertain-date locator
+        position type variable
       }
     })
     
