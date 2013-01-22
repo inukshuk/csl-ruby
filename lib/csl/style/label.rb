@@ -36,7 +36,6 @@ module CSL
       end
 
       def has_variable?
-        return parent.has_variable? if names_label?
         attribute?(:variable)
       end
 
@@ -44,9 +43,8 @@ module CSL
       # is the child of a {Names} node, returns the parent's variable
       # attribute instead.
       #
-      # @return [String] the value of the node's variable attribute
+      # @return [String, nil] the value of the node's variable attribute
       def variable
-        return parent.variable if name_label?
         attributes[:variable]
       end
 

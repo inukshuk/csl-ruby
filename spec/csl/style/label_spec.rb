@@ -26,19 +26,6 @@ module CSL
       before(:each) { Style::Names.new << subject }
 
       it { should be_names_label }
-
-      describe '#variable' do
-        before(:each) { subject.parent[:variable] = 'editor' }
-
-        it 'returns the names variable(s)' do
-          subject.variable.should == 'editor'
-        end
-
-        it 'returns the names variable(s) even when the local attribute is set' do
-          subject[:variable] = 'page'
-          subject.variable.should == 'editor'
-        end
-      end
     end
 
     describe '#term' do

@@ -16,12 +16,16 @@ module CSL
         yield self if block_given?
       end
 
+      def delimiter
+        attributes.fetch(:delimiter, '')
+      end
+
       def has_variable?
         attribute?(:variable)
       end
 
       def variable
-        attributes[:variable]
+        attributes[:variable].to_s
       end
 
     end
