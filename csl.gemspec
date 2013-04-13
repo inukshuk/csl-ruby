@@ -14,19 +14,15 @@ Gem::Specification.new do |s|
   s.summary     = 'A Ruby CSL parser and library'
   s.description =
     """
-		A Ruby parser and library for the Citation Style Language (CSL), an open
-		XML-based language to describe the formatting of citations and
-		bibliographies.
+		A Ruby parser and library for the Citation Style Language (CSL),
+		an open XML-based language to describe the formatting of citations
+		and bibliographies.
 		"""
 
   s.license     = 'AGPL'
   s.date        = Time.now.strftime('%Y-%m-%d')
 
   s.add_dependency('namae', ['~>0.3'])
-
-  s.add_development_dependency('cucumber', ['~>1.1'])
-  s.add_development_dependency('rspec', ['~>2.7'])
-  s.add_development_dependency('rake', ['~>0.9'])
 
   s.files        = `git ls-files`.split("\n")
   s.test_files   = `git ls-files -- {test,spec,features}/*`.split("\n")

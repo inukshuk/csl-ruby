@@ -8,7 +8,7 @@ module CSL
     it { should_not be_never_pluralize }
 
     describe '.terms' do
-      Hash[%w{
+      Hash[*%w{
         page              page
         issue             issue
         edition           edition
@@ -17,7 +17,7 @@ module CSL
         chapter-number    chapter
       }].each do |variable, term|
         it "returns #{term.inspect} for #{variable.inspect}" do
-          Label.terms[variable].should == term
+          Style::Label.terms[variable].should == term
         end
       end
     end

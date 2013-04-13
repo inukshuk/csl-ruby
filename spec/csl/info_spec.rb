@@ -7,7 +7,7 @@ module CSL
     it { should_not be_nil }
     it { should_not have_children }
     
-    let(:info) { Info.new }
+    before { @info = Info.new }
     
     describe '#nodename' do
       it 'returns "info"' do
@@ -17,7 +17,7 @@ module CSL
     
     describe '#children' do
       it 'returns a Info::Children instance' do
-        Info.new.children.should be_a(Info::Children)
+        @info.children.should be_a(Info::Children)
       end
       
       it 'allows to set the id by array accessor' do
@@ -27,52 +27,52 @@ module CSL
 
     describe '#category' do
       it 'returns an empty list by default' do
-        Info.new.category.should be_empty
+        @info.category.should be_empty
       end
     end
 
     describe 'citation-format' do
       it 'has no citation-format by default' do
-        Info.new.citation_format.should be_nil
+        @info.citation_format.should be_nil
       end
       
       it 'setting a citation-format creates a new category node' do
-        expect { info.citation_format = 'foo' }.to change { info.has_categories? }
+        expect { @info.citation_format = 'foo' }.to change { @info.has_categories? }
       end
 
       it 'setting a citation-format actually sets the citation-format' do
-        expect { info.citation_format = 'bar' }.to change { info.citation_format }.to(:bar)
+        expect { @info.citation_format = 'bar' }.to change { @info.citation_format }.to(:bar)
       end
       
       describe 'given a category node with the citation-attribute set' do
-        before(:all) { info.add_child Info::Category.new(:'citation-format' => 'author') }
+        before { @info.add_child Info::Category.new(:'citation-format' => 'author') }
         
         it 'has a citation format' do
-          info.citation_format.should == :author
+          @info.citation_format.should == :author
         end
         
         it 'setting a citation-format does not create a new category node' do
-          expect { info.citation_format = 'foo' }.not_to change { info.categories.length }
+          expect { @info.citation_format = 'foo' }.not_to change { @info.categories.length }
         end
         
         it 'setting a citation-format actually sets the citation-format' do
-          expect { info.citation_format = 'bar' }.to change { info.citation_format }.to(:bar)
+          expect { @info.citation_format = 'bar' }.to change { @info.citation_format }.to(:bar)
         end
       end
       
       describe 'given a category node without the citation-attribute set' do
-        before(:all) { info.add_child Info::Category.new(:field => 'literature') }
+        before { @info.add_child Info::Category.new(:field => 'literature') }
       
         it 'has no citation-format by default' do
-          info.citation_format.should be_nil
+          @info.citation_format.should be_nil
         end
 
         it 'setting a citation-format creates a new category node' do
-          expect { info.citation_format = 'foo' }.to change { info.categories.length }.from(1).to(2)
+          expect { @info.citation_format = 'foo' }.to change { @info.categories.length }.from(1).to(2)
         end
 
         it 'setting a citation-format actually sets the citation-format' do
-          expect { info.citation_format = 'bar' }.to change { info.citation_format }.to(:bar)
+          expect { @info.citation_format = 'bar' }.to change { @info.citation_format }.to(:bar)
         end
       end
     end
@@ -83,7 +83,7 @@ module CSL
       it { should_not have_template_link }
       
       it 'self_link is nil by default' do
-        Info.new.self_link.should be_nil
+        @info.self_link.should be_nil
       end
 
       it 'returns nil if no suitable link is set' do
@@ -100,8 +100,8 @@ module CSL
       end
 
       it 'setter creates new link node if link did not exist' do
-        expect { info.self_link = 'bar' }.to change { info.has_self_link? }
-        info.links[0].should be_a(Info::Link)
+        expect { @info.self_link = 'bar' }.to change { @info.has_self_link? }
+        @info.links[0].should be_a(Info::Link)
       end
       
     end

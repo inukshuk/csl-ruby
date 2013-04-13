@@ -1,6 +1,12 @@
 source 'https://rubygems.org'
 gemspec
 
+group :development, :test do
+  gem 'rake', '~>10.0'
+  gem 'rspec', '~>2.13'
+  gem 'cucumber', '~>1.2'
+end
+
 group :debug do
   gem 'ruby-debug', :platforms => [:mri_18, :jruby]
   gem 'debugger', :platforms => [:mri_19]
