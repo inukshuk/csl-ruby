@@ -6,7 +6,7 @@ module CSL
     attr_reader :children
     attr_writer :nodename
 
-		protected :parent=
+    protected :parent=
 
     def self.included(base)
       base.extend(ClassMethods)
@@ -120,9 +120,9 @@ module CSL
     end
 
     # @return [Boolean] true if this node has no child nodes; false otherwise.
-		def empty?
-			children.empty?
-		end
+    def empty?
+      children.empty?
+    end
 
     # Unlinks the node and all its children from its parent node. Returns
     # the old parent node or nil.
@@ -212,10 +212,10 @@ module CSL
 
 
     # Add memoized methods. When processing citations, styles will
-		# typically remain stable; therefore cite processors may opt
-		# to use memoized versions of the following methods. These
-		# versions are marked with an exclamation mark as a reminder
-		# that the return values are cached and potentially outdated.
+    # typically remain stable; therefore cite processors may opt
+    # to use memoized versions of the following methods. These
+    # versions are marked with an exclamation mark as a reminder
+    # that the return values are cached and potentially outdated.
     %w{ ancestors descendants siblings root depth }.each do |name|
       ivar = "@#{name}"
       define_method("#{name}!") do
@@ -261,17 +261,17 @@ module CSL
         end
       end
 
-			def constantize_nodename(name)
-			  return constantize(name) if respond_to?(:constantize)
+      def constantize_nodename(name)
+        return constantize(name) if respond_to?(:constantize)
 
         klass = name.to_s.capitalize.gsub(/(\w)-(\w)/) { [$1, $2.upcase].join }
 
-				if const_defined?(klass)
-				  const_get(klass)
-				else
-					nil
-				end
-			end
+        if const_defined?(klass)
+          const_get(klass)
+        else
+          nil
+        end
+      end
 
 
       private
@@ -315,9 +315,9 @@ module CSL
                 if klass
                   value = klass.new(value)
                 else
-                	# try to force convert value
-                	value = (value.is_a?(String) ? TextNode : Node).new(value)
-                	value.nodename = name.to_s
+                  # try to force convert value
+                  value = (value.is_a?(String) ? TextNode : Node).new(value)
+                  value.nodename = name.to_s
                 end
 
               rescue => e

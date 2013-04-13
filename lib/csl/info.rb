@@ -37,7 +37,7 @@ module CSL
 
     attr_children :title, :'title-short', :id, :issn, :eissn, :issnl,
       :link, :author, :contributor, :translator, :category, :published,
-			:summary, :updated, :rights, :'link-dependent-style'
+      :summary, :updated, :rights, :'link-dependent-style'
 
     alias_child :contributors, :contributor
     alias_child :authors, :author
@@ -188,21 +188,21 @@ module CSL
 
     class Contributor < Node
       attr_children :name, :email, :uri
-			def_delegators :name, *Namae::Name.members
+      def_delegators :name, *Namae::Name.members
     end
 
     class Author < Node
       attr_children :name, :email, :uri
-			def_delegators :name, *Namae::Name.members
+      def_delegators :name, *Namae::Name.members
     end
 
     class Translator < Node
       attr_children :name, :email, :uri
-			def_delegators :name, *Namae::Name.members
+      def_delegators :name, *Namae::Name.members
     end
 
     class Link < Node
-			has_language
+      has_language
       attr_struct :href, :rel
     end
 
@@ -220,17 +220,17 @@ module CSL
 
     class Name < TextNode
 
-			def_delegators :namae, *Namae::Name.members
+      def_delegators :namae, *Namae::Name.members
 
-			private
+      private
 
-			def namae
-				@namae || namae!
-			end
+      def namae
+        @namae || namae!
+      end
 
-			def namae!
-				@namae = Namae::Name.parse to_s
-			end
+      def namae!
+        @namae = Namae::Name.parse to_s
+      end
     end
 
     class Email < TextNode
@@ -240,19 +240,19 @@ module CSL
     end
 
     class Title < TextNode
-			has_language
+      has_language
     end
 
     class TitleShort < TextNode
-			has_language
+      has_language
     end
 
     class Summary < TextNode
-			has_language
+      has_language
     end
 
     class Rights < TextNode
-			has_language
+      has_language
       attr_struct :license
     end
 

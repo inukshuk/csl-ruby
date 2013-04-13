@@ -37,26 +37,26 @@ module CSL
 
         input = input.to_s
 
-				case
-				when File.exists?(input)
-					location = input
-				when File.exists?(extend_name(input))
-					location = extend_name(input)
-				when File.exists?(extend_path(input))
-					location = extend_path(input)
-				else
-					location = input
-				end
+        case
+        when File.exists?(input)
+          location = input
+        when File.exists?(extend_name(input))
+          location = extend_name(input)
+        when File.exists?(extend_path(input))
+          location = extend_path(input)
+        else
+          location = input
+        end
 
-				Kernel.open(location, 'r:UTF-8') do |io|
+        Kernel.open(location, 'r:UTF-8') do |io|
           data = io.read
         end
       end
 
-			parse(data)
+      parse(data)
 
-		rescue => e
-			raise ParseError, "failed to load #{input.inspect}: #{e.message}"
+    rescue => e
+      raise ParseError, "failed to load #{input.inspect}: #{e.message}"
     end
 
     def list

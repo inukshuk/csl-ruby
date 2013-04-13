@@ -80,7 +80,7 @@ module CSL
     attr_struct :xmlns, :version
     attr_children :info, :'style-options', :date, :terms
 
-		has_language
+    has_language
 
     attr_accessor :region
 
@@ -181,18 +181,18 @@ module CSL
     # region to the default region for the given language.
     #
     # @raise [ArgumentError] if the argument is no valid locale string.
-		# 	A valid locale string is based on the syntax of IETF language tags;
-		#   it consists of either a language or region tag (or both), separated
-		#   by a hyphen.
-		#
-		# @return [self]
+    #   A valid locale string is based on the syntax of IETF language tags;
+    #   it consists of either a language or region tag (or both), separated
+    #   by a hyphen.
+    #
+    # @return [self]
     def set(locale)
       @language, @region = Locale.normalize(locale).split(/-/).map(&:to_sym)
       self
     end
 
     # Sets the locale's language and region to nil.
-		# @return [self]
+    # @return [self]
     def clear
       @language, @region = nil
       self
@@ -304,20 +304,20 @@ module CSL
       validate.empty?
     end
 
-		# @return [Locale]
-		def merge(*others)
-			deep_copy.merge!(*others)
-		end
+    # @return [Locale]
+    def merge(*others)
+      deep_copy.merge!(*others)
+    end
 
-		# @return [self]
-		def merge!(*others)
-			others.each do |other|
-			  merge_options other
-			  merge_dates other
-			end
+    # @return [self]
+    def merge!(*others)
+      others.each do |other|
+        merge_options other
+        merge_dates other
+      end
 
-			self
-		end
+      self
+    end
 
 
     # Locales are sorted first by language, then by region; sort order is
@@ -376,22 +376,22 @@ module CSL
       Schema.preamble.dup
     end
 
-		# @param other [Locale] an other locale whose options should be merged
-		# @return [self]
-		def merge_options(other)
-		  return self unless other.has_options?
+    # @param other [Locale] an other locale whose options should be merged
+    # @return [self]
+    def merge_options(other)
+      return self unless other.has_options?
 
-		  if has_options?
-		    options.attributes.merge! other.options.attributes
-		  else
-		    add_child other.options.dup
-		  end
+      if has_options?
+        options.attributes.merge! other.options.attributes
+      else
+        add_child other.options.dup
+      end
 
-		  self
-		end
+      self
+    end
 
-		# @param other [Locale] an other locale whose date nodes should be merged
-		# @return [self]
+    # @param other [Locale] an other locale whose date nodes should be merged
+    # @return [self]
     def merge_dates(other)
       return self unless other.has_dates?
 

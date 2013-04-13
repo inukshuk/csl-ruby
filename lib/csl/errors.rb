@@ -5,14 +5,14 @@ module CSL
 
     def initialize(message, original = $!)
       @original = original
-			super(message)
+      super(message)
     end    
   end
   
-	class ParseError < Error
-	end
+  class ParseError < Error
+  end
 
-	class ValidationError < Error
-	end
+  class ValidationError < Error
+  end
 
 end

@@ -15,14 +15,14 @@ module CSL
 
     private
     
-		def tabwidth
-			2
-		end
-		
-		def preamble
-		  ''
-		end
-		
+    def tabwidth
+      2
+    end
+    
+    def preamble
+      ''
+    end
+    
     def pp(tag, level = 0)
       if tag.is_a?(Array)
         tag.map { |t| pp t, level + 1 }.join("\n")

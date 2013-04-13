@@ -35,11 +35,11 @@ module CSL
       end
     end
 
-		module Nesting
-			def nesting
-				name.split(/::/).inject([]) { |ns, n| ns << (ns[-1] || Object).const_get(n) }
-			end
-		end
+    module Nesting
+      def nesting
+        name.split(/::/).inject([]) { |ns, n| ns << (ns[-1] || Object).const_get(n) }
+      end
+    end
 
     module Blank
       def blank?
@@ -55,7 +55,7 @@ class Hash
 end
 
 class Module
-	include CSL::Extensions::Nesting
+  include CSL::Extensions::Nesting
 end
 
 class Object
