@@ -213,15 +213,22 @@ module CSL
         attr_reader :form_fallbacks
 
         def specialize(options)
-          options = options.select do |k,v|
-            !v.nil? && Term::Attributes.keys.include?(k.to_sym)
+          specialized = {}
+          
+          options.each do |key, value|
+            key = key.to_sym
+
+            if !value.nil? && Term::Attributes.keys.include?(key)
+              specialized[key] = value
+            end
           end
 
-          options.delete :'gender-form' unless
-            options[:'gender-form'].to_s =~ /^masculine|feminine$/
+          specialized.delete :'gender-form' unless
+            specialized[:'gender-form'].to_s =~ /^masculine|feminine$/
 
-          options
+          specialized
         end
+
       end
 
       # This method returns whether or not the ordinal term matchs the

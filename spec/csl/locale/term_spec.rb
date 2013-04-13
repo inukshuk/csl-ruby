@@ -12,6 +12,12 @@ module CSL
 			end
 		end
 
+    describe '.specialize' do
+      it 'filters the passed in hash to contain only match-able entries' do
+        Locale::Term.specialize({ :form => 'short', :foo => 'bar' }).should == { :form => 'short' }
+      end
+    end
+
 		describe '#ordinalize' do
 
 		  describe "given standard English terms" do

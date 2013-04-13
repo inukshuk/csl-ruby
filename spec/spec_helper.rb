@@ -1,6 +1,11 @@
 begin
-  require 'simplecov'
-  require 'debugger'
+  if RUBY_VERSION < '1.9'
+    # require 'debug'
+    # Debugger.start
+  else
+    require 'simplecov'
+    require 'debugger'
+  end
 rescue LoadError
   # ignore
 end

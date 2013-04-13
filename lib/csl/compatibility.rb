@@ -26,12 +26,21 @@ module CSL
   module_function
 
   if RUBY_VERSION < '1.9'
-    def encode_xml_attr(string)
-      string.inspect
-    end
+
+    XML_ENTITY_SUBSTITUTION = Hash[*%w{
+     & &amp; < &lt; > &gt; ' &apos; " &quot;
+    }].freeze
 
     def encode_xml_text(string)
-      string.dup
+      string.gsub(/[&<>]/) { |match|
+        XML_ENTITY_SUBSTITUTION[match]
+      }
+    end
+
+    def encode_xml_attr(string)
+      string.gsub(/[&<>'"]/) { |match|
+        XML_ENTITY_SUBSTITUTION[match]
+      }.inspect
     end
   else
     def encode_xml_text(string)
