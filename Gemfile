@@ -1,9 +1,9 @@
-source :rubygems
+source 'https://rubygems.org'
 gemspec
 
 group :debug do
   gem 'ruby-debug', :platforms => [:mri_18, :jruby]
-  gem 'debugger', :platforms => [:mri_19]
+  gem 'debugger', :platforms => [:mri_19, :mri_20]
 end
 
 group :optional do
@@ -16,10 +16,10 @@ group :extra do
   gem 'guard', '~>1.2'
   gem 'guard-rspec', '~>1.1'
   gem 'guard-cucumber', '~>1.2'
-  gem 'rb-fsevent', '~>0.9.1', :platforms => [:mri_19, :rbx]
+  gem 'rb-fsevent', '~>0.9.1', :platforms => [:mri_19, :mri_20, :rbx]
 
-	gem 'yard', '~>0.8', :platforms => [:mri_19]
-	gem 'redcarpet', '~>2.1', :platforms => [:mri_19]
+	gem 'yard', '~>0.8', :platforms => [:mri_19, :mri_20]
+	gem 'redcarpet', '~>2.1', :platforms => [:mri_19, :mri_20]
 end
 
 # vim: syntax=ruby
