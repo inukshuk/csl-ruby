@@ -29,15 +29,15 @@ module CSL
       end
 
 			def hide_default_attributes?
-				@hide_default_attributes ||= true
+				!@show_default_attributes
 			end
 
 			def hide_default_attributes!
-				@hide_default_attributes = true
+				@show_default_attributes = false
 			end
 
 			def show_default_attributes!
-				@hide_default_attributes = false
+				@show_default_attributes = true
 			end
 
       def constantize(name)
@@ -268,7 +268,7 @@ module CSL
 		def default_attribute?(name)
 			defaults = self.class.default_attributes
 			name, value = name.to_sym, attributes.fetch(name)
-			
+
 			return false unless !value.nil? || defaults.key?(name)
 			defaults[name] == value
 		end
@@ -452,9 +452,11 @@ module CSL
     private
 
     def attribute_assignments
-			a = self.class.hide_default_attributes? ? custom_attributes : attributes
-      a.map { |name, value|
-        value.nil? ? nil : [name, value.to_s.inspect].join('=')
+			attrs = self.class.hide_default_attributes? ?
+			  custom_attributes : attributes.to_hash
+
+      attrs.map { |name, value|
+        value.nil? ? nil : [name, CSL.encode_xml_attr(value.to_s)].join('=')
       }.compact
     end
 
@@ -494,7 +496,7 @@ module CSL
     attr_accessor :text
 
     def to_s
-      text.to_s.strip
+      CSL.encode_xml_text text.to_s.strip
     end
 
     # TextNodes quack like a string.
@@ -530,7 +532,7 @@ module CSL
     end
 
     def tags
-      ["<#{attribute_assignments.unshift(nodename).join(' ')}>#{text}</#{nodename}>"]
+      ["<#{attribute_assignments.unshift(nodename).join(' ')}>#{to_s}</#{nodename}>"]
     end
 
     def inspect

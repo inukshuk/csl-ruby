@@ -2,7 +2,9 @@ module CSL
   
   class Schema
     
-    @version   = '1.0.1'.freeze
+    @version         = '1.0.1'.freeze
+    @major_version   = '1.0'.freeze
+
     @namespace = 'http://purl.org/net/xbiblio/csl'.freeze
     @preamble  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n".freeze
     
@@ -131,8 +133,8 @@ module CSL
     
     class << self
       
-      attr_accessor :version, :namespace, :types, :variables, :categories,
-        :attributes, :preamble, :values
+      attr_accessor :version, :major_version, :namespace, :types,
+        :variables, :categories, :attributes, :preamble, :values
       
       private :new
       

@@ -20,9 +20,10 @@ module CSL
       end
     end
 
-    attr_defaults :version => Schema.version, :xmlns => Schema.namespace
+    attr_defaults :version => Schema.major_version,
+      :xmlns => Schema.namespace
 
-		show_default_attributes!
+    show_default_attributes!
 
     attr_struct :xmlns, :version, :class, :'default-locale',
       :'initialize-with-hyphen', :'page-range-format',
@@ -81,16 +82,16 @@ module CSL
     alias_child :metadata, :info
 
     # @return [String] the style's id
-		def id
-			return unless info.has_id?
-			info.id.to_s
-		end
+    def id
+      return unless info.has_id?
+      info.id.to_s
+    end
 
     # @return [String] the style's title
-		def title
-			return unless info.has_title?
-			info.title.to_s
-		end
+    def title
+      return unless info.has_title?
+      info.title.to_s
+    end
 
     alias has_template? has_template_link?
 

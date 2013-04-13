@@ -10,9 +10,22 @@ module CSL
       @style[:version].should match(/1\.\d+(\.\d+)?/)
     end
 
+    it 'has the default version' do
+      @style.default_attribute?(:version).should be_true
+    end
+
+    it 'has a the default namespace attribute' do
+      @style[:xmlns].should == CSL::Schema.namespace
+      @style.default_attribute?(:xmlns).should be_true
+    end
+
     describe '#to_xml' do
       it 'returns an empty style' do
         @style.to_xml.should match(/^<style[^>]*\/>/)
+      end
+
+      it 'includes the xml namespace' do
+        @style.to_xml.should match(CSL::Schema.namespace)
       end
 
       it 'supports round-trip for apa style' do
