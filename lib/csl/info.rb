@@ -96,6 +96,11 @@ module CSL
 
     alias id= set_child_id
 
+    def self_link!
+      return unless has_id?
+      self.self_link = id
+    end
+
     # @return [Time,nil] when the info node's parent was last updated
     def updated_at
       return unless has_updated?

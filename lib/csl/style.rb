@@ -40,7 +40,7 @@ module CSL
     alias has_macros? has_macro?
 
     def_delegators :info, :self_link, :self_link=, :has_self_link?,
-      :template_link, :template_link=, :has_template_link?,
+      :self_link!, :template_link, :template_link=, :has_template_link?,
       :documentation_link, :documentation_link=, :has_documentation_link?,
       :independent_parent_link, :independent_parent_link=,
       :has_independent_parent_link?, :title=, :id=, :has_title?, :has_id?,
