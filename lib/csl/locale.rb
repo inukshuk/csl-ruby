@@ -72,10 +72,12 @@ module CSL
       attr_reader :tag_pattern
     end
 
-    attr_defaults :version => Schema.version, :xmlns => Schema.namespace
+    attr_defaults :version => Schema.major_version, :xmlns => Schema.namespace
+    
+    show_default_attributes!
+    
     attr_struct :xmlns, :version
-
-    attr_children :'style-options', :info, :date, :terms
+    attr_children :info, :'style-options', :date, :terms
 
 		has_language
 
@@ -165,7 +167,7 @@ module CSL
 
     # @return [Boolean] whether or not the Locale's version is less than CSL-Ruby's default version
     def legacy?
-      version < Schema.version
+      version < Schema.major_version
     end
 
     # @example
