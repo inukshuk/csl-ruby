@@ -72,10 +72,11 @@ module CSL
       attr_reader :tag_pattern
     end
 
-    attr_defaults :version => Schema.major_version, :xmlns => Schema.namespace
-    
+    attr_defaults :version => Schema.major_version,
+      :xmlns => Schema.namespace
+
     show_default_attributes!
-    
+
     attr_struct :xmlns, :version
     attr_children :info, :'style-options', :date, :terms
 
@@ -240,12 +241,12 @@ module CSL
       raise ArgumentError, "unable to ordinalize #{number}; integer expected" unless
         number.respond_to?(:to_i)
 
-      number = number.to_i      
+      number = number.to_i
       ordinal = terms.ordinalize number, options
 
       return number.to_s if ordinal.nil?
       return ordinal.to_s(options) if ordinal.long_ordinal?
-      
+
       [number, ordinal.to_s(options)].join
     end
 
