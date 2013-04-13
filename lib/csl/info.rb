@@ -108,9 +108,9 @@ module CSL
       ts = timestamp.respond_to?(:xmlschema) ? timestamp.xmlschema : timestamp.to_s
 
       if has_updated?
-        updated = Updated.new { |u| u.text = ts }
-      else
         updated.text = ts
+      else
+        add_child Updated.new { |u| u.text = ts }
       end
 
       self
@@ -128,12 +128,41 @@ module CSL
       ts = timestamp.respond_to?(:xmlschema) ? timestamp.xmlschema : timestamp.to_s
 
       if has_published?
-        published = Published.new { |u| u.text = ts }
-      else
         published.text = ts
+      else
+        add_child Published.new { |u| u.text = ts }
       end
 
       self
+    end
+
+    def license
+      return unless has_rights?
+      rights[:license] || rights.to_s
+    end
+
+    def license=(license)
+      if has_rights?
+        rights[:license] = license
+      else
+        add_child Rights.new(:license => license)
+      end
+    end
+
+    def default_license?
+      has_rights? && rights[:license] == Schema.default_license &&
+        rights.to_s == Schema.default_rights_string
+    end
+
+    def default_license!
+      if has_rights?
+        rights[:license] = Schema.default_license
+        rights.text = Schema.default_rights_string
+      else
+        add_child Rights.new(:license => Schema.default_license) { |r|
+          r.text = Schema.default_rights_string
+        }
+      end
     end
 
     # @return [Symbol] the parent style's citation format

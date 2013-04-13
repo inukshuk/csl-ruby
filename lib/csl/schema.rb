@@ -8,6 +8,11 @@ module CSL
     @namespace = 'http://purl.org/net/xbiblio/csl'.freeze
     @preamble  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n".freeze
     
+    @default_license = 'http://creativecommons.org/licenses/by-sa/3.0/'
+    @default_rights_string =
+      "This work is licensed under a Creative Commons Attribution-Share Alike 3.0 License: #{@default_license}"
+
+    
     @types = %w{ article article-journal article-magazine article-newspaper
       bill book broadcast chapter entry entry-dictionary entry-encyclopedia
       figure graphic interview legal_case legislation manuscript map
@@ -134,7 +139,8 @@ module CSL
     class << self
       
       attr_accessor :version, :major_version, :namespace, :types,
-        :variables, :categories, :attributes, :preamble, :values
+        :variables, :categories, :attributes, :preamble, :values,
+        :default_rights_string, :default_license
       
       private :new
       
