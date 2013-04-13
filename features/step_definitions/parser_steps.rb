@@ -4,7 +4,9 @@ When /^I parse the CSL string(?: in the (\w+) scope)?$/ do |scope, string|
 end
 
 Then /^(?:the )?(\w+[\?!]?) should be "([^"]*)"$/ do |name, expected|
-  @csl.send(name).to_s.should == expected
+  actual = @csl.send(name)
+  actual = !!actual if expected =~ /^true|false$/
+  actual.to_s.should == expected
 end
 
 Then /^the (\w+) (\w+) should be "([^"]*)"$/ do |outer, inner, expected|
