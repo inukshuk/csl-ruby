@@ -18,5 +18,5 @@ notifications:
     on_failure: always
 matrix:
   allow_failures:
-	  - rvm: jruby-19mode
+    - rvm: jruby-19mode
     - rvm: rbx-19mode
