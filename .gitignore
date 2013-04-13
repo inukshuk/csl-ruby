@@ -7,3 +7,5 @@ Gemfile.lock
 /.rbx
 *.rbc
 *.gem
+.ruby-version
+.rvm
