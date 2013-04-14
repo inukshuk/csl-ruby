@@ -1,3 +1,3 @@
 module CSL  
-  VERSION = '1.0.0.pre22'.freeze
+  VERSION = '1.0.0.pre23'.freeze
 end
