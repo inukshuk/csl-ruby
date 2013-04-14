@@ -91,8 +91,13 @@ module CSL
         names-delimiter
       },
       :conditionals => %w{
-        disambiguate is-numeric  is-uncertain-date locator
-        position type variable
+        disambiguate position
+        is-numeric is-numeric-any is-numeric-all is-numeric-none
+        is-uncertain-date is-uncertain-date-any is-uncertain-date-all
+        is-uncertain-date-none
+        locator locator-any locator-all locator-none
+        type type-any type-all type-none
+        variable variable-any variable-all variable-none
       }
     })
     
