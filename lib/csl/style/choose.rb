@@ -15,13 +15,15 @@ module CSL
         end
         
         def conditions
-          attributes_for(*Schema.attr(:conditionals)).map { |type, values|
-            values.to_s.split(/\s+/).map { |value| [type, value] }
-          }.flatten(1)
+          attributes_for(*Schema.attr(:conditionals)).map do |name, values|
+            extract_type_and_matcher_from(name) << values.to_s.split(/\s+/)
+          end
         end
 
-        def matcher
-          case attributes[:match]
+        def matcher(match = nil)
+          match ||= attributes[:match]
+
+          case match
           when 'any'
             :any?
           when 'none'
@@ -29,7 +31,14 @@ module CSL
           else
             :all?
           end
-        end 
+        end
+        
+        private
+
+        def extract_type_and_matcher_from(attribute)
+          type, match = attribute.to_s.split(/-(any|all|none)$/, 2)
+          [type.to_sym, matcher(match)]
+        end
       end
     end
 
