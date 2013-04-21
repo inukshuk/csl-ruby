@@ -54,7 +54,7 @@ module CSL
       has_no_children
 
       attr_struct :name, :form, :'range-delimiter',
-        *Schema.attr(:formatting, :periods)
+        :'strip-periods', *Schema.attr(:formatting)
 
       include CSL::DatePart
     end

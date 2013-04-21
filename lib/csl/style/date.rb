@@ -4,8 +4,8 @@ module CSL
     class Date < Node
       attr_defaults :'date-parts' => 'year-month-day'
 
-      attr_struct :name, :form, :'range-delimiter', :'date-parts', :variable,
-        *Schema.attr(:display, :formatting, :delimiter)
+      attr_struct :name, :form, :'range-delimiter', :'date-parts',
+				:variable, *Schema.attr(:formatting, :delimiter)
 
       attr_children :'date-part'
 
@@ -49,11 +49,11 @@ module CSL
       end
 
       def numeric?
-        attributes[:form].to_s =~ /^numeric$/i
+        form =~ /^numeric$/i
       end
 
       def text?
-        attributes[:form].to_s =~ /^text$/i
+        form =~ /^text$/i
       end
 
       def has_date_parts?
@@ -69,8 +69,8 @@ module CSL
     class DatePart < Node
       has_no_children
 
-      attr_struct :name, :form, :'range-delimiter',
-        *Schema.attr(:formatting, :periods)
+      attr_struct :name, :form, :'range-delimiter', :'strip-periods',
+        *Schema.attr(:formatting)
 
       include CSL::DatePart
     end

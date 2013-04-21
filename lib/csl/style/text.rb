@@ -3,7 +3,7 @@ module CSL
 
     class Text < Node
       attr_struct :variable, :macro, :term, :form, :plural, :value,
-        *Schema.attr(:formatting, :display, :quotes, :periods)
+				:quotes, :'strip-periods', *Schema.attr(:formatting)
 
       has_no_children
 

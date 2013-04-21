@@ -69,17 +69,8 @@ module CSL
       :delimiter => %w{
         delimiter
       },
-      :display => %w{
-        block left-margin right-inline indent
-      },
       :font => %w{
         font-style font-variant font-weight text-decoration vertical-align
-      },
-      :quotes => %w{
-        quotes
-      },
-      :periods => %w{
-        strip-periods
       },
       :name => %w{
         name-form name-delimiter and delimiter-precedes-et-al initialize-with
@@ -103,7 +94,7 @@ module CSL
     
     @attributes.each_value { |v| v.map!(&:to_sym).freeze }
 
-    @attributes[:formatting] = [:'text-case'].concat(
+    @attributes[:formatting] = [:'text-case', :display].concat(
       @attributes.values_at(:affixes, :font).flatten)
 
     @attributes.freeze

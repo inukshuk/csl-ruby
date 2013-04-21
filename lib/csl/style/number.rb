@@ -4,8 +4,7 @@ module CSL
     # Numbers are CSL rendering elements which output the number variable
     # selected with the required variable attribute.
     class Number < Node
-      attr_struct :variable, :form, :'text-case',
-        *Schema.attr(:affixes, :display, :font)
+      attr_struct :variable, :form, *Schema.attr(:formatting)
 
       has_no_children
 
@@ -22,29 +21,29 @@ module CSL
       end
 
       def form
-        attributes[:form]
+        attributes[:form].to_s
       end
 
       # @return [Boolean] whether or not the number's format is set to
       #   :numeric; also returns true if the number's form attribute is not
       #   set or nil.
       def numeric?
-        !has_form? || form.to_sym == :numeric
+        !has_form? || form == 'numeric'
       end
 
-      # @return [Boolean] whether or not the number's format is set to :ordinal
+      # @return [Boolean] whether or not the number's format is set to 'ordinal
       def ordinal?
-        has_form? && form.to_sym == :ordinal
+        has_form? && form == 'ordinal'
       end
 
-      # @return [Boolean] whether or not the number's format is set to :'long-ordinal'
+      # @return [Boolean] whether or not the number's format is set to 'long-ordinal'
       def long_ordinal?
-        has_form? && form.to_sym == :'long-ordinal'
+        has_form? && form == 'long-ordinal'
       end
 
-      # @return [Boolean] whether or not the number's format is set to :roman
+      # @return [Boolean] whether or not the number's format is set to 'roman'
       def roman?
-        has_form? && form.to_sym == :roman
+        has_form? && form == 'roman'
       end
     end
 

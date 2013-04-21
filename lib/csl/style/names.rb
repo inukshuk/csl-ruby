@@ -3,7 +3,7 @@ module CSL
 
     class Names < Node
 
-      attr_struct :variable, *Schema.attr(:names, :delimiter, :affixes, :display, :font)
+      attr_struct :variable, *Schema.attr(:names, :delimiter, :affixes, :font)
 
       attr_children :name, :'et-al', :label, :substitute
 

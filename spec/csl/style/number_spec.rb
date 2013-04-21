@@ -52,6 +52,7 @@ module CSL
       
       it 'returns false if the form attribute is set to :ordinal' do
         Style::Number.new(:form => 'ordinal').should be_ordinal
+        Style::Number.new(:form => :ordinal).should be_ordinal
       end
     end
 

@@ -11,8 +11,8 @@ module CSL
     # is used instead of the local attribute.
     class Label < Node
 
-      attr_struct :variable, :form, :plural,
-        *Schema.attr(:formatting, :periods)
+      attr_struct :variable, :form, :plural, :'strip-periods',
+        *Schema.attr(:formatting)
 
       has_no_children
 
@@ -57,11 +57,11 @@ module CSL
       end
 
       def always_pluralize?
-        attributes[:plural].to_s =~ /^always$/i
+        attribute?(:plural) && attributes[:plural] =~ /^always$/i
       end
 
       def never_pluralize?
-        attributes[:plural].to_s =~ /^never$/i
+        attribute?(:plural) && attributes[:plural] =~ /^never$/i
       end
 
       # @return [Boolean] whether or not the {Label} is inside a {Names} node

@@ -21,7 +21,7 @@ module CSL
         end
 
         def matcher(match = attributes[:match])
-          case match
+          case match.to_s
           when 'any'
             :any?
           when 'none'
@@ -37,8 +37,9 @@ module CSL
           type, match = attribute.to_s.split(/-(any|all|none)$/, 2)
 
           # subtle: if the default matcher is :none? and there
-          # is no override we to use :any? in the nested lists
-          # to avoid double negation during evaluation
+          # is no override we want to use :any? inside the nested
+          # lists to avoid double negation during evaluation of
+          # the entire expression!
 
           if match.nil?
             match = matcher
