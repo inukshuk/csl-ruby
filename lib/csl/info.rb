@@ -156,7 +156,7 @@ module CSL
 
     def default_license?
       has_rights? && rights[:license] == Schema.default_license &&
-        rights.to_s == Schema.default_rights_string
+        rights.text == Schema.default_rights_string
     end
 
     def default_license!

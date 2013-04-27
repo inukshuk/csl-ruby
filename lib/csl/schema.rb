@@ -10,8 +10,7 @@ module CSL
     
     @default_license = 'http://creativecommons.org/licenses/by-sa/3.0/'
     @default_rights_string =
-      "This work is licensed under a Creative Commons Attribution-Share Alike 3.0 License: #{@default_license}"
-
+      'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License'
     
     @types = %w{ article article-journal article-magazine article-newspaper
       bill book broadcast chapter entry entry-dictionary entry-encyclopedia
