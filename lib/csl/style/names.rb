@@ -35,7 +35,7 @@ module CSL
 
       attr_struct :form, *Schema.attr(:name, :affixes, :font, :delimiter)
 
-      attr_defaults :form => 'long', :delimiter => ', ', :and => 'symbol',
+      attr_defaults :form => 'long', :delimiter => ', ',
         :'delimiter-precedes-last' => 'contextual', :initialize => true,
         :'sort-separator' => ', '
 
@@ -55,7 +55,11 @@ module CSL
         attributes[:initialize].to_s !~ /^false$/i
       end
 
-      # @param [#to_i, Enumerable] names the list of names (or its length)
+      def et_al
+        parent && parent.et_al
+      end
+
+      # @param names [#to_i, Enumerable] the list of names (or its length)
       # @return [Boolean] whether or not the should be truncate
       def truncate?(names, subsequent = false)
         names = names.length if names.respond_to?(:length)
@@ -104,13 +108,45 @@ module CSL
         attribute?(:'name-as-sort-order')
       end
 
-      alias sort_order? name_as_sort_order?
-
       def name_as_sort_order
         attributes[:'name-as-sort-order'].to_s
       end
 
       alias sort_order name_as_sort_order
+
+      def first_name_as_sort_order?
+        attributes[:'name-as-sort-order'].to_s =~ /^first$/i
+      end
+
+      def all_names_as_sort_order?
+        attributes[:'name-as-sort-order'].to_s =~ /^all$/i
+      end
+
+      
+      # @param names [#to_i, Enumerable] the list of names (or its length)
+      # @return [Boolean] whether or not the delimiter will be inserted between
+      #   the penultimate and the last name
+      def delimiter_precedes_last?(names)
+        names = names.length if names.respond_to?(:length)
+
+        case
+        when !attribute?(:and)
+          true
+        when delimiter_never_precedes_last?
+          false
+        when delimiter_always_precedes_last?
+          true
+        when delimiter_precedeces_last_after_inverted_name?
+          if name_as_sort_order?
+            all_names_as_sort_order? || names.to_i == 2
+          else
+            false
+          end
+
+        else
+          names.to_i > 2
+        end
+      end
 
       # @return [Boolean] whether or not the should always be inserted between
       #   the penultimate and the last name
@@ -154,8 +190,22 @@ module CSL
         self
       end
 
+      def delimiter_precedes_last_after_inverted_name?
+        !!(attributes[:'delimiter-precedes-last'].to_s =~ /^after-inverted-name/i)
+      end
+
+      def delimiter_precedes_last_after_inverted_name!
+        attributes[:'delimiter-precedes-last'] = 'after-inverted-name'
+        self
+      end
+
       def ellipsis?
         attributes[:'et-al-use-last'].to_s =~ /^true$/
+      end
+
+      def connector
+        c = attributes[:and]
+        c == 'symbol' ? '&' : c
       end
     end
 
@@ -167,7 +217,7 @@ module CSL
     class EtAl < Node
       has_no_children
       attr_struct :term, *Schema.attr(:affixes, :font)
-      
+
       attr_defaults :term => 'et-al'
     end
 
