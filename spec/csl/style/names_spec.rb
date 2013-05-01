@@ -7,7 +7,7 @@ module CSL
 
   describe Style::Name do
 
-    it { should delimiter_contextually_precedes_last }
+    it { should be_delimiter_contextually_precedes_last }
 
     [:never, :always, :contextually].each do |setting|
       setter = "delimiter_#{setting}_precedes_last!"
