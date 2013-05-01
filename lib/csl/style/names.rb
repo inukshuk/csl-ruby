@@ -35,6 +35,10 @@ module CSL
 
       attr_struct :form, *Schema.attr(:name, :affixes, :font, :delimiter)
 
+      attr_defaults :form => 'long', :delimiter => ', ', :and => 'symbol',
+        :'delimiter-precedes-last' => 'contextual', :initialize => true,
+        :'sort-separator' => ', '
+
       attr_children :'name-part'
 
       alias parts name_part
@@ -46,6 +50,113 @@ module CSL
         yield self if block_given?
       end
 
+
+      def initialize?
+        attributes[:initialize].to_s !~ /^false$/i
+      end
+
+      # @param [#to_i, Enumerable] names the list of names (or its length)
+      # @return [Boolean] whether or not the should be truncate
+      def truncate?(names, subsequent = false)
+        names = names.length if names.respond_to?(:length)
+        limit = truncate_when(subsequent)
+
+        !limit.zero? && names.to_i >= limit
+      end
+
+      # @param [Enumerable] names
+      # @return [Array] the truncated list of names
+      def truncate(names, subsequent = false)
+        limit = truncate_at(subsequent)
+
+        return names if limit.zero?
+        names.take limit
+      end
+
+      def truncate_when(subsequent = false)
+        if subsequent && attribute?(:'et-al-subsequent-min')
+          attribute[:'et-al-subsequent-min'].to_i
+        else
+          attribute[:'et-al-min'].to_i
+        end
+      end
+
+      def truncate_at(subsequent = false)
+        if subsequent && attribute?(:'et-al-subsequent-use-first')
+          attribute[:'et-al-subsequent-use-first'].to_i
+        else
+          attribute[:'et-al-use-first'].to_i
+        end
+      end
+
+      # @return [String] the delimiter between family and given names
+      #   in sort order
+      def sort_separator
+        attributes[:'sort-separator'].to_s
+      end
+
+      # @return [String] the delimiter between names
+      def delimiter
+        attributes[:delimiter].to_s
+      end
+
+      def name_as_sort_order?
+        attribute?(:'name-as-sort-order')
+      end
+
+      alias sort_order? name_as_sort_order?
+
+      def name_as_sort_order
+        attributes[:'name-as-sort-order'].to_s
+      end
+
+      alias sort_order name_as_sort_order
+
+      # @return [Boolean] whether or not the should always be inserted between
+      #   the penultimate and the last name
+      def delimiter_always_precedes_last?
+        !!(attributes[:'delimiter-precedes-last'].to_s =~ /^always$/i)
+      end
+
+      # Set the :'delimiter-precedes-last' attribute to 'always'.
+      # @return [self] self
+      def delimiter_always_precedes_last!
+        attributes[:'delimiter-precedes-last'] = 'always'
+        self
+      end
+
+      alias delimiter_precedes_last! delimiter_always_precedes_last!
+
+
+      # @return [Boolean] whether or not the should never be inserted between
+      #   the penultimate and the last name
+      def delimiter_never_precedes_last?
+        !!(attributes[:'delimiter-precedes-last'].to_s =~ /^never$/i)
+      end
+
+      # Set the :'delimiter-precedes-last' attribute to 'never'
+      # @return [self] self
+      def delimiter_never_precedes_last!
+        attributes[:'delimiter-precedes-last'] = 'never'
+        self
+      end
+
+      # @return [Boolean] whether or not the should be inserted between the
+      #   penultimate and the last name depending on the number of names
+      def delimiter_contextually_precedes_last?
+        !!(attributes[:'delimiter-precedes-last'].to_s =~ /^contextual/i)
+      end
+
+      # Set the :'delimiter-precedes-last' attribute to 'contextual'
+      # @return [self] self
+      def delimiter_contextually_precedes_last!
+        attributes[:'delimiter-precedes-last'] = 'contextual'
+        self
+      end
+
+      def ellipsis?
+        attributes[:'et-al-use-last'].to_s =~ /^true$/
+      end
     end
 
     class NamePart < Node
@@ -56,6 +167,8 @@ module CSL
     class EtAl < Node
       has_no_children
       attr_struct :term, *Schema.attr(:affixes, :font)
+      
+      attr_defaults :term => 'et-al'
     end
 
     class Substitute < Node

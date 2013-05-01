@@ -293,6 +293,15 @@ module CSL
       attributes.fetch(name, false)
     end
 
+    # @param [[String]] names list of attribute names
+    # @return [Boolean] true if the node contains attributes for all
+    #   passed-in names; false otherwise.
+    def attributes?(*names)
+      names.flatten(1).all? do |name|
+        attribute?(name)
+      end
+    end
+
     # Returns true if the node contains any attributes (ignores nil values);
     # false otherwise.
     def has_attributes?
