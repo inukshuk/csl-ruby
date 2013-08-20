@@ -96,6 +96,13 @@ module CSL
       it 'accepts and validates a style instance' do
         Schema.validate(Style.load(:apa)).should == []
       end
+
+      it 'does not accept invalid xml markup' do
+        Schema.validate(%Q{
+         <style xmlns="http://purl.org/net/xbiblio/csl" class="note" version="1.0">
+         </stle>
+        })[0][0].should == 0 # error on line 0 -> parse error
+      end
       
     # TODO fix nokogiri/jing validation
     end unless RUBY_PLATFORM =~ /java/i

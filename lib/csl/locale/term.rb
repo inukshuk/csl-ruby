@@ -357,7 +357,11 @@ module CSL
 
       def tags
         if textnode?
-          ["<#{[nodename, *attribute_assignments].join(' ')}>", text, "</#{nodename}>"]
+          [
+            "<#{[nodename, *attribute_assignments].join(' ')}>",
+            CSL.encode_xml_text(text),
+            "</#{nodename}>"
+          ]
         else
           super
         end

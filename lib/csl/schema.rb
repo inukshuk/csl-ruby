@@ -110,7 +110,12 @@ module CSL
     
     @validators = {
       :nokogiri => lambda { |schema, style|
-        schema.validate(Nokogiri::XML(style)).map { |e| [e.line, e.message] }
+        begin
+          schema.validate(Nokogiri::XML(style, nil, nil, Nokogiri::XML::ParseOptions::PEDANTIC)).
+            map { |e| [e.line, e.message] }
+        rescue
+          [[0, $!.message]]
+        end
       },
       
       :default => lambda { |schema, style|
