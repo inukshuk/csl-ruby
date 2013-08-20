@@ -6,6 +6,7 @@ Gemfile.lock
 /.yardoc
 /.rbx
 *.rbc
+*.swp
 *.gem
 .ruby-version
 .rvm
