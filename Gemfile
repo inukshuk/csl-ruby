@@ -14,7 +14,11 @@ group :debug do
 end
 
 group :optional do
-  gem 'nokogiri', '~>1.5'
+  if RUBY_VERSION < '1.9'
+    gem 'nokogiri', '1.5'
+  else
+    gem 'nokogiri', '~> 1.6'
+  end
 end
 
 group :extra do
