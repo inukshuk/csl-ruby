@@ -56,9 +56,9 @@ available features, please consult the
 
     # Load another style
     amc = CSL::Style.load 'http://zotero.org/styles/applied-mathematics-and-computation'
-    
+
     amc.independent? #-> false
-    
+
     # Load the independent parent style
     parent = amc.independent_parent
     parent.title #-> "Elsevier (numeric, with titles)"
@@ -73,31 +73,31 @@ available features, please consult the
     # Fetch the a macro
     authors = apa.macros['authors'].children[0]
     #-> #<CSL::Style::Names variable="author" children=[2]>
-    
+
     # Load a locally installed locale
     fr = CSL::Locale.load :fr
-    
+
     # Translate a term
     fr.translate 'editor' #-> "éditeur"
     fr.translate 'editor', plural: true #-> "éditeurs"
     fr.translate 'editor', form: 'short' #-> "éd."
-    
+
     # Ordinalize a number
     fr.ordinalize 42 #=> "42ᵉ"
     fr.ordinalize 3, form: 'long' => "troisième"
 
     # Create a new style
     style = CSL::Style.new
-    
+
     style.id = 'http://www.zotero.org/styles/my-style'
     style.title = 'My Style'
 
     # Add the default license for CSL styles
     style.default_license!
-    
+
     # Access the style as XML
     style.to_xml
-    
+
     # Access the style as XML (pretty printed)
     style.to_s
 
@@ -130,7 +130,7 @@ example, fix the bug and submit a pull request.
 
 Copyright
 ---------
-Copyright 2009-2013 Sylvester Keil. All rights reserved.
+Copyright 2009-2014 Sylvester Keil. All rights reserved.
 
 Copyright 2012 President and Fellows of Harvard College.
 
