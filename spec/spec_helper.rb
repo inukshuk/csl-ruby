@@ -1,9 +1,17 @@
 begin
-  if RUBY_VERSION < '1.9'
-    # require 'debug'
-    # Debugger.start
+  require 'simplecov'
+rescue LoadError
+  # ignore
+end
+
+begin
+  case
+  when RUBY_PLATFORM < 'java'
+    require 'debug'
+    Debugger.start
+  when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
+    require 'rubinius/debugger'
   else
-    require 'simplecov'
     require 'debugger'
   end
 rescue LoadError

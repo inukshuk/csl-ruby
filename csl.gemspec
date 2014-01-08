@@ -22,6 +22,8 @@ Gem::Specification.new do |s|
   s.license     = 'AGPL'
   s.date        = Time.now.strftime('%Y-%m-%d')
 
+  s.required_ruby_version = '>= 1.9.3'
+
   s.add_dependency('namae', ['~>0.7'])
 
   s.files        = `git ls-files`.split("\n")
@@ -29,7 +31,7 @@ Gem::Specification.new do |s|
   s.executables  = []
   s.require_path = 'lib'
 
-  s.has_rdoc      = 'yard'  
+  s.has_rdoc      = 'yard'
 end
 
 # vim: syntax=ruby
