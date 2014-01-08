@@ -51,11 +51,11 @@ module CSL
     end
   else
     def encode_xml_text(string)
-      string.encode(:xml => :text)
+      string.encode(string.encoding, :xml => :text)
     end
 
     def encode_xml_attr(string)
-      string.encode(:xml => :attr)
+      string.encode(string.encoding, :xml => :attr)
     end
   end
 end
