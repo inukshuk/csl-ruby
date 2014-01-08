@@ -19,7 +19,7 @@ task :console, [:script] do |t,args|
 
   require 'irb'
   require 'csl'
-  
+
   IRB.conf[:SCRIPT] = args.script
   IRB.start
 end
