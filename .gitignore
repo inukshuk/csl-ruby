@@ -10,3 +10,4 @@ Gemfile.lock
 *.gem
 .ruby-version
 .rvm
+.bundler
