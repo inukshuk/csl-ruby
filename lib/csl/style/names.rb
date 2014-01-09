@@ -86,9 +86,9 @@ module CSL
 
       def truncate_when(subsequent = false)
         if subsequent && attribute?(:'et-al-subsequent-min')
-          attribute[:'et-al-subsequent-min'].to_i
+          attributes[:'et-al-subsequent-min'].to_i
         else
-          attribute[:'et-al-min'].to_i
+          attributes[:'et-al-min'].to_i
         end
       end
 
