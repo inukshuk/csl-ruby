@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 module CSL
   class Style
 
@@ -47,9 +49,14 @@ module CSL
         super(attributes)
         children[:'name-part'] = []
 
+        # TODO inherit from style, citation and bibliography
+
         yield self if block_given?
       end
 
+      def name_options
+        attributes_for :form, :initialize, :'initialize-with', :'sort-separator'
+      end
 
       def initialize?
         attributes[:initialize].to_s !~ /^false$/i
@@ -122,7 +129,7 @@ module CSL
         attributes[:'name-as-sort-order'].to_s =~ /^all$/i
       end
 
-      
+
       # @param names [#to_i, Enumerable] the list of names (or its length)
       # @return [Boolean] whether or not the delimiter will be inserted between
       #   the penultimate and the last name
@@ -201,6 +208,10 @@ module CSL
 
       def ellipsis?
         attributes[:'et-al-use-last'].to_s =~ /^true$/
+      end
+
+      def ellipsis
+        '…'
       end
 
       def connector

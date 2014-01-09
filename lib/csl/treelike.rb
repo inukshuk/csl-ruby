@@ -32,7 +32,7 @@ module CSL
       end
     end
     alias delete delete_children
-    
+
     # Deletes child nodes that are equal to the passed-in node. Returns all
     # deleted children. If no children were deleted, returns nil. If the
     # optional block is given, returns the result block if no children were
@@ -287,7 +287,7 @@ module CSL
       # standard Array that normally holds the child nodes. The benefit of
       # using the Struct is that all child nodes are accessible by name and
       # need not be looked up; this improves performance, however, note that
-      # a node defining it's children that way can only contain nodes of the
+      # a node defining its children that way can only contain nodes of the
       # given types.
       #
       # This method also generates accessors for each child. The writer
