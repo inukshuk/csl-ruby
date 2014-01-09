@@ -175,7 +175,7 @@ module CSL
         when delimiter_precedes_et_al_after_inverted_name?
           name_as_sort_order_at?(names.to_i)
         else
-          names.to_i > 2
+          names.to_i > 1
         end
       end
 
@@ -188,7 +188,7 @@ module CSL
       # Set the :'delimiter-precedes-et-al' attribute to 'always'.
       # @return [self] self
       def delimiter_always_precedes_et_al!
-        attributes[:'delimiter-precedes-et_al'] = 'always'
+        attributes[:'delimiter-precedes-et-al'] = 'always'
         self
       end
 
@@ -212,6 +212,7 @@ module CSL
       #   be inserted between before et-al depending on the
       #   number of names rendered
       def delimiter_contextually_precedes_et_al?
+        return true unless attribute?[:'delimiter-precedes-et-al']
         !!(attributes[:'delimiter-precedes-et-al'].to_s =~ /^contextual/i)
       end
 
