@@ -115,6 +115,11 @@ module CSL
         attribute?(:'name-as-sort-order')
       end
 
+      def name_as_sort_order_at?(position)
+        return false unless name_as_sort_order?
+        all_names_as_sort_order? || position == 1 && first_name_as_sort_order?
+      end
+
       def name_as_sort_order
         attributes[:'name-as-sort-order'].to_s
       end
@@ -122,13 +127,22 @@ module CSL
       alias sort_order name_as_sort_order
 
       def first_name_as_sort_order?
-        attributes[:'name-as-sort-order'].to_s =~ /^first$/i
+        !!(attributes[:'name-as-sort-order'].to_s =~ /^first$/i)
       end
 
       def all_names_as_sort_order?
-        attributes[:'name-as-sort-order'].to_s =~ /^all$/i
+        !!(attributes[:'name-as-sort-order'].to_s =~ /^all$/i)
       end
 
+      def first_name_as_sort_order!
+        attributes[:'name-as-sort-order'] = 'first'
+        self
+      end
+
+      def all_names_as_sort_order!
+        attributes[:'name-as-sort-order'] = 'all'
+        self
+      end
 
       # @param names [#to_i, Enumerable] the list of names (or its length)
       # @return [Boolean] whether or not the delimiter will be inserted between
@@ -217,6 +231,10 @@ module CSL
       def connector
         c = attributes[:and]
         c == 'symbol' ? '&' : c
+      end
+
+      def connector=(c)
+        attributes[:and] = c
       end
     end
 
