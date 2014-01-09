@@ -94,10 +94,30 @@ module CSL
 
       def truncate_at(subsequent = false)
         if subsequent && attribute?(:'et-al-subsequent-use-first')
-          attribute[:'et-al-subsequent-use-first'].to_i
+          attributes[:'et-al-subsequent-use-first'].to_i
         else
-          attribute[:'et-al-use-first'].to_i
+          attributes[:'et-al-use-first'].to_i
         end
+      end
+
+      def truncate_at!(at)
+        attributes[:'et-al-use-first'] = at.to_i
+        self
+      end
+
+      def truncate_when!(pos)
+        attributes[:'et-al-min'] = pos.to_i
+        self
+      end
+
+      def truncate_subsequent_at!(at)
+        attributes[:'et-al-subsequent-use-first'] = at.to_i
+        self
+      end
+
+      def truncate_subsequent_when!(pos)
+        attributes[:'et-al-subsequent-min'] = pos.to_i
+        self
       end
 
       # @return [String] the delimiter between family and given names
