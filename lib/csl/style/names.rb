@@ -164,6 +164,73 @@ module CSL
         self
       end
 
+      def delimiter_precedes_et_al?(names)
+        names = names.length if names.respond_to?(:length)
+
+        case
+        when delimiter_never_precedes_et_al?
+          false
+        when delimiter_always_precedes_et_al?
+          true
+        when delimiter_precedes_et_al_after_inverted_name?
+          name_as_sort_order_at?(names.to_i)
+        else
+          names.to_i > 2
+        end
+      end
+
+      # @return [Boolean] whether or not the delimmiter should
+      #   always be inserted before et-al
+      def delimiter_always_precedes_et_al?
+        !!(attributes[:'delimiter-precedes-et-al'].to_s =~ /^always$/i)
+      end
+
+      # Set the :'delimiter-precedes-et-al' attribute to 'always'.
+      # @return [self] self
+      def delimiter_always_precedes_et_al!
+        attributes[:'delimiter-precedes-et_al'] = 'always'
+        self
+      end
+
+      alias delimiter_precedes_et_al! delimiter_always_precedes_et_al!
+
+
+      # @return [Boolean] whether or not the delimiter should
+      #   never be inserted before et-al
+      def delimiter_never_precedes_et_al?
+        !!(attributes[:'delimiter-precedes-et-al'].to_s =~ /^never$/i)
+      end
+
+      # Set the :'delimiter-precedes-et-al' attribute to 'never'
+      # @return [self] self
+      def delimiter_never_precedes_et_al!
+        attributes[:'delimiter-precedes-et-al'] = 'never'
+        self
+      end
+
+      # @return [Boolean] whether or not the delimtier should
+      #   be inserted between before et-al depending on the
+      #   number of names rendered
+      def delimiter_contextually_precedes_et_al?
+        !!(attributes[:'delimiter-precedes-et-al'].to_s =~ /^contextual/i)
+      end
+
+      # Set the :'delimiter-precedes-et-al' attribute to 'contextual'
+      # @return [self] self
+      def delimiter_contextually_precedes_et_al!
+        attributes[:'delimiter-precedes-et-al'] = 'contextual'
+        self
+      end
+
+      def delimiter_precedes_et_al_after_inverted_name?
+        !!(attributes[:'delimiter-precedes-et-al'].to_s =~ /^after-inverted-name/i)
+      end
+
+      def delimiter_precedes_et_al_after_inverted_name!
+        attributes[:'delimiter-precedes-et-al'] = 'after-inverted-name'
+        self
+      end
+
       # @param names [#to_i, Enumerable] the list of names (or its length)
       # @return [Boolean] whether or not the delimiter will be inserted between
       #   the penultimate and the last name
