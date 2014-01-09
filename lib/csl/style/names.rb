@@ -143,7 +143,7 @@ module CSL
           false
         when delimiter_always_precedes_last?
           true
-        when delimiter_precedeces_last_after_inverted_name?
+        when delimiter_precedes_last_after_inverted_name?
           if name_as_sort_order?
             all_names_as_sort_order? || names.to_i == 2
           else
