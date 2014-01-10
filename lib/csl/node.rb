@@ -422,6 +422,10 @@ module CSL
       attributes_for Schema.attr(:formatting)
     end
 
+    def strip_periods?
+      attribute?(:'strip-periods') && attributes[:'strip-periods'].to_s =~ /^true$/i
+    end
+
     def <=>(other)
       [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
     rescue
