@@ -14,7 +14,7 @@ module CSL
       def variable
         attributes[:variable]
       end
-      
+
       def variable_options
         attributes_for :form
       end
