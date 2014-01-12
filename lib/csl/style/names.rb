@@ -7,6 +7,8 @@ module CSL
 
       attr_struct :variable, *Schema.attr(:names, :delimiter, :affixes, :font)
 
+      attr_defaults :delimiter => ', '
+
       attr_children :name, :'et-al', :label, :substitute
 
       alias labels label
