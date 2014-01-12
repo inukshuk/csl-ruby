@@ -200,10 +200,24 @@ module CSL
 
     # @return [String, nil] the term's translation
     def translate(name, options = {})
+      return unless has_terms?
+
       term = terms.lookup name, options
       term && term.to_s(options)
     end
     alias t translate
+
+    # Stores a translation in the locale's term registry.
+    # @see Terms#store
+    def store(*arguments)
+      unless has_terms?
+        self << CSL::Locale::Terms.new
+      end
+
+      terms.store(*arguments)
+      self
+    end
+    alias learn store
 
     # Ordinalizes the passed-in number using either the ordinal or
     # long-ordinal forms defined by the locale. If a long-ordinal form is
@@ -248,6 +262,40 @@ module CSL
       return ordinal.to_s(options) if ordinal.long_ordinal?
 
       [number, ordinal.to_s(options)].join
+    end
+
+    # @return [Boolean] true when the option punctuation-in-quote is true
+    def punctuation_in_quote?
+      return false unless has_options? && options.attribute?(:'punctuation-in-quote')
+      !!(options[:'punctuation-in-quote'].to_s =~ /^true$/i)
+    end
+    alias punctuation_in_quotes? punctuation_in_quote?
+
+    def punctuation_in_quote!
+      unless has_options?
+        children[:'style-options'] = StyleOptions.new
+      end
+
+      options[:'punctuation-in-quote'] = true
+    end
+    alias punctuation_in_quotes! punctuation_in_quote!
+
+    # Puts localized quotes around the passed-in string.
+    # @return [String] the quoted string
+    def quote(string)
+      oq, cq = t('open-quote'), t('close-quote')
+
+      return string if oq.nil? || cq.nil? || (oq.empty? && cq.empty?)
+
+      # replace inner quotes
+
+      if punctuation_in_quotes?
+        string, punctuation = string.split(/([\.,])$/, 2)
+
+        "#{oq}#{string}#{cq}#{punctuation}"
+      else
+        "#{oq}#{string}#{cq}"
+      end
     end
 
     # @example

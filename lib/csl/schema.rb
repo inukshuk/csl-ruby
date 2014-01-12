@@ -1,17 +1,17 @@
 module CSL
-  
+
   class Schema
-    
+
     @version         = '1.0.1'.freeze
     @major_version   = '1.0'.freeze
 
     @namespace = 'http://purl.org/net/xbiblio/csl'.freeze
     @preamble  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n".freeze
-    
+
     @default_license = 'http://creativecommons.org/licenses/by-sa/3.0/'
     @default_rights_string =
       'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License'
-    
+
     @types = %w{ article article-journal article-magazine article-newspaper
       bill book broadcast chapter entry entry-dictionary entry-encyclopedia
       figure graphic interview legal_case legislation manuscript map
@@ -31,7 +31,7 @@ module CSL
 
       :number => %w{
         chapter-number collection-number edition issue number number-of-pages
-        number-of-volumes volume        
+        number-of-volumes volume
       },
 
       :text => %w{
@@ -60,7 +60,7 @@ module CSL
       [:date,:names,:text,:number].reduce([]) { |s,a| s.concat(@variables[a]) }.sort
 
     @variables.freeze
-    
+
     @attributes = Hash.new { |h,k| h.fetch(k.to_sym, nil) }.merge({
       :affixes => %w{
         prefix suffix
@@ -90,7 +90,7 @@ module CSL
         variable variable-any variable-all variable-none
       }
     })
-    
+
     @attributes.each_value { |v| v.map!(&:to_sym).freeze }
 
     @attributes[:formatting] = [:'text-case', :display].concat(
@@ -103,11 +103,11 @@ module CSL
         :form => %w{ numeric numeric-leading-zeros ordinal long short }
       }
     })
-    
+
     @values.freeze
 
     @file = File.expand_path('../../../vendor/schema/csl.rng', __FILE__)
-    
+
     @validators = {
       :nokogiri => lambda { |schema, style|
         begin
@@ -117,12 +117,12 @@ module CSL
           [[0, $!.message]]
         end
       },
-      
+
       :default => lambda { |schema, style|
         raise ValidationError, "please `gem install nokogiri' for validation support"
       }
     }
-    
+
     begin
       # TODO enable java validator when nokogiri issue is fixed
       if RUBY_PLATFORM =~ /java/i
@@ -135,19 +135,19 @@ module CSL
     rescue LoadError
       @validator = @validators[:default]
     end
-    
+
     class << self
-      
+
       attr_accessor :version, :major_version, :namespace, :types,
         :variables, :categories, :attributes, :preamble, :values,
         :default_rights_string, :default_license
-      
+
       private :new
-      
+
       def attr(*arguments)
         attributes.values_at(*arguments).flatten(1)
       end
-      
+
       # Validates the passed-in style or list of styles. The style argument(s)
       # can either be a {Style} object, a style's file handle, XML content
       # or a valid location (wildcards are supported). The method returns
@@ -187,9 +187,9 @@ module CSL
             validator[schema, File.open(node, 'r:UTF-8')]
           else
             glob = Dir.glob(node)
-            
+
             if glob.empty?
-              validator[schema, Kernel.open(node)]            
+              validator[schema, Kernel.open(node)]
             else
               glob.map { |n| validator[schema, File.open(n, 'r:UTF-8')] }.flatten(1)
             end
@@ -198,7 +198,7 @@ module CSL
           raise ArgumentError, "failed to validate #{node.inspect}: not a CSL node"
         end
       end
-      
+
       # Whether or not the passed-in style (or list of styles) is valid.
       #
       # @see validate
@@ -215,11 +215,11 @@ module CSL
       def valid?(style)
         validate(style).empty?
       end
-      
+
       private
-      
+
       attr_reader :validators, :validator, :schema
     end
-    
-  end  
+
+  end
 end

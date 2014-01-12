@@ -21,6 +21,28 @@ module CSL
 
       alias each each_child
 
+      # @example
+      #   terms.store(term)
+      #   terms.store('book', ['book', 'books'])
+      #   terms.store('book', 'bk', :form => 'short')
+      #
+      # Shorthand method to stores a new term translations.
+      #
+      # @param [Term, String] the term; or the the term's name
+      # @param [String] the term's translation
+      # @param [Hash] additional term attributes
+      #
+      # @return [self]
+      def store(term, translation = nil, options = nil)
+        unless term.is_a?(Term)
+          term = Term.new(:name => term)
+          term.attributes.merge(options) unless options.nil?
+          term.set(*translation)
+        end
+
+        self << term
+      end
+
       # If a style uses a term in a form that is undefined, there is a
       # fallback to other forms: "verb-short" first falls back to "verb",
       # "symbol" first falls back to "short", and "verb" and "short" both
@@ -214,7 +236,7 @@ module CSL
 
         def specialize(options)
           specialized = {}
-          
+
           options.each do |key, value|
             key = key.to_sym
 
@@ -329,6 +351,21 @@ module CSL
       end
 
       alias plural pluralize
+
+      alias singular= single=
+      alias plural= multiple=
+
+      def set(singular, plural = nil)
+        if plural.nil?
+          self.text = singular
+        else
+          self.single = singular
+          self.multiple = plural
+        end
+
+        self
+      end
+
 
       # @!method masculine?
       # @return [Boolean] whether or not the term is masculine

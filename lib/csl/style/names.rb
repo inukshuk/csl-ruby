@@ -329,6 +329,10 @@ module CSL
     class NamePart < Node
       has_no_children
       attr_struct :name, :'text-case', *Schema.attr(:affixes, :font)
+
+      def name
+        attributes[:name]
+      end
     end
 
     class EtAl < Node

@@ -4,13 +4,13 @@ require 'spec_helper'
 module CSL
   describe Locale::Terms do
 
-		it { should_not be nil }
+    it { should_not be nil }
 
-		describe '#to_xml' do
-			it 'returns <terms/> by default' do
-				subject.to_xml.should == '<terms/>'
-			end
-		end
+    describe '#to_xml' do
+      it 'returns <terms/> by default' do
+        subject.to_xml.should == '<terms/>'
+      end
+    end
 
     describe '.specialize' do
       it 'filters the passed in hash to contain only match-able entries' do
@@ -18,40 +18,40 @@ module CSL
       end
     end
 
-		describe '#ordinalize' do
+    describe '#ordinalize' do
 
-		  describe "given standard English terms" do
-  		  let(:en) do
-  		    Locale::Terms.parse <<-EOS
-  	      <terms>
-    	      <term name="ordinal">th</term>
+      describe "given standard English terms" do
+        let(:en) do
+          Locale::Terms.parse <<-EOS
+          <terms>
+            <term name="ordinal">th</term>
             <term name="ordinal-01">st</term>
             <term name="ordinal-02">nd</term>
             <term name="ordinal-03">rd</term>
             <term name="ordinal-11">th</term>
             <term name="ordinal-12">th</term>
             <term name="ordinal-13">th</term>
-  	      </terms>
-  	      EOS
-  		  end
+          </terms>
+          EOS
+        end
 
         %w{
           ordinal ordinal-01 ordinal-02 ordinal-03 ordinal
         }.each_with_index do |ordinal, number|
-  		    it "returns #{ordinal.inspect} for #{number}" do
-  		      en.ordinalize(number)[:name].should == ordinal
-  		    end
-  		  end
-		  end
+          it "returns #{ordinal.inspect} for #{number}" do
+            en.ordinalize(number)[:name].should == ordinal
+          end
+        end
+      end
 
-		end
+    end
 
     describe '#lookup' do
 
-		  describe "given standard English terms" do
-  		  let(:en) do
-  		    Locale::Terms.parse <<-EOS
-  	      <terms>
+      describe "given standard English terms" do
+        let(:en) do
+          Locale::Terms.parse <<-EOS
+          <terms>
             <term name="page" form="short">
               <single>p.</single>
               <multiple>pp.</multiple>
@@ -79,42 +79,42 @@ module CSL
             </term>
             <term name="editor" form="verb">edited by</term>
             <term name="editor" form="verb-short">ed.</term>
-  	      </terms>
-  	      EOS
-  		  end
-
-  		  it 'returns nil if there is no matching term' do
-  		    en.lookup(:foo).should be_nil
-  		  end
-
-  		  it 'returns the long form by default' do
-  		    en.lookup(:page).should be_long
-  		  end
-
-  		  it 'returns the term in the passed-in form if available' do
-  		    en.lookup(:section, :form => 'long').should be_long
-  		    en.lookup(:section, :form => 'short').should be_short
-  		    en.lookup(:section, :form => 'symbol').should be_symbol
-
-  		    en.lookup(:editor).should be_long
-  		    en.lookup(:editor, :form => 'long').should be_long
-  		    en.lookup(:editor, :form => 'verb').should be_verb
-  		    en.lookup(:editor, :form => 'verb-short').should be_verb_short
-  		  end
-
-  		  it 'returns the right fallback form if the passed-in form is not available' do
-  		    en.lookup(:page, :form => 'verb').should be_long
-  		    en.lookup(:page, :form => 'verb-short').should be_long
-  		    en.lookup(:page, :form => 'symbol').should be_short
+          </terms>
+          EOS
         end
 
-  		  it 'ignores irrelevant options' do
-  		    en.lookup(:page, :plural => true).should_not be_nil
-  		  end
-  		end
+        it 'returns nil if there is no matching term' do
+          en.lookup(:foo).should be_nil
+        end
+
+        it 'returns the long form by default' do
+          en.lookup(:page).should be_long
+        end
+
+        it 'returns the term in the passed-in form if available' do
+          en.lookup(:section, :form => 'long').should be_long
+          en.lookup(:section, :form => 'short').should be_short
+          en.lookup(:section, :form => 'symbol').should be_symbol
+
+          en.lookup(:editor).should be_long
+          en.lookup(:editor, :form => 'long').should be_long
+          en.lookup(:editor, :form => 'verb').should be_verb
+          en.lookup(:editor, :form => 'verb-short').should be_verb_short
+        end
+
+        it 'returns the right fallback form if the passed-in form is not available' do
+          en.lookup(:page, :form => 'verb').should be_long
+          en.lookup(:page, :form => 'verb-short').should be_long
+          en.lookup(:page, :form => 'symbol').should be_short
+        end
+
+        it 'ignores irrelevant options' do
+          en.lookup(:page, :plural => true).should_not be_nil
+        end
+      end
 
     end
-	end
+  end
 
   describe Locale::Term do
 
@@ -129,13 +129,13 @@ module CSL
     it { should_not be_short_ordinal }
     it { should_not be_long_ordinal }
 
-		it 'is not a textnode by default' do
-			subject.should_not be_textnode
-		end
+    it 'is not a textnode by default' do
+      subject.should_not be_textnode
+    end
 
-		it 'is a textnode when the text is "foo"' do
-			Locale::Term.new { |t| t.text = 'foo' }.should be_textnode
-		end
+    it 'is a textnode when the text is "foo"' do
+      Locale::Term.new { |t| t.text = 'foo' }.should be_textnode
+    end
 
     describe 'gender attribute is set' do
       let(:m) { Locale::Term.new(:name => 'month-05') { |t| t.masculine!; t.text = 'Mai' } }
@@ -237,19 +237,19 @@ module CSL
       end
     end
 
-		describe '#to_xml' do
-			it 'returns <term/> by default' do
-				subject.to_xml.should == '<term/>'
-			end
+    describe '#to_xml' do
+      it 'returns <term/> by default' do
+        subject.to_xml.should == '<term/>'
+      end
 
-			it 'returns <term>foo</term> when the text is "foo"' do
-				Locale::Term.new { |t| t.text = 'foo' }.to_xml.should == '<term>foo</term>'
-			end
+      it 'returns <term>foo</term> when the text is "foo"' do
+        Locale::Term.new { |t| t.text = 'foo' }.to_xml.should == '<term>foo</term>'
+      end
 
-			it 'returns <term><multiple>foo</multiple></term> when multiple is "foo"' do
-				Locale::Term.new { |t| t.multiple = 'foo' }.to_xml.should == '<term><multiple>foo</multiple></term>'
-			end
+      it 'returns <term><multiple>foo</multiple></term> when multiple is "foo"' do
+        Locale::Term.new { |t| t.multiple = 'foo' }.to_xml.should == '<term><multiple>foo</multiple></term>'
+      end
 
-		end
+    end
   end
 end

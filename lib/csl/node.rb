@@ -423,11 +423,11 @@ module CSL
     end
 
     def strip_periods?
-      attribute?(:'strip-periods') && attributes[:'strip-periods'].to_s =~ /^true$/i
+      attribute?(:'strip-periods') && !!(attributes[:'strip-periods'].to_s =~ /^true$/i)
     end
 
     def quotes?
-      attribute?(:'quotes') && attributes[:'quotes'].to_s =~ /^true$/i
+      attribute?(:'quotes') && !!(attributes[:'quotes'].to_s =~ /^true$/i)
     end
 
     def <=>(other)
