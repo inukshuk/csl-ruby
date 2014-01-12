@@ -282,10 +282,15 @@ module CSL
 
     # Puts localized quotes around the passed-in string.
     # @return [String] the quoted string
-    def quote(string)
+    def quote(string, escape = false)
       oq, cq = t('open-quote'), t('close-quote')
 
       return string if oq.nil? || cq.nil? || (oq.empty? && cq.empty?)
+
+      if escape
+        oq = CSL.encode_xml_text(oq)
+        cq = CSL.encode_xml_text(cq)
+      end
 
       # TODO replace inner quotes
 
