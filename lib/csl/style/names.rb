@@ -313,7 +313,7 @@ module CSL
       end
 
       def ellipsis
-        '…'
+        "#{delimiter}… "
       end
 
       def connector
@@ -337,7 +337,7 @@ module CSL
 
     class EtAl < Node
       has_no_children
-      attr_struct :term, *Schema.attr(:affixes, :font)
+      attr_struct :term, :'text-case', *Schema.attr(:affixes, :font)
 
       attr_defaults :term => 'et-al'
     end

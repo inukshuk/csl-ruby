@@ -287,7 +287,7 @@ module CSL
 
       return string if oq.nil? || cq.nil? || (oq.empty? && cq.empty?)
 
-      # replace inner quotes
+      # TODO replace inner quotes
 
       if punctuation_in_quotes?
         string, punctuation = string.split(/([\.,])$/, 2)
