@@ -324,7 +324,7 @@ module CSL
                 raise ArgumentError, "failed to convert #{value.inspect} to node: #{e.message}"
               end unless value.respond_to?(:nodename)
 
-              children << value
+              add_child value
               value
             end
 
