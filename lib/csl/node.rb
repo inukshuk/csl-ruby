@@ -422,10 +422,10 @@ module CSL
       options = attributes_for Schema.attr(:formatting)
 
       if !root? && parent.respond_to?(:inheritable_formatting_options)
-        options = parent.inheritable_formatting_options.merge(options)
+        parent.inheritable_formatting_options.merge(options)
+      else
+        options
       end
-
-      options
     end
 
     def strip_periods?
