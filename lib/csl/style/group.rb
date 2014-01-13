@@ -13,10 +13,23 @@ module CSL
     # the Group calls a variable (either directly or via a macro), and
     # b) all variables that are called are empty.
     class Group < Node
-      attr_struct(*Schema.attr(:formatting, :affixes, :delimiter))
+      attr_struct(*Schema.attr(:formatting, :delimiter))
       
       def delimiter
         attributes.fetch(:delimiter, '')
+      end
+
+      # Returns only those formatting options applicable to the Group
+      # node itself; not those which are transmitted to the enclosed
+      # elements.
+      #
+      # @return [Hash] the node's formatting options
+      def formatting_options
+        attributes_for :display, *Schema.attr(:affixes) 
+      end
+
+      def inheritable_formatting_options
+        attributes_for *Schema.attr(:font)
       end
 
       private
