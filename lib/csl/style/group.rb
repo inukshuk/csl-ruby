@@ -29,7 +29,7 @@ module CSL
       end
 
       def inheritable_formatting_options
-        attributes_for *Schema.attr(:font)
+        attributes_for :'text-case', *Schema.attr(:font)
       end
 
       private
