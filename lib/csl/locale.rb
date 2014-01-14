@@ -37,9 +37,10 @@ module CSL
       attr_accessor :default
       attr_reader :languages, :regions
 
-      def load(input = Locale.default)
+      def load(input = nil)
+        input ||= Locale.default
         input = normalize input if input.to_s =~ tag_pattern
-        super
+        super(input)
       end
 
       # Normalizes an IETF tag; adds a language's default region or a
