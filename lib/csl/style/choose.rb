@@ -12,7 +12,7 @@ module CSL
 
         class << self
           def matches?(nodename)
-            nodename === ':If' || nodename === ':IfElse' || nodename === ':Else'
+            nodename === ':if' || nodename === ':elseif' || nodename === ':else'
           end
         end
 
