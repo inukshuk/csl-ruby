@@ -31,12 +31,6 @@ module CSL
       def inheritable_formatting_options
         attributes_for :'text-case', *Schema.attr(:font)
       end
-
-      private
-      
-      def added_child(node)
-        node.attributes.merge formatting_options
-      end
     end
     
   end
