@@ -28,3 +28,13 @@ end
 Then /^the (\w+) number (\d+) should( not)? be a (\w+)$/ do |name, offset, negate, predicate|
   @csl.send("#{name}s")[offset.to_i - 1].send("#{predicate}?").should == negate.nil?
 end
+
+Then /^the (\w+) number (\d+)'s (\w+) should( not)? be "([^"]*)"$/ do |name, offset, method, negate, expected|
+  actual = @csl.send("#{name}s")[offset.to_i - 1].send(method).to_s
+  
+  if negate.nil?
+    actual.should == expected
+  else
+    actual.should_not == expected
+  end
+end

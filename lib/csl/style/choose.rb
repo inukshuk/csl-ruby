@@ -3,6 +3,8 @@ module CSL
 
     class Choose < Node
 
+      alias blocks children
+
       class Block < Node
         attr_struct :match, *Schema.attr(:conditionals)
 
@@ -10,7 +12,7 @@ module CSL
 
         class << self
           def matches?(nodename)
-            nodename.to_s =~ /^if(-else)?|else$/
+            nodename === ':if' || nodename === ':elseif' || nodename === ':else'
           end
         end
 

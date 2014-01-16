@@ -15,8 +15,8 @@ module CSL
 
       attr_accessor :default
 
-      def load(input = Style.default)
-        super
+      def load(input = nil)
+        super(input || Style.default)
       end
     end
 

@@ -419,7 +419,13 @@ module CSL
 
     # @return [Hash] the node's formatting options
     def formatting_options
-      attributes_for Schema.attr(:formatting)
+      options = attributes_for Schema.attr(:formatting)
+
+      if !root? && parent.respond_to?(:inheritable_formatting_options)
+        parent.inheritable_formatting_options.merge(options)
+      else
+        options
+      end
     end
 
     def strip_periods?

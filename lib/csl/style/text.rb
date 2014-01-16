@@ -25,8 +25,10 @@ module CSL
 
       # @return [Macro, nil]
       def macro
-        raise unless parent.respond_to?(:macros)
-        parent.macros[attributes[:macro]]
+        raise "failed to resolve macro #{attributes[:macro].inspect}" unless
+          !root? && root.respond_to?(:macros)
+
+        root.macros[attributes[:macro]]
       end
 
       def has_term?

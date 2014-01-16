@@ -37,9 +37,10 @@ module CSL
       attr_accessor :default
       attr_reader :languages, :regions
 
-      def load(input = Locale.default)
+      def load(input = nil)
+        input ||= Locale.default
         input = normalize input if input.to_s =~ tag_pattern
-        super
+        super(input)
       end
 
       # Normalizes an IETF tag; adds a language's default region or a
@@ -262,6 +263,20 @@ module CSL
       return ordinal.to_s(options) if ordinal.long_ordinal?
 
       [number, ordinal.to_s(options)].join
+    end
+
+    # @return [Boolean] true when the option limit-day-ordinals-to-day-1 is true
+    def limit_day_ordinals?
+      return false unless has_options? && options.attribute?(:'limit-day-ordinals-to-day-1')
+      !!(options[:'limit-day-ordinals-to-day-1'].to_s =~ /^true$/i)
+    end
+
+    def limit_day_ordinals!
+      unless has_options?
+        children[:'style-options'] = StyleOptions.new
+      end
+
+      options[:'limit-day-ordinals-to-day-1'] = true
     end
 
     # @return [Boolean] true when the option punctuation-in-quote is true
