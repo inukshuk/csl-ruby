@@ -60,8 +60,9 @@ module CSL
         attributes_for :form, :initialize, :'initialize-with', :'sort-separator'
       end
 
-      def initialize?
-        attributes[:initialize].to_s !~ /^false$/i
+      def initialize_without_hyphen?
+        !root? && root.respond_to?(:initialize_without_hyphen?) &&
+          root.initialize_without_hyphen?
       end
 
       def et_al

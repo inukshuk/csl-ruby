@@ -14,7 +14,7 @@ module CSL
       include Loader
 
       attr_accessor :default
-      
+
       def load(input = Style.default)
         super
       end
@@ -114,6 +114,14 @@ module CSL
       load_related_style_from independent_parent_link
     end
 
+    def demote_non_dropping_particle
+      attributes[:'demote-non-dropping-particle']
+    end
+
+    def initialize_without_hyphen?
+      attribute?(:'initialize-with-hyphen') && !attributes[:'initialize-with-hyphen']
+    end
+
     private
 
     def preamble
@@ -124,7 +132,7 @@ module CSL
       # TODO try local first
       Style.load(uri)
     end
-    
+
     def added_macro(node)
       unless node.attribute?(:name)
         raise ValidationError,
@@ -138,7 +146,7 @@ module CSL
 
       macros[node[:name]] = node
     end
-    
+
     def deleted_macro(node)
       macros.delete node[:name]
     end
