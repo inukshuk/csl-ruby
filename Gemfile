@@ -5,6 +5,9 @@ group :development, :test do
   gem 'rake', '~>10.0'
   gem 'rspec', '~>2.13'
   gem 'cucumber', '~>1.2'
+  gem 'simplecov', '~>0.8', :require => false
+  gem 'rubinius-coverage', :platform => :rbx
+  gem 'coveralls', :require => false
 end
 
 group :debug do
@@ -19,9 +22,6 @@ group :optional do
 end
 
 group :extra do
-  gem 'simplecov', '~>0.8'
-  gem 'rubinius-coverage', :platforms => :rbx
-
   gem 'guard', '~>2.2'
   gem 'guard-rspec'
   gem 'guard-cucumber'

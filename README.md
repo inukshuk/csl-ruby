@@ -31,7 +31,7 @@ manipulate, query or otherwise work with them using a dedicated API: that is
 to say, you do not have to resort to XML-related methods of access, but can
 make use of a large set of library methods which are specific to CSL. This
 is useful, primarily, for citation processors like
-[CiteProc-Ruby](https://github.com/inukshuk/citeproc-ruby).
+[CiteProc-Ruby](https://github.com/inukshuk/citeproc).
 
 On the other hand, CSL-Ruby makes it easy to create new styles and locales
 using Ruby; this is useful, for example, if you need to change or adapt
