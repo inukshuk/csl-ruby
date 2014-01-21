@@ -4,7 +4,9 @@ CSL-Ruby provides a Ruby parser and a comprehensive API for the
 [Citation Style Language](http://citationstyles.org) (CSL), an XML-based
 format to describe the formatting of citations, notes and bibliographies.
 
-[![Build Status](https://secure.travis-ci.org/inukshuk/csl-ruby.png?branch=master)](http://travis-ci.org/inukshuk/csl-ruby)
+[![Build Status](https://secure.travis-ci.org/inukshuk/csl-ruby.png)](http://travis-ci.org/inukshuk/csl-ruby)
+[![Coverage Status](https://coveralls.io/repos/inukshuk/csl-ruby/badge.png?branch=master)](https://coveralls.io/r/inukshuk/csl-ruby?branch=master)
+[![Dependency Status](https://gemnasium.com/inukshuk/csl-ruby.png)](https://gemnasium.com/inukshuk/csl-ruby)
 
 Styles and Locales
 ------------------
@@ -127,6 +129,13 @@ If you've found a bug or have a question, please open an issue on the
 Or, for extra credit, clone the CSL-Ruby repository, write a failing
 example, fix the bug and submit a pull request.
 
+Credits
+-------
+Thanks to Rintze M. Zelle, Sebastian Karcher, Frank G. Bennett, Jr.,
+and Bruce D'Arcus of CSL and citeproc-js fame for their support!
+
+Thanks to Google and the Berkman Center at Harvard University for supporting
+this project as part of [Google Summer of Code](https://developers.google.com/open-source/soc/).
 
 Copyright
 ---------
