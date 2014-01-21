@@ -122,6 +122,14 @@ module CSL
       attribute?(:'initialize-with-hyphen') && !attributes[:'initialize-with-hyphen']
     end
 
+    def has_page_range_format?
+      attribute?(:'page-range-format')
+    end
+
+    def page_range_format
+      attributes[:'page-range-format']
+    end
+
     private
 
     def preamble

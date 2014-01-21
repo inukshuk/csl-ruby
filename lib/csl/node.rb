@@ -428,6 +428,18 @@ module CSL
       end
     end
 
+    # Whether or not page ranges should be formatted when
+    # rendering this node.
+    #
+    # Page ranges must be formatted if the node is part of
+    # a {Style} with a page-range-format value.
+    #
+    # @return [Boolean] whether or not page ranges should
+    #   be formatted
+    def format_page_ranges?
+      root.respond_to?(:has_page_range_format?) && root.has_page_range_format?
+    end
+
     def strip_periods?
       attribute?(:'strip-periods') && !!(attributes[:'strip-periods'].to_s =~ /^true$/i)
     end
