@@ -179,16 +179,16 @@ module CSL
         locale.store 'open-quote', '»'
         locale.store 'close-quote', '«'
 
-        locale.quote('foo.').should == '»foo.«'
-        locale.quote('foo,').should == '»foo,«'
+        locale.quote('foo.').should == '»foo«.'
+        locale.quote('foo,').should == '»foo«,'
 
         locale.quote('foo!').should == '»foo!«'
         locale.quote('foo?').should == '»foo?«'
 
         locale.punctuation_in_quotes!
 
-        locale.quote('foo.').should == '»foo«.'
-        locale.quote('foo,').should == '»foo«,'
+        locale.quote('foo.').should == '»foo.«'
+        locale.quote('foo,').should == '»foo,«'
 
         locale.quote('foo!').should == '»foo!«'
         locale.quote('foo?').should == '»foo?«'

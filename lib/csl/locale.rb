@@ -310,11 +310,11 @@ module CSL
       # TODO replace inner quotes
 
       if punctuation_in_quotes?
+        "#{oq}#{string}#{cq}"
+      else
         string, punctuation = string.split(/([\.,])$/, 2)
 
         "#{oq}#{string}#{cq}#{punctuation}"
-      else
-        "#{oq}#{string}#{cq}"
       end
     end
 
