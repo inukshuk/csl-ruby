@@ -56,7 +56,7 @@ module CSL
       end
 
       def substitute?
-        !root? && parent.is_a? CSL::Style::Substitute
+        !root? && parent.is_a?(CSL::Style::Substitute)
       end
 
       def delimiter
