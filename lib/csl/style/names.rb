@@ -20,6 +20,45 @@ module CSL
         yield self if block_given?
       end
 
+      #def formatting_options
+      #  options = super
+
+      #  if substitute?
+      #    names = parent.parent
+      #    options.merge!(original.formatting_options) unless names.nil?
+      #  end
+
+      #  options
+      #end
+
+      def et_al
+        node = super
+
+        return node unless node.nil?
+
+        if substitute?
+          node = parent.parent.et_al unless parent.root?
+        end
+
+        node
+      end
+
+      def name
+        node = super
+
+        return node unless node.nil?
+
+        if substitute?
+          node = parent.parent.name unless parent.root?
+        end
+
+        node
+      end
+
+      def substitute?
+        !root? && parent.is_a? CSL::Style::Substitute
+      end
+
       def delimiter
         attributes.fetch(:delimiter, '')
       end

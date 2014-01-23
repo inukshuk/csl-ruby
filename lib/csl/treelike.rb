@@ -114,6 +114,17 @@ module CSL
     end
     alias >> find_children
 
+    def closest(name, conditions = {})
+      case
+      when root?
+        nil
+      when parent.match?(name, conditions)
+        parent
+      else
+        parent.closest(name, conditions)
+      end
+    end
+
     # @return [Boolean] true if this node has child nodes; false otherwise.
     def has_children?
       !empty?
