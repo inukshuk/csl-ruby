@@ -31,8 +31,10 @@ module CSL
       #  options
       #end
 
+      alias original_et_al et_al
+
       def et_al
-        node = super
+        node = original_et_al
 
         return node unless node.nil?
 
@@ -43,8 +45,10 @@ module CSL
         node
       end
 
+      alias original_name name
+
       def name
-        node = super
+        node = original_name
 
         return node unless node.nil?
 
