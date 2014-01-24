@@ -440,6 +440,11 @@ module CSL
       root.respond_to?(:has_page_range_format?) && root.has_page_range_format?
     end
 
+    def page_range_format
+      return unless format_page_ranges?
+      root.page_range_format
+    end
+
     def strip_periods?
       attribute?(:'strip-periods') && !!(attributes[:'strip-periods'].to_s =~ /^true$/i)
     end
