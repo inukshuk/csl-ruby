@@ -23,7 +23,7 @@ module CSL
 
       def delimiter(mode = nil)
         attributes.fetch(:delimiter) do
-          inherited_names_options(mode)[:delimiter] || ', '
+          inherited_names_options(mode)[:delimiter] || ''
         end
       end
 
