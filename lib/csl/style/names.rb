@@ -4,12 +4,15 @@ module CSL
   class Style
 
     class Names < Node
+      extend InheritsNameOptions
 
       attr_struct :variable, *Schema.attr(:delimiter, :affixes, :font)
 
       attr_defaults :delimiter => ', '
 
       attr_children :name, :'et-al', :label, :substitute
+
+      inherits :names_options
 
       alias labels label
 
@@ -20,15 +23,6 @@ module CSL
         yield self if block_given?
       end
 
-      def formatting_options
-        options = super
-
-        if !root? && root.respond_to?(:inheritable_names_options)
-          options.merge!(root.inheritable_names_options)
-        end
-
-        options
-      end
 
       def delimiter
         attributes.fetch(:delimiter, '')
@@ -46,6 +40,7 @@ module CSL
 
 
     class Name < Node
+      extend InheritsNameOptions
 
       attr_struct :form, *Schema.attr(:name, :affixes, :font, :delimiter)
 
@@ -54,6 +49,8 @@ module CSL
         :'sort-separator' => ', '
 
       attr_children :'name-part'
+
+      inherits :name_options
 
       alias parts name_part
 
@@ -71,24 +68,6 @@ module CSL
       def initialize_without_hyphen?
         !root? && root.respond_to?(:initialize_without_hyphen?) &&
           root.initialize_without_hyphen?
-      end
-
-      def inherited_name_options(mode = nil)
-        options = {}
-
-        if !root? && root.respond_to?(:inheritable_name_options)
-          if !mode.nil? && root.respond_to?(mode)
-            node = root.send(mode)
-
-            if node.respond_to?(:inheritable_name_options)
-              options = node.inheritable_name_options.merge(options)
-            end
-          end
-
-          options = root.inheritable_name_options.merge(options)
-        end
-
-        options
       end
 
       def et_al
