@@ -18,6 +18,7 @@ task :console, [:script] do |t,args|
   ARGV.clear
 
   require 'irb'
+  require 'irb/completion'
   require 'csl'
 
   IRB.conf[:SCRIPT] = args.script

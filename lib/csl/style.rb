@@ -3,6 +3,8 @@ module CSL
   class Style < Node
     types << CSL::Info << CSL::Locale
 
+    include InheritableNameOptions
+
     @default = :apa
 
     @root = '/usr/local/share/csl/styles'.freeze

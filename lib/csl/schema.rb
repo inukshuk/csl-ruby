@@ -72,13 +72,13 @@ module CSL
         font-style font-variant font-weight text-decoration vertical-align
       },
       :name => %w{
-        name-form name-delimiter and delimiter-precedes-et-al initialize-with
+        and delimiter-precedes-et-al initialize-with
         delimiter-precedes-last et-al-min et-al-use-first et-al-subsequent-min
         et-al-subsequent-use-first et-al-use-last name-as-sort-order
         sort-separator initialize
       },
       :names => %w{
-        names-delimiter
+        names-delimiter name-delimiter name-form
       },
       :conditionals => %w{
         disambiguate position

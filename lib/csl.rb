@@ -30,6 +30,8 @@ require 'csl/locale/date'
 require 'csl/locale/term'
 require 'csl/locale/style_options'
 
+require 'csl/name_options'
+
 require 'csl/style'
 require 'csl/style/bibliography'
 require 'csl/style/citation'
@@ -44,9 +46,9 @@ require 'csl/style/number'
 require 'csl/style/text'
 
 module CSL
-  
+
   module_function
-  
+
   def parse(*arguments)
     Parser.instance.parse(*arguments)
   end
@@ -54,7 +56,7 @@ module CSL
   def parse!(*arguments)
     Parser.instance.parse!(*arguments)
   end
-  
+
   def validate(node)
     Schema.validate(node)
   end

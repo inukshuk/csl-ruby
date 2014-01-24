@@ -5,7 +5,7 @@ module CSL
 
     class Names < Node
 
-      attr_struct :variable, *Schema.attr(:names, :delimiter, :affixes, :font)
+      attr_struct :variable, *Schema.attr(:delimiter, :affixes, :font)
 
       attr_defaults :delimiter => ', '
 
@@ -20,16 +20,15 @@ module CSL
         yield self if block_given?
       end
 
-      #def formatting_options
-      #  options = super
+      def formatting_options
+        options = super
 
-      #  if substitute?
-      #    names = parent.parent
-      #    options.merge!(original.formatting_options) unless names.nil?
-      #  end
+        if !root? && root.respond_to?(:inheritable_names_options)
+          options.merge!(root.inheritable_names_options)
+        end
 
-      #  options
-      #end
+        options
+      end
 
       alias original_et_al et_al
 
@@ -94,8 +93,6 @@ module CSL
         super(attributes)
         children[:'name-part'] = []
 
-        # TODO inherit from style, citation and bibliography
-
         yield self if block_given?
       end
 
@@ -108,8 +105,28 @@ module CSL
           root.initialize_without_hyphen?
       end
 
+      def inherit_name_options!(mode = nil)
+        if !root? && root.respond_to?(:inheritable_name_options)
+          if !mode.nil? && root.respond_to?(mode)
+            node = root.send(mode)
+
+            if node.respond_to?(:inheritable_name_options)
+              reverse_merge! node.inheritable_name_options
+            end
+          end
+
+          reverse_merge! root.inheritable_name_options
+        end
+
+        self
+      end
+
       def et_al
-        parent && parent.et_al
+        @et_al || parent && parent.et_al
+      end
+
+      def et_al=(et_al)
+        @et_al = et_al
       end
 
       # @param names [#to_i, Enumerable] the list of names (or its length)

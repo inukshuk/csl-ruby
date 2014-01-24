@@ -190,6 +190,7 @@ module CSL
 
             self
           end
+          alias merge! merge
 
           # @overload values_at(selector, ... )
           #   Returns an array containing the attributes in self according
@@ -231,9 +232,7 @@ module CSL
 
     def initialize_copy(other)
       super
-      @attributes = self.class.create_attributes(other.attributes)
-      @children = self.class.create_children
-      @parent, @ancestors, @descendants, @siblings, @root, @depth = nil
+      initialize(other.attributes)
     end
 
     def deep_copy
@@ -244,6 +243,19 @@ module CSL
       end
 
       copy
+    end
+
+    def merge!(options)
+      attributes.merge!(options)
+      self
+    end
+
+    def reverse_merge!(options)
+      options.each_pair do |key, value|
+        attributes[key] = value unless attribute? key
+      end
+
+      self
     end
 
     # @return [Boolean] whether or not the node has default attributes
@@ -417,6 +429,7 @@ module CSL
       }.compact]
     end
 
+    
     # @return [Hash] the node's formatting options
     def formatting_options
       options = attributes_for Schema.attr(:formatting)
