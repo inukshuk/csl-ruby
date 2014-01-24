@@ -105,20 +105,22 @@ module CSL
           root.initialize_without_hyphen?
       end
 
-      def inherit_name_options!(mode = nil)
+      def inherited_name_options(mode = nil)
+        options = {}
+
         if !root? && root.respond_to?(:inheritable_name_options)
           if !mode.nil? && root.respond_to?(mode)
             node = root.send(mode)
 
             if node.respond_to?(:inheritable_name_options)
-              reverse_merge! node.inheritable_name_options
+              options = node.inheritable_name_options.merge(options)
             end
           end
 
-          reverse_merge! root.inheritable_name_options
+          options = root.inheritable_name_options.merge(options)
         end
 
-        self
+        options
       end
 
       def et_al
