@@ -8,8 +8,6 @@ module CSL
 
       attr_struct :variable, *Schema.attr(:delimiter, :affixes, :font)
 
-      attr_defaults :delimiter => ', '
-
       attr_children :name, :'et-al', :label, :substitute
 
       inherits :names_options
@@ -23,10 +21,9 @@ module CSL
         yield self if block_given?
       end
 
-
       def delimiter(mode = nil)
         attributes.fetch(:delimiter) do
-          inherited_names_options(mode)[:delimiter] || ''
+          inherited_names_options(mode)[:delimiter] || ', '
         end
       end
 
