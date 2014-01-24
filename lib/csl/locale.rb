@@ -135,11 +135,6 @@ module CSL
       yield self if block_given?
     end
 
-    def initialize_copy(other)
-      super
-      @language, @region = other.language, other.region
-    end
-
 
     def added_to(node)
       raise ValidationError, "not allowed to add locale to #{node.nodename}" unless

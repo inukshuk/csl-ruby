@@ -448,7 +448,7 @@ module CSL
           private
 
           def resolve(nodename)
-            keys.include?(nodename.to_sym) && send(nodename)
+            keys.include?(nodename.to_sym) && self[nodename]
           end
         })
       end

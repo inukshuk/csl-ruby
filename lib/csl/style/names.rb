@@ -30,44 +30,6 @@ module CSL
         options
       end
 
-      alias original_et_al et_al
-
-      def et_al
-        node = original_et_al
-
-        return node unless node.nil?
-
-        if substitute?
-          node = parent.parent.et_al unless parent.root?
-        end
-
-        node
-      end
-
-      alias original_name name
-
-      def name
-        node = original_name
-
-        return node unless node.nil?
-
-        if substitute?
-          node = parent.parent.name unless parent.root?
-        end
-
-        node
-      end
-
-      alias original_has_name? has_name?
-
-      def has_name?
-        original_has_name? || substitute? && parent.parent.has_name?
-      end
-
-      def substitute?
-        !root? && parent.is_a?(CSL::Style::Substitute)
-      end
-
       def delimiter
         attributes.fetch(:delimiter, '')
       end
