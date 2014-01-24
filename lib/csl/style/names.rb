@@ -58,6 +58,12 @@ module CSL
         node
       end
 
+      alias original_has_name? has_name?
+
+      def has_name?
+        original_has_name? || substitute? && parent.parent.has_name?
+      end
+
       def substitute?
         !root? && parent.is_a?(CSL::Style::Substitute)
       end
