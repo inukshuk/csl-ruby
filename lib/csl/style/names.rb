@@ -24,8 +24,10 @@ module CSL
       end
 
 
-      def delimiter
-        attributes.fetch(:delimiter, '')
+      def delimiter(mode = nil)
+        attributes.fetch(:delimiter) do
+          inherited_names_options(mode)[:delimiter] || ''
+        end
       end
 
       def has_variable?
