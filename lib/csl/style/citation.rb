@@ -5,13 +5,11 @@ module CSL
 
       include InheritableNameOptions
 
-      attr_struct :'cite-group-delimiter', :collapse, :'year-suffix-delimiter',
-        :'after-collapse-delimiter', :'disambiguate-add-names',
-        :'disambiguate-add-givenname', :'disambiguate-add-year-suffix',
-        :'givenname-disambiguation-rule', *Schema.attr(:names, :name)
+      attr_struct *Schema.attr(:citation, :names, :name)
 
       attr_children :sort, :layout
 
+      alias sort? has_sort?
     end
 
   end

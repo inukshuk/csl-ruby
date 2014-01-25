@@ -80,6 +80,15 @@ module CSL
       :names => %w{
         names-delimiter name-delimiter name-form
       },
+      :bibliography => %w{
+        hanging-indent second-field-align line-spacing entry-spacing
+      },
+      :citation => %w{
+        disambiguate-add-names disambiguate-add-given-name
+        givenname-disambiguation-rule disambiguate-add-year-suffix
+        cite-group-delimiter collapse year-suffix-delimiter
+        after-collapse-delimiter near-note-distance
+      },
       :conditionals => %w{
         disambiguate position
         is-numeric is-numeric-any is-numeric-all is-numeric-none
