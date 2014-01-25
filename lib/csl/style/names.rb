@@ -82,7 +82,7 @@ module CSL
       end
 
       # @param names [#to_i, Enumerable] the list of names (or its length)
-      # @return [Boolean] whether or not the should be truncate
+      # @return [Boolean] whether or not the list should be truncated
       def truncate?(names, subsequent = false)
         names = names.length if names.respond_to?(:length)
         limit = truncate_when(subsequent)
