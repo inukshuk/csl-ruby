@@ -1,75 +1,77 @@
 module CSL
+  class Style
 
-  class Sort < Node
+    class Sort < Node
 
-    attr_children :key
+      attr_children :key
 
-    alias keys key
+      alias keys key
 
-    def initialize(attributes = {})
-      super(attributes)
-      children[:key] = []
+      def initialize(attributes = {})
+        super(attributes)
+        children[:key] = []
 
-      yield self if block_given?
-    end
-
-    class Key < Node
-
-      attr_struct :variable, :macro, :sort,
-        :'names-use-min', :'names-use-first', :'names-use-last'
-
-      attr_defaults :sort => 'ascending'
-
-      has_no_children
-
-      def name_options
-        options = {}
-
-        options[:'et-al-use-min'] = options[:'et-al-subsequent-use-min'] =
-          attributes[:'names-use-min'] if attribute? :'names-use-min'
-
-        options[:'et-al-use-first'] = options[:'et-al-subsequent-use-first'] =
-          attributes[:'names-use-first'] if attribute? :'names-use-first'
-
-        options[:'et-al-use-last'] = options[:'et-al-subsequent-use-last'] =
-          attributes[:'names-use-last'] if attribute? :'names-use-last'
-
-        options
+        yield self if block_given?
       end
 
-      def ascending?
-        attributes[:sort] ~= /^ascending$/i
-      end
+      class Key < Node
 
-      def ascending!
-        attributes[:sort] = 'ascending'
-      end
+        attr_struct :variable, :macro, :sort,
+          :'names-use-min', :'names-use-first', :'names-use-last'
 
-      def descending?
-        !ascending?
-      end
+        attr_defaults :sort => 'ascending'
 
-      def descending!
-        attributes[:sort] = 'descending'
-      end
+        has_no_children
 
-      def macro?
-        attribute? :macro
-      end
+        def name_options
+          options = {}
 
-      def macro
-        fail 'cannot resolve macro: not associated with style' unless
-          !root? && root.respond_to?(:macros)
+          options[:'et-al-use-min'] = options[:'et-al-subsequent-use-min'] =
+            attributes[:'names-use-min'] if attribute? :'names-use-min'
 
-        root.macros[attributes[:macro].to_s]
-      end
+          options[:'et-al-use-first'] = options[:'et-al-subsequent-use-first'] =
+            attributes[:'names-use-first'] if attribute? :'names-use-first'
 
-      def variable
-        attributes[:variable]
+          options[:'et-al-use-last'] = options[:'et-al-subsequent-use-last'] =
+            attributes[:'names-use-last'] if attribute? :'names-use-last'
+
+          options
+        end
+
+        def ascending?
+          attributes[:sort] =~ /^ascending$/i
+        end
+
+        def ascending!
+          attributes[:sort] = 'ascending'
+        end
+
+        def descending?
+          !ascending?
+        end
+
+        def descending!
+          attributes[:sort] = 'descending'
+        end
+
+        def macro?
+          attribute? :macro
+        end
+
+        def macro
+          fail 'cannot resolve macro: not associated with style' unless
+            !root? && root.respond_to?(:macros)
+
+          root.macros[attributes[:macro].to_s]
+        end
+
+        def variable
+          attributes[:variable]
+        end
+
       end
 
     end
 
   end
-
 end

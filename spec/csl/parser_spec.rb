@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module CSL
-  
+
   describe Parser do
 
     describe '.instance' do
@@ -13,7 +13,7 @@ module CSL
     Parser.engines.each_pair do |name, parser|
       describe "when using the #{name} parser " do
         before(:all) { Parser.instance.parser = parser }
-    
+
         describe '#parse' do
 
           describe 'for <foo/>' do
@@ -38,7 +38,7 @@ module CSL
 
           describe 'for <foo bar="x"/>' do
             let(:source) { '<foo bar="x"/>' }
-            
+
             it 'returns a node with attributes' do
               Parser.instance.parse(source).should have_attributes
             end
@@ -54,7 +54,7 @@ module CSL
 
           describe 'for <foo>Foo Bar</foo>' do
             let(:source) { '<foo>Foo Bar</foo>' }
-            
+
             it 'returns text node' do
               Parser.instance.parse(source).should be_textnode
             end
@@ -63,30 +63,30 @@ module CSL
           it 'returns a regular node for <x>\n <y/></x>' do
             Parser.instance.parse("<x>\n <y/></x>").should_not be_textnode
           end
-          
-					describe 'xml comments' do
-						it 'ignores comment-only documents' do
-							Parser.instance.parse("<!--x></x-->").should be_nil
-						end
 
-						it 'ignores comments in normal nodes' do
-							Parser.instance.parse("<x><!-- comment --></x>").should_not have_children
-						end
+          describe 'xml comments' do
+            it 'ignores comment-only documents' do
+              Parser.instance.parse("<!--x></x-->").should be_nil
+            end
 
-						it 'ignores comments in text nodes' do
-							node = Parser.instance.parse("<x>foo<!-- comment --></x>")
-							node.should be_textnode
-							node.should_not have_children
-							node.text.should == 'foo'
-						end
-						
-					end
-					
+            it 'ignores comments in normal nodes' do
+              Parser.instance.parse("<x><!-- comment --></x>").should_not have_children
+            end
+
+            it 'ignores comments in text nodes' do
+              node = Parser.instance.parse("<x>foo<!-- comment --></x>")
+              node.should be_textnode
+              node.should_not have_children
+              node.text.should == 'foo'
+            end
+
+          end
+
         end
-        
+
       end
     end
 
   end
-  
+
 end

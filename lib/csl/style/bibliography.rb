@@ -18,6 +18,11 @@ module CSL
       def bibliography_options
         attributes_for *Schema.attr(:bibliography)
       end
+
+      def sort_keys
+        return [] unless sort?
+        children[:sort].descendants
+      end
     end
 
   end
