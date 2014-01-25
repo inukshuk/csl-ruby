@@ -60,6 +60,10 @@ module CSL
         yield self if block_given?
       end
 
+      def count?
+        attribute?(:form) && attributes[:form] == 'count'
+      end
+
       def name_options
         attributes_for :form, :initialize, :'initialize-with', :'sort-separator'
       end
