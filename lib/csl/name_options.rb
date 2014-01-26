@@ -19,13 +19,11 @@ module CSL
     def inherits(name)
       inheritable_options = "inheritable_#{name}".to_sym
 
-      define_method("inherited_#{name}") do |mode|
+      define_method("inherited_#{name}") do |node|
         options = {}
 
         if !root? && root.respond_to?(inheritable_options)
-          if !mode.nil? && root.respond_to?(mode)
-            node = root.send(mode)
-
+          unless node.nil?
             if node.respond_to?(inheritable_options)
               options = node.send(inheritable_options).merge(options)
             end

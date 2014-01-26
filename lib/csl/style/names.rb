@@ -21,9 +21,9 @@ module CSL
         yield self if block_given?
       end
 
-      def delimiter(mode = nil)
+      def delimiter(node = nil)
         attributes.fetch(:delimiter) do
-          inherited_names_options(mode)[:delimiter] || ''
+          inherited_names_options(node)[:delimiter] || ''
         end
       end
 
