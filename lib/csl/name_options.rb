@@ -19,17 +19,17 @@ module CSL
     def inherits(name)
       inheritable_options = "inheritable_#{name}".to_sym
 
-      define_method("inherited_#{name}") do |node|
+      define_method("inherited_#{name}") do |node, style|
         options = {}
 
-        if !root? && root.respond_to?(inheritable_options)
-          unless node.nil?
-            if node.respond_to?(inheritable_options)
-              options = node.send(inheritable_options).merge(options)
-            end
-          end
+        if node.respond_to?(inheritable_options)
+          options = node.send(inheritable_options).merge(options)
+        end
 
-          options = root.send(inheritable_options).merge(options)
+        style ||= root
+
+        if !root? && style.respond_to?(inheritable_options)
+          options = style.send(inheritable_options).merge(options)
         end
 
         options
