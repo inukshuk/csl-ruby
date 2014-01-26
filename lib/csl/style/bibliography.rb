@@ -26,7 +26,7 @@ module CSL
       end
 
       def substitute_subsequent_author?
-        attribute?(:'subsequent-author-substitute') && subsequent_author_substitute != 'false'
+        attribute?(:'subsequent-author-substitute')
       end
 
       def subsequent_author_substitute
@@ -35,6 +35,16 @@ module CSL
 
       def subsequent_author_substitute_rule
         attribute[:'subsequent-author-substitute-rule'].to_s
+      end
+
+      def substitute_subsequent_authors_completely?
+        return false unless substitute_subsequent_author?
+        subsequent_author_substitute_rule == 'complete-all'
+      end
+
+      def substitute_subsequent_authors_individually?
+        return false unless substitute_subsequent_author?
+        subsequent_author_substitute_rule != 'complete-all'
       end
     end
 
