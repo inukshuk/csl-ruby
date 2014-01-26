@@ -43,9 +43,11 @@ module CSL
 
       attr_struct :form, *Schema.attr(:name, :affixes, :font, :delimiter)
 
-      attr_defaults :form => 'long', :delimiter => ', ',
-        :'delimiter-precedes-last' => 'contextual', :initialize => true,
-        :'sort-separator' => ', '
+      # Having default attributes makes inheritance really difficult.
+      #
+      # attr_defaults :form => 'long', :delimiter => ', ',
+      #   :'delimiter-precedes-last' => 'contextual', :initialize => true,
+      #   :'sort-separator' => ', '
 
       attr_children :'name-part'
 
@@ -138,12 +140,12 @@ module CSL
       # @return [String] the delimiter between family and given names
       #   in sort order
       def sort_separator
-        attributes[:'sort-separator'].to_s
+        attributes[:'sort-separator'] || ', '
       end
 
       # @return [String] the delimiter between names
       def delimiter
-        attributes[:delimiter].to_s
+        attributes[:delimiter] || ', '
       end
 
       def name_as_sort_order?
@@ -304,6 +306,7 @@ module CSL
       # @return [Boolean] whether or not the should be inserted between the
       #   penultimate and the last name depending on the number of names
       def delimiter_contextually_precedes_last?
+        return true unless attribute?(:'delimiter-precedes-last')
         !!(attributes[:'delimiter-precedes-last'].to_s =~ /^contextual/i)
       end
 
