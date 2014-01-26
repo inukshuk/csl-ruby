@@ -25,7 +25,7 @@ module CSL
         children[:sort].descendants
       end
 
-      def subsititute_subsequent_author?
+      def substitute_subsequent_author?
         attribute?(:'subsequent-author-substitute') && subsequent_author_substitute != 'false'
       end
 
