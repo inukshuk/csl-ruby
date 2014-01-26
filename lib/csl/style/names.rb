@@ -111,9 +111,9 @@ module CSL
 
       def truncate_at(subsequent = false)
         if subsequent && attribute?(:'et-al-subsequent-use-first')
-          attributes[:'et-al-subsequent-use-first'].to_i
+          attributes.fetch(:'et-al-subsequent-use-first', 1).to_i
         else
-          attributes[:'et-al-use-first'].to_i
+          attributes.fetch(:'et-al-use-first', 1).to_i
         end
       end
 
