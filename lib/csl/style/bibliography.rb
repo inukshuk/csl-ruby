@@ -38,12 +38,12 @@ module CSL
       end
 
       def substitute_subsequent_authors_completely?
-        return false unless substitute_subsequent_author?
+        return false unless substitute_subsequent_authors?
         subsequent_author_substitute_rule == 'complete-all'
       end
 
       def substitute_subsequent_authors_individually?
-        return false unless substitute_subsequent_author?
+        return false unless substitute_subsequent_authors?
         subsequent_author_substitute_rule != 'complete-all'
       end
     end
