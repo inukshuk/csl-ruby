@@ -30,11 +30,11 @@ module CSL
       end
 
       def subsequent_author_substitute
-        attribute[:'subsequent-author-substitute'].to_s
+        attributes[:'subsequent-author-substitute'].to_s
       end
 
       def subsequent_author_substitute_rule
-        attribute[:'subsequent-author-substitute-rule'].to_s
+        attributes[:'subsequent-author-substitute-rule'].to_s
       end
 
       def substitute_subsequent_authors_completely?
