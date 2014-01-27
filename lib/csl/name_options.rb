@@ -13,7 +13,7 @@ module CSL
 
       if attribute?(:'demote-non-dropping-particle')
         options[:'demote-non-dropping-particle'] =
-          attributes[:'demote_non_dropping_particle']
+          attributes[:'demote-non-dropping-particle']
       end
 
       options
