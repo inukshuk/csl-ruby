@@ -119,6 +119,12 @@ module CSL
     def demote_non_dropping_particle
       attributes[:'demote-non-dropping-particle']
     end
+    alias demote_particle demote_non_dropping_particle
+
+    def demote_non_dropping_particle?
+      attribute?(:'demote-non-dropping-particle')
+    end
+    alias demote_particle? demote_non_dropping_particle?
 
     def initialize_without_hyphen?
       attribute?(:'initialize-with-hyphen') && !attributes[:'initialize-with-hyphen']

@@ -11,11 +11,6 @@ module CSL
         options[:form] = attributes[:'name-form']
       end
 
-      if attribute?(:'demote-non-dropping-particle')
-        options[:'demote-non-dropping-particle'] =
-          attributes[:'demote-non-dropping-particle']
-      end
-
       options
     end
 
