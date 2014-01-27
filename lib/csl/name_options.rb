@@ -1,10 +1,20 @@
 module CSL
   module InheritableNameOptions
     def inheritable_name_options
-      options = attributes_for :'demote-non-dropping-particle', *Schema.attr(:name)
+      options = attributes_for *Schema.attr(:name)
 
-      options[:delimiter] = attributes[:'name-delimiter'] if attribute?(:'name-delimiter')
-      options[:form] = attributes[:'name-form'] if attribute?(:'name-form')
+      if attribute?(:'name-delimiter')
+        options[:delimiter] = attributes[:'name-delimiter']
+      end
+
+      if attribute?(:'name-form')
+        options[:form] = attributes[:'name-form']
+      end
+
+      if attribute?(:'demote-non-dropping-particle')
+        options[:'demote-non-dropping-particle'] =
+          attributes[:'demote_non_dropping_particle']
+      end
 
       options
     end
