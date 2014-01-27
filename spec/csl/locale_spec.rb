@@ -193,6 +193,15 @@ module CSL
         locale.quote('foo!').should == '»foo!«'
         locale.quote('foo?').should == '»foo?«'
       end
+
+      it 'replaces existing quotes with inner quotes' do
+        locale.store 'open-quote', '“'
+        locale.store 'close-quote', '”'
+        locale.store 'open-inner-quote', '‘'
+        locale.store 'close-inner-quote', '’'
+
+        locale.quote('“foo”').should == '“‘foo’”'
+      end
     end
   end
 end

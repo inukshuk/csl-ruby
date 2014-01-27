@@ -302,7 +302,7 @@ module CSL
         cq = CSL.encode_xml_text(cq)
       end
 
-      # TODO replace inner quotes
+      string = replace_with_inner_quotes(string, oq, cq, escape)
 
       if punctuation_in_quotes?
         "#{oq}#{string}#{cq}"
@@ -311,6 +311,19 @@ module CSL
 
         "#{oq}#{string}#{cq}#{punctuation}"
       end
+    end
+
+    def replace_with_inner_quotes(string, open, close, escape = false)
+      oq, cq = t('open-inner-quote'), t('close-inner-quote')
+
+      return string if oq.nil? || cq.nil? || (oq.empty? && cq.empty?)
+
+      if escape
+        oq = CSL.encode_xml_text(oq)
+        cq = CSL.encode_xml_text(cq)
+      end
+
+      string.gsub(/(#{open}|"\b)/, oq).gsub(/(#{close}|\b")/, cq)
     end
 
     # @example
