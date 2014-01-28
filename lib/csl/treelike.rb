@@ -370,7 +370,7 @@ module CSL
           alias original_each each
 
           def count
-            values.reject { |c| c.nil? || c.empty? }.length
+            values.reject { |c| c.nil? || c.is_a?(Array) && c.empty? }.length
           end
 
           # Iterates through all children. Nil values are skipped and Arrays
