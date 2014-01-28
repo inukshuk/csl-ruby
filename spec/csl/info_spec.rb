@@ -172,8 +172,8 @@ module CSL
 
     let(:poe) {
       Info::Author.new { |a|
-        a.email = 'poe@baltimore.com'
         a.name = 'E. A. Poe'
+        a.email = 'poe@baltimore.com'
       }
     }
 

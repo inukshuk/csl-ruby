@@ -367,23 +367,19 @@ module CSL
             __class__.keys
           end
 
-          alias original_each each
 
           def count
             values.reject { |c| c.nil? || c.is_a?(Array) && c.empty? }.length
           end
 
+          alias original_each each
+
           # Iterates through all children. Nil values are skipped and Arrays
           # expanded.
           def each
             if block_given?
-              original_each do |node|
-                if node.kind_of?(Array)
-                  node.select { |n| !n.nil? }.each(&Proc.new)
-                else
-                  yield node unless node.nil?
-                end
-              end
+              order.each(&Proc.new)
+              self
             else
               to_enum
             end
