@@ -1,3 +1,14 @@
+module CSL
+  module_function
+
+  def silence_warnings
+    original_verbosity, $VERBOSE = $VERBOSE, nil
+    yield
+  ensure
+    $VERBOSE = original_verbosity
+  end
+end
+
 class Module
   if RUBY_VERSION < '1.9'
     alias const? const_defined?

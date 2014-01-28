@@ -435,9 +435,11 @@ module CSL
 
     private
 
+    alias original_locale_attribute_assignments attribute_assignments
+
     def attribute_assignments
       if root?
-        super.push('xml:lang="%s"' % to_s)
+        original_locale_attribute_assignments
       else
         'xml:lang="%s"' % to_s
       end

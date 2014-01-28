@@ -173,7 +173,7 @@ module CSL
         delete_children tmp
       end
 
-      private
+      protected
 
       # @!attribute [r] registry
       # @return [Hash] a private registry to map term names to the respective
@@ -184,6 +184,8 @@ module CSL
       # @return [Hash] a private registry to map ordinals to the respective
       #   term objects for quick ordinal look-up
       attr_reader :ordinals
+
+      private
 
       def added_child(term)
         raise ValidationError, "failed to register term #{term.inspect}: name attribute missing" unless

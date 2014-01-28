@@ -17,7 +17,7 @@ module CSL
       alias sort? has_sort?
 
       def bibliography_options
-        attributes_for *Schema.attr(:bibliography)
+        attributes_for(*Schema.attr(:bibliography))
       end
 
       def sort_keys

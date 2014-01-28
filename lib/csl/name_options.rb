@@ -1,7 +1,7 @@
 module CSL
   module InheritableNameOptions
     def inheritable_name_options
-      options = attributes_for *Schema.attr(:name)
+      options = attributes_for(*Schema.attr(:name))
 
       if attribute?(:'name-delimiter')
         options[:delimiter] = attributes[:'name-delimiter']

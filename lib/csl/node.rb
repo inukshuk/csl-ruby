@@ -137,8 +137,10 @@ module CSL
             attr_reader :keys
           end
 
-          def initialize(attrs = {})
-            super(*attrs.symbolize_keys.values_at(*keys))
+          CSL.silence_warnings do
+            def initialize(attrs = {})
+              super(*attrs.symbolize_keys.values_at(*keys))
+            end
           end
 
           # @return [<Symbol>] a list of symbols representing the names/keys

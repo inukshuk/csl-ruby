@@ -5,7 +5,7 @@ module CSL
 
       include InheritableNameOptions
 
-      attr_struct *Schema.attr(:citation, :names, :name)
+      attr_struct(*Schema.attr(:citation, :names, :name))
 
       attr_children :sort, :layout
 
