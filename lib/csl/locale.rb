@@ -20,10 +20,9 @@ module CSL
     # Default languages/regions.
     # Auto-detection is based on these lists.
     @regions = Hash[*%w{
-      af ZA ar AR bg BG ca AD cs CZ da DK de DE el GR en US es ES et EE fa IR
-      fr FR he IL hu HU is IS it IT ja JP km KH ko KR mn MN nb NO nl NL nn NO
-      pl PL pt PT ro RO ru RU sk SK sl SI sr RS sv SE th TH tr TR uk UA vi VN
-      zh CN
+      af ZA bg BG ca AD cs CZ da DK de DE el GR en US es ES et EE fa IR fr FR
+      he IL hu HU is IS it IT ja JP km KH ko KR mn MN nb NO nl NL nn NO pl PL
+      pt PT ro RO ru RU sk SK sl SI sr RS sv SE th TH tr TR uk UA vi VN zh CN
     }.map(&:to_sym)].freeze
 
     @languages = @regions.invert.merge(Hash[*%w{
@@ -39,7 +38,7 @@ module CSL
 
       def load(input = nil)
         input ||= Locale.default
-        input = normalize input if input.to_s =~ tag_pattern
+        input = normalize input if input.to_s =~ @tag_pattern
         super(input)
       end
 
@@ -58,7 +57,7 @@ module CSL
         tag = tag.to_s.strip
 
         raise ArgumentError, "not a valid IETF tag: #{tag.inspect}" unless
-          tag =~ tag_pattern
+          tag =~ @tag_pattern
 
         language, region = tag.split(/-/)
 
@@ -67,10 +66,6 @@ module CSL
 
         tag
       end
-
-      private
-
-      attr_reader :tag_pattern
     end
 
     attr_defaults :version => Schema.major_version,
