@@ -580,6 +580,8 @@ module CSL
       true
     end
 
+    remove_method :empty?
+
     def empty?
       text.nil? || text.empty?
     end

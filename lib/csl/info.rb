@@ -86,8 +86,9 @@ module CSL
     end
 
     # Ruby 1.8 still has Object#id methods so the attr_children generator
-    # has not created those; since #id is deprecated in 1.8.7 we're
+    # may not have created those; since #id is deprecated in 1.8.7 we're
     # forcing the override anyway. Live dangerously!
+    remove_method :id
 
     # @return [Id] the id text node
     def id
