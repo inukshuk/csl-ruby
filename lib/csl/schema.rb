@@ -181,9 +181,9 @@ module CSL
       def validate(node)
         case
         when node.is_a?(Node)
-          validator[schema, node.to_xml]
+          @validator[@schema, node.to_xml]
         when node.respond_to?(:read)
-          validator[schema, node.read]
+          @validator[@schema, node.read]
         when node.is_a?(Enumerable) && !node.is_a?(String)
           node.map { |n| validate(n) }.flatten(1)
         when node.respond_to?(:to_s)
@@ -191,16 +191,16 @@ module CSL
 
           case
           when node =~ /^\s*</
-            validator[schema, node]
+            @validator[@schema, node]
           when File.exists?(node)
-            validator[schema, File.open(node, 'r:UTF-8')]
+            @validator[@schema, File.open(node, 'r:UTF-8')]
           else
             glob = Dir.glob(node)
 
             if glob.empty?
-              validator[schema, Kernel.open(node)]
+              @validator[@schema, Kernel.open(node)]
             else
-              glob.map { |n| validator[schema, File.open(n, 'r:UTF-8')] }.flatten(1)
+              glob.map { |n| @validator[@schema, File.open(n, 'r:UTF-8')] }.flatten(1)
             end
           end
         else
@@ -224,10 +224,6 @@ module CSL
       def valid?(style)
         validate(style).empty?
       end
-
-      private
-
-      attr_reader :validators, :validator, :schema
     end
 
   end
