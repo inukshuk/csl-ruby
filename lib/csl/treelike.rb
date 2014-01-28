@@ -357,6 +357,10 @@ module CSL
             @order = []
           end
 
+          def index(node, &block)
+            @order.index(node, &block)
+          end
+
           # @return [<Symbol>] a list of symbols representing the names/keys
           #   of the attribute variables.
           def keys

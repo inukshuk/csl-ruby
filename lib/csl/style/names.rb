@@ -12,13 +12,13 @@ module CSL
 
       inherits :names_options
 
-      alias labels label
-
       def initialize(attributes = {})
         super(attributes)
-        children[:label] = []
-
         yield self if block_given?
+      end
+
+      def prefix_label?
+        has_label? && has_name? && children.index(label) < children.index(name)
       end
 
       def delimiter(node = nil, style = nil)
