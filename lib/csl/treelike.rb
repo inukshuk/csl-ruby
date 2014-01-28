@@ -354,6 +354,7 @@ module CSL
 
           def initialize(attrs = {})
             super(*attrs.symbolize_keys.values_at(*keys))
+            @order = []
           end
 
           # @return [<Symbol>] a list of symbols representing the names/keys
@@ -407,6 +408,9 @@ module CSL
               self[node.nodename] = [current, node]
             end
 
+            # Add to @order to keep track of node ordering
+            @order << node
+
             self
           end
 
@@ -430,6 +434,9 @@ module CSL
               end
             end
 
+            # Delete node from ordered list as well
+            @order.delete(node)
+
             if deleted.nil? && block_given?
               yield
             else
@@ -444,6 +451,10 @@ module CSL
               resolve(name) || default
             end
           end
+
+          protected
+
+          attr_reader :order
 
           private
 
