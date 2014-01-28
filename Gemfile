@@ -31,10 +31,12 @@ group :extra do
   gem 'redcarpet', '~>3.0', :platforms => [:mri]
 end
 
-platform :rbx do
-  gem 'rubysl', '~>2.0'
-  gem 'json', '~>1.8'
-  gem 'racc'
+group :rbx do
+  platform :rbx do
+    gem 'rubysl', '~>2.0'
+    gem 'json', '~>1.8'
+    gem 'racc'
+  end
 end
 
 # vim: syntax=ruby
