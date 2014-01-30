@@ -4,8 +4,7 @@ module CSL
     class Sort < Node
 
       attr_children :key
-
-      alias keys key
+      alias_child :sort_keys, :key
 
       def initialize(attributes = {})
         super(attributes)
