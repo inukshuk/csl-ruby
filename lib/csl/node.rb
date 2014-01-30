@@ -3,6 +3,7 @@ module CSL
   class Node
 
     extend Forwardable
+    extend Extensions::Nesting
 
     include Enumerable
     include Comparable

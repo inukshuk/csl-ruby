@@ -14,7 +14,7 @@ module CSL
           options
         end
       end
-  
+
       def symbolize_keys!
         replace(symbolize_keys)
       end
@@ -52,10 +52,6 @@ end
 class Hash
   include CSL::Extensions::SymbolizeKeys unless method_defined?(:symbolize_keys)
   include CSL::Extensions::StringifyKeys unless method_defined?(:stringify_keys)
-end
-
-class Module
-  include CSL::Extensions::Nesting
 end
 
 class Object
