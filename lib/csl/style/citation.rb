@@ -10,6 +10,11 @@ module CSL
       attr_children :sort, :layout
 
       alias sort? has_sort?
+
+      def sort_keys
+        return [] unless sort?
+        sort.sort_keys
+      end
     end
 
   end

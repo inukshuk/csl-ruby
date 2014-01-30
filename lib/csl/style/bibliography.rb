@@ -22,7 +22,7 @@ module CSL
 
       def sort_keys
         return [] unless sort?
-        children[:sort].descendants
+        sort.sort_keys
       end
 
       def substitute_subsequent_authors?
