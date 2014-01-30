@@ -12,6 +12,8 @@ module CSL
       end
 
       alias sort_keys children
+      alias sort_keys? has_children?
+      alias has_sort_keys? has_children?
 
       class Key < Node
 
