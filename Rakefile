@@ -48,7 +48,13 @@ end
 task :default => [:spec, :cucumber]
 
 task :check_warnings do
-  system %[bundle exec ruby -v -rcsl -e "puts CSL::VERSION"]
+  $VERBOSE = true
+  require 'csl'
+
+  CSL::Style.new
+  CSL::Locale.new
+
+  puts CSL::VERSION
 end
 
 begin
