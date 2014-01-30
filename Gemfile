@@ -26,6 +26,7 @@ group :extra do
   gem 'guard-rspec'
   gem 'bond'
   gem 'diff-lcs'
+  gem 'pry'
   gem 'guard-cucumber'
   gem 'rb-fsevent', '~>0.9', :platforms => [:ruby]
 

@@ -13,16 +13,14 @@ $:.unshift(File.join(File.dirname(__FILE__), './lib'))
 require 'csl/version'
 
 
-desc 'Run an IRB session with CSL loaded'
-task :console, [:script] do |t,args|
+desc 'Run a Pry session with CSL loaded'
+task :console do
   ARGV.clear
 
-  require 'irb'
-  require 'irb/completion'
+  require 'pry'
   require 'csl'
 
-  IRB.conf[:SCRIPT] = args.script
-  IRB.start
+  Pry.start
 end
 
 require 'rspec/core'
@@ -48,6 +46,10 @@ task :release do |t|
 end
 
 task :default => [:spec, :cucumber]
+
+task :check_warnings do
+  system %[bundle exec ruby -v -rcsl -e "puts CSL::VERSION"]
+end
 
 begin
   require 'yard'
