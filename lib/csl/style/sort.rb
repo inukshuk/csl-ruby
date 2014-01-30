@@ -3,15 +3,15 @@ module CSL
 
     class Sort < Node
 
-      attr_children :key
-      alias_child :sort_keys, :key
+      #attr_children :key
+      #alias_child :sort_keys, :key
 
       def initialize(attributes = {})
         super(attributes)
-        children[:key] = []
-
         yield self if block_given?
       end
+
+      alias sort_keys children
 
       class Key < Node
 
