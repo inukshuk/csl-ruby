@@ -97,7 +97,7 @@ module CSL
       def truncate(names, subsequent = false)
         limit = truncate_at(subsequent)
 
-        return names if limit.zero?
+        return [] if limit.zero?
         names.take limit
       end
 
