@@ -18,7 +18,7 @@ module CSL
       class Key < Node
 
         attr_struct :variable, :macro, :sort,
-          :'names-use-min', :'names-use-first', :'names-use-last'
+          :'names-min', :'names-use-first', :'names-use-last'
 
         attr_defaults :sort => 'ascending'
 
@@ -28,7 +28,7 @@ module CSL
           options = {}
 
           options[:'et-al-use-min'] = options[:'et-al-subsequent-use-min'] =
-            attributes[:'names-use-min'] if attribute? :'names-use-min'
+            attributes[:'names-min'] if attribute? :'names-min'
 
           options[:'et-al-use-first'] = options[:'et-al-subsequent-use-first'] =
             attributes[:'names-use-first'] if attribute? :'names-use-first'
