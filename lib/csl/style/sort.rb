@@ -27,7 +27,7 @@ module CSL
         def name_options
           options = {}
 
-          options[:'et-al-use-min'] = options[:'et-al-subsequent-use-min'] =
+          options[:'et-al-min'] = options[:'et-al-subsequent-min'] =
             attributes[:'names-min'] if attribute? :'names-min'
 
           options[:'et-al-use-first'] = options[:'et-al-subsequent-use-first'] =
