@@ -13,7 +13,7 @@ module CSL
 
       def sort_keys
         return [] unless sort?
-        sort.sort_keys
+        children[:sort].sort_keys
       end
     end
 
