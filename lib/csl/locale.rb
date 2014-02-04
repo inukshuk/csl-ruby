@@ -131,6 +131,7 @@ module CSL
     end
 
     def initialize_copy(other)
+      @parent, @ancestors, @descendants, @siblings, @root, @depth = nil
       initialize(other.attributes.to_hash.merge(:lang => other.to_s))
     end
 
