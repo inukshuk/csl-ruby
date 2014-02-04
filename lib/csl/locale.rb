@@ -131,7 +131,7 @@ module CSL
     end
 
     def initialize_copy(other)
-      initialize(other.attributes.to_hash)
+      initialize(other.attributes.to_hash.merge(:lang => other.to_s))
     end
 
     def added_to(node)

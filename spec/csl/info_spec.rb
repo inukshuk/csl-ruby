@@ -145,6 +145,30 @@ module CSL
       end
     end
 
+    describe '#dup' do
+      it 'does not copy ancestors' do
+        apa = Style.load(:apa).info
+        apa.should be_a(Info)
+
+        apa.should_not be_root
+        apa.dup.should be_root
+      end
+    end
+
+    describe '#deep_copy' do
+      it 'copies the full sub-tree' do
+        apa = Style.load(:apa).info
+        apa.should be_a(Info)
+
+        xml = apa.to_xml
+
+        copy = apa.deep_copy
+
+        apa.to_xml.should == xml # original unchanged!
+        copy.to_xml.should == xml
+      end
+    end
+
     describe '#pretty_print' do
       it 'returns an empty info element by default' do
         subject.pretty_print.should == '<info/>'
@@ -234,6 +258,21 @@ module CSL
       end
     end
 
+  end
+
+  describe Info::Rights do
+    it { should_not be_nil }
+
+    describe '#dup' do
+      it 'copies attributes and text' do
+        r = Info::Rights.new('foo')
+        r[:license] = 'bar'
+
+        c = r.dup
+        c.text.should == 'foo'
+        c[:license].should == 'bar'
+      end
+    end
   end
 
 end

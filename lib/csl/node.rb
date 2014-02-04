@@ -234,7 +234,7 @@ module CSL
     end
 
     def initialize_copy(other)
-      super
+      @parent, @ancestors, @descendants, @siblings, @root, @depth = nil
       initialize(other.attributes)
     end
 
@@ -432,7 +432,7 @@ module CSL
       }.compact]
     end
 
-    
+
     # @return [Hash] the node's formatting options
     def formatting_options
       options = attributes_for Schema.attr(:formatting)
@@ -568,7 +568,7 @@ module CSL
 
     def initialize(argument = '')
       case
-      when argument.is_a?(Hash)
+      when argument.respond_to?(:each_pair)
         super
       when argument.respond_to?(:to_s)
         super({})
@@ -577,6 +577,11 @@ module CSL
       else
         raise ArgumentError, "failed to create text node from #{argument.inspect}"
       end
+    end
+
+    def initialize_copy(other)
+      super
+      @text = other.text
     end
 
     def textnode?

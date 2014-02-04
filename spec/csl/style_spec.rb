@@ -39,6 +39,20 @@ module CSL
       end
     end
 
+    describe '#deep_copy' do
+      it 'works on apa style' do
+        apa = Style.load(:apa)
+        apa.should be_a(Style)
+
+        xml = apa.to_xml
+
+        copy = apa.deep_copy
+
+        apa.to_xml.should == xml # original unchanged!
+        copy.to_xml.should == xml
+      end
+    end
+
     describe '#children' do
 
       it { should_not have_info }
