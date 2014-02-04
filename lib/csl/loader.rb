@@ -22,7 +22,7 @@ module CSL
     # Typically, this will return a new instance of the class.
     #
     # @note
-    #   The base class is exepcted to define a #parse method.
+    #   The base class is expected to define a #parse method.
     #
     # @raise ParseError
     #
