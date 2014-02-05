@@ -33,7 +33,7 @@ module CSL
 
         style ||= root
 
-        if !root? && style.respond_to?(inheritable_options)
+        if !style.equal?(self) && style.respond_to?(inheritable_options)
           options = style.send(inheritable_options).merge(options)
         end
 
