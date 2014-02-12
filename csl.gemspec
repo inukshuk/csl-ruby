@@ -4,6 +4,12 @@ $:.unshift lib unless $:.include?(lib)
 
 require 'csl/version'
 
+EXCLUDES = %w{
+  .coveralls.yml
+  .travis.yml
+  .csl.gemspec
+}
+
 Gem::Specification.new do |s|
   s.name        = 'csl'
   s.version     = CSL::VERSION.dup
@@ -26,7 +32,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency('namae', ['~>0.7'])
 
-  s.files        = `git ls-files`.split("\n")
+  s.files        = `git ls-files`.split("\n") - EXCLUDES
   s.test_files   = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables  = []
   s.require_path = 'lib'
