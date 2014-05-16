@@ -18,45 +18,17 @@ module CSL
     #   Locale.load('http://example.com/de.xml') -> locale
     #
     # Resolves the passed-in path/name or string and loads the asset data.
-    # The data will be passed on to the #parse method of the base class.
+    # The data will be passed on to the #parse! method of the base class.
     # Typically, this will return a new instance of the class.
     #
     # @note
-    #   The base class is expected to define a #parse method.
+    #   The base class is expected to define a #parse! method.
     #
     # @raise ParseError
     #
     # @return [Style, Locale] the parsed CSL resource
     def load(input)
-      case
-      when input.respond_to?(:read)
-        data = input.read
-      when input.to_s =~ /^\s*</
-        data = input.to_s
-      else
-
-        input = input.to_s
-
-        case
-        when File.exists?(input)
-          location = input
-        when File.exists?(extend_name(input))
-          location = extend_name(input)
-        when File.exists?(extend_path(input))
-          location = extend_path(input)
-        else
-          location = input
-        end
-
-        Kernel.open(location, 'r:UTF-8') do |io|
-          data = io.read
-        end
-      end
-
-      parse(data)
-
-    rescue => e
-      raise ParseError, "failed to load #{input.inspect}: #{e.message}"
+      parse! extract_data_from(input)
     end
 
     def list
@@ -85,6 +57,37 @@ module CSL
       end
 
       name
+    end
+
+    private
+
+    def extract_data_from(input)
+      case
+      when input.respond_to?(:read)
+        input.read
+      when input.to_s =~ /^\s*</
+        input.to_s
+      else
+
+        input = input.to_s
+
+        case
+        when File.exists?(input)
+          location = input
+        when File.exists?(extend_name(input))
+          location = extend_name(input)
+        when File.exists?(extend_path(input))
+          location = extend_path(input)
+        else
+          location = input
+        end
+
+        Kernel.open(location, 'r:UTF-8') do |io|
+          io.read
+        end
+      end
+    rescue => e
+      raise ParseError, "failed to extract CSL data from #{input.inspect}: #{e.message}"
     end
   end
 
