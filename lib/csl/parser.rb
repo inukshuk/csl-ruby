@@ -11,7 +11,9 @@ module CSL
     @engines = {
       :nokogiri => lambda { |source|
         Nokogiri::XML::Document.parse(source, nil, nil,
-          Nokogiri::XML::ParseOptions::DEFAULT_XML | Nokogiri::XML::ParseOptions::NOBLANKS | Nokogiri::XML::ParseOptions::NOENT)
+          Nokogiri::XML::ParseOptions::DEFAULT_XML |
+          Nokogiri::XML::ParseOptions::NOBLANKS |
+          Nokogiri::XML::ParseOptions::NOENT)
       },
       :default  => lambda { |source|
         REXML::Document.new(source, :compress_whitespace => :all, :ignore_whitespace_nodes => :all)
@@ -68,7 +70,7 @@ module CSL
       scope = specialize_scope(root, scope)
 
       node.children.each do |child|
-        root << parse_tree(child, scope) unless comment?(child)
+        root << parse_tree(child, scope) unless skip?(child)
       end unless root.textnode?
 
       root
@@ -79,7 +81,12 @@ module CSL
         node.has_text? && node.text
       else
         child = node.children[0]
-        child && child.respond_to?(:text?) && child.text? && child.text
+        return unless child && child.respond_to?(:text?) && child.text?
+
+        text = child.text
+        return if text.to_s.strip.empty?
+
+        text
       end
     end
 
@@ -88,7 +95,18 @@ module CSL
         node.respond_to?(:node_type) &&
         [:comment, :xmldecl, :processing_instruction, 7].include?(node.node_type)
     end
-    alias skip? comment?
+
+    def text?(node)
+      if defined?(Nokogiri)
+        node.is_a?(Nokogiri::XML::Text)
+      else
+        false
+      end
+    end
+
+    def skip?(node)
+      comment?(node) || text?(node)
+    end
 
     def specialize_scope(root, scope = Node)
       case root

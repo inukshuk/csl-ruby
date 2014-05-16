@@ -388,6 +388,10 @@ module CSL
           def empty?
             all?(&:nil?)
           end
+          
+          def select(&block)
+            each.select(&block)
+          end
 
           # Adds the node as a child node. Raises ValidationError if none
           # of the Struct members matches the node's name. If there is

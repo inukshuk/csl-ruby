@@ -36,6 +36,26 @@ module CSL
             end
           end
 
+          describe 'for an empty name node' do
+            ['<name/>', '<name></name>', '<name> </name>'].each do |source|
+              it "returns a Style::Name for #{source.inspect} by default" do
+                Parser.instance.parse!(source).should be_a(Style::Name)
+              end
+
+              it "returns a Style::Name for #{source.inspect} for Style scope" do
+                Parser.instance.parse!(source, Style).should be_a(Style::Name)
+              end
+
+              it "returns a Node for #{source.inspect} for Locale scope" do
+                Parser.instance.parse!(source, Locale).should be_a(Node)
+              end
+
+              it "returns an Info::Name for #{source.inspect} for Info scope" do
+                Parser.instance.parse!(source, Info).should be_a(Info::Name)
+              end
+            end
+          end
+
           describe 'for <foo bar="x"/>' do
             let(:source) { '<foo bar="x"/>' }
 
