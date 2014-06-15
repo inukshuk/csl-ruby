@@ -72,11 +72,11 @@ module CSL
         input = input.to_s
 
         case
-        when File.exists?(input)
+        when File.exist?(input)
           location = input
-        when File.exists?(extend_name(input))
+        when File.exist?(extend_name(input))
           location = extend_name(input)
-        when File.exists?(extend_path(input))
+        when File.exist?(extend_path(input))
           location = extend_path(input)
         else
           location = input
