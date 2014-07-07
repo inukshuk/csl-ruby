@@ -183,7 +183,9 @@ module CSL
     end
 
     describe '#pretty_print' do
-      TextNode.new(:foo => 'bar') { |n| n.text = 'foo' }.pretty_print.should == '<text-node foo="bar">foo</text-node>'
+      it 'prints the text node as XML' do
+        expect(TextNode.new(:foo => 'bar') { |n| n.text = 'foo' }.pretty_print).to eq('<text-node foo="bar">foo</text-node>')
+      end
     end
   end
 
