@@ -11,7 +11,7 @@ When /^I ordinalize the number (\d+)(?: using the (long) form(?: and (feminine|m
 end
 
 Then /^the ordinal should (?:be|equal) "([^"]*)"$/ do |ord|
-  @ordinal.should == ord
+  expect(@ordinal).to eq(ord)
 end
 
 When /^I ordinalize these numbers:?$/ do |table|
@@ -22,13 +22,15 @@ When /^I ordinalize these numbers:?$/ do |table|
 end
 
 Then /^the ordinals should (?:be|equal):?$/ do |table|
-  @ordinals.join(' ').should == table.rows.flatten.join(' ')
+  expect(@ordinals.join(' ')).to eq(table.rows.flatten.join(' '))
 end
 
 Then /^the locale should should have (\d+) terms$/ do |num|
-	@csl.terms.length.should == num.to_i
+	expect(@csl.terms.length).to eq(num.to_i)
 end
 
 Then /^the (\w+[\?!]?) of the term "([^"]*)" should be "([^"]*)"$/ do |method, name, expected|
-	@csl.terms.detect { |t| t.name == name }.send(method).should == expected
+	expect(
+    @csl.terms.detect { |t| t.name == name }.send(method)
+  ).to eq(expected)
 end

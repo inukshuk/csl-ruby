@@ -6,35 +6,35 @@ end
 Then /^(?:the )?(\w+[\?!]?) should be "([^"]*)"$/ do |name, expected|
   actual = @csl.send(name)
   actual = !!actual if expected =~ /^true|false$/
-  actual.to_s.should == expected
+  expect(actual.to_s).to eq(expected)
 end
 
 Then /^the (\w+) (\w+) should be "([^"]*)"$/ do |outer, inner, expected|
-  @csl.send(outer).send(inner).to_s.should == expected
+  expect(@csl.send(outer).send(inner).to_s).to eq(expected)
 end
 
 Then /^the attribute "([^"]*)" should be "([^"]*)"$/ do |name, expected|
-  @csl[name.to_sym].should == expected
+  expect(@csl[name.to_sym]).to eq(expected)
 end
 
 Then /^the node should have (\d+) (\w+)$/ do |length, name|
-  @csl.send(name).length.should == length.to_i
+  expect(@csl.send(name).length).to eq(length.to_i)
 end
 
 Then /^the (\w+) number (\d+) should have the attribute "([^"]*)" set to "([^"]*)"$/ do |name, offset, attribute, expected|
-  @csl.send("#{name}s")[offset.to_i - 1][attribute.to_sym].should == expected
+  expect(@csl.send("#{name}s")[offset.to_i - 1][attribute.to_sym]).to eq(expected)
 end
 
 Then /^the (\w+) number (\d+) should( not)? be a (\w+)$/ do |name, offset, negate, predicate|
-  @csl.send("#{name}s")[offset.to_i - 1].send("#{predicate}?").should == negate.nil?
+  expect(@csl.send("#{name}s")[offset.to_i - 1].send("#{predicate}?")).to eq(negate.nil?)
 end
 
 Then /^the (\w+) number (\d+)'s (\w+) should( not)? be "([^"]*)"$/ do |name, offset, method, negate, expected|
   actual = @csl.send("#{name}s")[offset.to_i - 1].send(method).to_s
   
   if negate.nil?
-    actual.should == expected
+    expect(actual).to eq(expected)
   else
-    actual.should_not == expected
+    expect(actual).not_to eq(expected)
   end
 end
