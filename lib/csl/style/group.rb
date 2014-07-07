@@ -5,8 +5,7 @@ module CSL
     # element (with the exception of {Layout}). Group nodes may carry the
     # delimiter attribute to separate their child elements, as well as
     # affixes and display attributes (applied to the output of the group
-    # as a whole) and formatting attributes (transmitted to the enclosed
-    # elements).
+    # as a whole).
     #
     # Groups implicitly act as a conditionals: a Group and its child
     # elements are suppressed if a) at least one rendering element in
@@ -26,10 +25,6 @@ module CSL
       # @return [Hash] the node's formatting options
       def formatting_options
         attributes_for :display, *Schema.attr(:affixes) 
-      end
-
-      def inheritable_formatting_options
-        attributes_for :'text-case', *Schema.attr(:font)
       end
     end
     

@@ -433,6 +433,11 @@ module CSL
     end
 
 
+    # The node's formatting options. If the node's parent responds
+    # to `inheritable_formatting_options`, these will be included
+    # in the result. This makes it easy for nodes to push formatting
+    # options to their child nodes.
+    #
     # @return [Hash] the node's formatting options
     def formatting_options
       options = attributes_for Schema.attr(:formatting)
