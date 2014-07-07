@@ -7,78 +7,78 @@ module CSL
     end
 
     it 'has a 1.x version by default' do
-      @style[:version].should match(/1\.\d+(\.\d+)?/)
+      expect(@style[:version]).to match(/1\.\d+(\.\d+)?/)
     end
 
     it 'has the default version' do
-      @style.default_attribute?(:version).should be_true
+      expect(@style.default_attribute?(:version)).to be_truthy
     end
 
     it 'has a the default namespace attribute' do
-      @style[:xmlns].should == CSL::Schema.namespace
-      @style.default_attribute?(:xmlns).should be_true
+      expect(@style[:xmlns]).to eq(CSL::Schema.namespace)
+      expect(@style.default_attribute?(:xmlns)).to be_truthy
     end
 
     describe '#to_xml' do
       it 'returns an empty style' do
-        @style.to_xml.should match(/^<style[^>]*\/>/)
+        expect(@style.to_xml).to match(/^<style[^>]*\/>/)
       end
 
       it 'includes the xml namespace' do
-        @style.to_xml.should match(CSL::Schema.namespace)
+        expect(@style.to_xml).to match(CSL::Schema.namespace)
       end
 
       it 'supports round-trip for apa style' do
         apa = Style.load(:apa)
-        apa.should be_a(Style)
+        expect(apa).to be_a(Style)
 
         xml = apa.to_xml
-        xml.should match(/^<style[^>]*>/)
+        expect(xml).to match(/^<style[^>]*>/)
 
-        Style.parse(xml).should be_a(Style)
+        expect(Style.parse(xml)).to be_a(Style)
       end
     end
 
     describe '#deep_copy' do
       it 'works on apa style' do
         apa = Style.load(:apa)
-        apa.should be_a(Style)
+        expect(apa).to be_a(Style)
 
         xml = apa.to_xml
 
         copy = apa.deep_copy
 
-        apa.to_xml.should == xml # original unchanged!
-        copy.to_xml.should == xml
+        expect(apa.to_xml).to eq(xml) # original unchanged!
+        expect(copy.to_xml).to eq(xml)
       end
     end
 
     describe '#children' do
 
-      it { should_not have_info }
-      it { should_not have_locale }
-      it { should_not have_macro }
-      it { should_not have_citation }
-      it { should_not have_bibliography }
+      it { is_expected.not_to have_info }
+      it { is_expected.not_to have_locale }
+      it { is_expected.not_to have_macro }
+      it { is_expected.not_to have_citation }
+      it { is_expected.not_to have_bibliography }
 
       describe 'when it has a title' do
         before { @style.title = 'foo' }
 
-        it { @style.should have_info }
+        it { expect(@style).to have_info }
 
         it 'info.title is a text node' do
-          @style.info.title.should be_a(TextNode)
+          expect(@style.info.title).to be_a(TextNode)
         end
 
         it '#title returns the title as a string' do
-          @style.title.should be_a(String)
+          expect(@style.title).to be_a(String)
         end
       end
     end
 
     describe '#id accessor' do
       it 'returns nil by default' do
-        @style.id.should be_nil
+        expect(@style.id).to be_nil
       end
 
       it 'writer sets the id to the passed-in string' do
@@ -88,11 +88,11 @@ module CSL
 
     describe 'independent and dependent styles' do
       it 'styles are independent by default' do
-        @style.should be_independent
+        expect(@style).to be_independent
       end
 
       it 'styles do not have independent-parent links by default' do
-        @style.should_not have_independent_parent_link
+        expect(@style).not_to have_independent_parent_link
       end
 
       it 'when setting an independet-parent link a style becomes dependent' do
@@ -102,7 +102,7 @@ module CSL
 
     describe 'macros' do
       it 'has no macros by default' do
-        @style.should_not have_macros
+        expect(@style).not_to have_macros
       end
 
       it 'raises a validation error when adding a macro without name' do
@@ -113,12 +113,12 @@ module CSL
         before { @style << Style::Macro.new(:name => 'author') }
 
         it 'has macros' do
-          @style.should have_macros
+          expect(@style).to have_macros
         end
 
         it 'the macro is registered in the macros hash' do
-          @style.macros.should have_key('author')
-          @style.macros['author'].should be_a(Style::Macro)
+          expect(@style.macros).to have_key('author')
+          expect(@style.macros['author']).to be_a(Style::Macro)
         end
 
         it 'raises a validation error when adding a macro with a duplicate name' do

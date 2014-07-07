@@ -3,15 +3,15 @@ require 'spec_helper'
 module CSL  
   describe Locale::StyleOptions do
   
-    it { should_not be nil }
+    it { is_expected.not_to be nil }
     
     it 'punctuation-in-quote is false by default' do
-      subject[:'punctuation-in-quote'].should be false
+      expect(subject[:'punctuation-in-quote']).to be false
     end
     
     describe '#to_xml' do
       it 'returns <style-options punctuation-in-quote="false"/> by default' do
-        subject.to_xml.should =~ /<style-options\/>/
+        expect(subject.to_xml).to match(/<style-options\/>/)
       end
     end
     

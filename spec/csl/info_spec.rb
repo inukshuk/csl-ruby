@@ -4,23 +4,23 @@ module CSL
 
   describe Info do
 
-    it { should_not be_nil }
-    it { should_not have_children }
+    it { is_expected.not_to be_nil }
+    it { is_expected.not_to have_children }
 
     before { @info = Info.new }
 
     describe '#nodename' do
       it 'returns "info"' do
-        subject.nodename.should == 'info'
+        expect(subject.nodename).to eq('info')
       end
     end
 
     describe 'license' do
-      it { should_not have_rights }
-      it { should_not be_default_license }
+      it { is_expected.not_to have_rights }
+      it { is_expected.not_to be_default_license }
 
       it 'has no license by default' do
-        @info.license.should be_nil
+        expect(@info.license).to be_nil
       end
 
       it 'setting a license adds a rights node' do
@@ -29,36 +29,36 @@ module CSL
 
       it 'setting the default license creates the default rights node' do
         @info.default_license!
-        @info.should have_rights
-        @info.should be_default_license
+        expect(@info).to have_rights
+        expect(@info).to be_default_license
 
         @info.rights.text = 'cc'
-        @info.should_not be_default_license
+        expect(@info).not_to be_default_license
 
         @info.default_license!
-        @info.should be_default_license
+        expect(@info).to be_default_license
       end
     end
 
     describe '#children' do
       it 'returns a Info::Children instance' do
-        @info.children.should be_a(Info::Children)
+        expect(@info.children).to be_a(Info::Children)
       end
 
       it 'allows to set the id by array accessor' do
-        lambda { Info.new.children[:id] = 'foo' }.should_not raise_error
+        expect { Info.new.children[:id] = 'foo' }.not_to raise_error
       end
     end
 
     describe '#category' do
       it 'returns an empty list by default' do
-        @info.category.should be_empty
+        expect(@info.category).to be_empty
       end
     end
 
     describe 'citation-format' do
       it 'has no citation-format by default' do
-        @info.citation_format.should be_nil
+        expect(@info.citation_format).to be_nil
       end
 
       it 'setting a citation-format creates a new category node' do
@@ -73,7 +73,7 @@ module CSL
         before { @info.add_child Info::Category.new(:'citation-format' => 'author') }
 
         it 'has a citation format' do
-          @info.citation_format.should == :author
+          expect(@info.citation_format).to eq(:author)
         end
 
         it 'setting a citation-format does not create a new category node' do
@@ -89,7 +89,7 @@ module CSL
         before { @info.add_child Info::Category.new(:field => 'literature') }
 
         it 'has no citation-format by default' do
-          @info.citation_format.should be_nil
+          expect(@info.citation_format).to be_nil
         end
 
         it 'setting a citation-format creates a new category node' do
@@ -103,20 +103,20 @@ module CSL
     end
 
     describe 'link accessors' do
-      it { should_not have_self_link }
-      it { should_not have_documentation_link }
-      it { should_not have_template_link }
+      it { is_expected.not_to have_self_link }
+      it { is_expected.not_to have_documentation_link }
+      it { is_expected.not_to have_template_link }
 
       it 'self_link is nil by default' do
-        @info.self_link.should be_nil
+        expect(@info.self_link).to be_nil
       end
 
       it 'returns nil if no suitable link is set' do
-        Info.new {|i| i.link = {:href => 'foo', :rel => 'documentation'} }.self_link.should be_nil
+        expect(Info.new {|i| i.link = {:href => 'foo', :rel => 'documentation'} }.self_link).to be_nil
       end
 
       it 'returns the href value of the link if it is set' do
-        Info.new {|i| i.link = {:href => 'foo', :rel => 'self'} }.self_link.should == 'foo'
+        expect(Info.new {|i| i.link = {:href => 'foo', :rel => 'self'} }.self_link).to eq('foo')
       end
 
       it 'setter changes the value of existing link' do
@@ -126,73 +126,73 @@ module CSL
 
       it 'setter creates new link node if link did not exist' do
         expect { @info.self_link = 'bar' }.to change { @info.has_self_link? }
-        @info.links[0].should be_a(Info::Link)
+        expect(@info.links[0]).to be_a(Info::Link)
       end
 
     end
 
     describe '#to_xml' do
       it 'returns an empty info element by default' do
-        subject.to_xml.should == '<info/>'
+        expect(subject.to_xml).to eq('<info/>')
       end
 
       it 'prints the id if present' do
-        Info.new { |i| i.set_child_id 'apa' }.to_xml.should == '<info><id>apa</id></info>'
+        expect(Info.new { |i| i.set_child_id 'apa' }.to_xml).to eq('<info><id>apa</id></info>')
       end
 
       it 'prints the category if present' do
-        Info.new { |i| i.category = {:'citation-format' => 'author'} }.to_xml.should == '<info><category citation-format="author"/></info>'
+        expect(Info.new { |i| i.category = {:'citation-format' => 'author'} }.to_xml).to eq('<info><category citation-format="author"/></info>')
       end
     end
 
     describe '#dup' do
       it 'does not copy ancestors' do
         apa = Style.load(:apa).info
-        apa.should be_a(Info)
+        expect(apa).to be_a(Info)
 
-        apa.should_not be_root
-        apa.dup.should be_root
+        expect(apa).not_to be_root
+        expect(apa.dup).to be_root
       end
     end
 
     describe '#deep_copy' do
       it 'copies the full sub-tree' do
         apa = Style.load(:apa).info
-        apa.should be_a(Info)
+        expect(apa).to be_a(Info)
 
         xml = apa.to_xml
 
         copy = apa.deep_copy
 
-        apa.to_xml.should == xml # original unchanged!
-        copy.to_xml.should == xml
+        expect(apa.to_xml).to eq(xml) # original unchanged!
+        expect(copy.to_xml).to eq(xml)
       end
     end
 
     describe '#pretty_print' do
       it 'returns an empty info element by default' do
-        subject.pretty_print.should == '<info/>'
+        expect(subject.pretty_print).to eq('<info/>')
       end
 
       it 'prints the id indented if present' do
-        Info.new { |i| i.set_child_id 'apa' }.pretty_print.should == "<info>\n  <id>apa</id>\n</info>"
+        expect(Info.new { |i| i.set_child_id 'apa' }.pretty_print).to eq("<info>\n  <id>apa</id>\n</info>")
       end
     end
 
     describe '#tags' do
       it 'returns a list with an empty info element by default' do
-        subject.tags.should == ['<info/>']
+        expect(subject.tags).to eq(['<info/>'])
       end
 
       it 'returns a nested list if id is present' do
-        Info.new { |i| i.set_child_id 'apa' }.tags.should == ['<info>', ['<id>apa</id>'], '</info>']
+        expect(Info.new { |i| i.set_child_id 'apa' }.tags).to eq(['<info>', ['<id>apa</id>'], '</info>'])
       end
 
     end
   end
 
   describe Info::Author do
-    it { should_not be_nil }
+    it { is_expected.not_to be_nil }
 
     let(:poe) {
       Info::Author.new { |a|
@@ -203,33 +203,33 @@ module CSL
 
     describe '#name' do
       it 'returns nil by default' do
-        subject.name.should be nil
+        expect(subject.name).to be nil
       end
 
       it 'returns the name if set' do
-        poe.name.to_s.should == 'E. A. Poe'
+        expect(poe.name.to_s).to eq('E. A. Poe')
       end
     end
 
     describe '#family' do
       it "returns the author's family name" do
-        poe.family.should == 'Poe'
+        expect(poe.family).to eq('Poe')
       end
     end
 
     describe '#email' do
       it 'returns the email' do
-        poe.email.to_s.should == 'poe@baltimore.com'
+        expect(poe.email.to_s).to eq('poe@baltimore.com')
       end
     end
 
     describe '#to_xml' do
       it 'returns an empty author by default' do
-        subject.to_xml.should == '<author/>'
+        expect(subject.to_xml).to eq('<author/>')
       end
 
       it 'prints all children' do
-        poe.to_xml.should == '<author><name>E. A. Poe</name><email>poe@baltimore.com</email></author>'
+        expect(poe.to_xml).to eq('<author><name>E. A. Poe</name><email>poe@baltimore.com</email></author>')
       end
     end
 
@@ -237,31 +237,31 @@ module CSL
 
   describe Info::Contributor do
 
-    it { should_not be_nil }
+    it { is_expected.not_to be_nil }
 
     let(:bruce) { Info::Contributor.new { |c| c.name = "Bruce D'Arcus" } }
 
     describe '#name' do
       it 'returns the name' do
-        bruce.name.to_s.should == "Bruce D'Arcus"
+        expect(bruce.name.to_s).to eq("Bruce D'Arcus")
       end
     end
 
 
     describe '#to_xml' do
       it 'returns an empty contributor by default' do
-        subject.to_xml.should == '<contributor/>'
+        expect(subject.to_xml).to eq('<contributor/>')
       end
 
       it 'prints the name tag if present' do
-        bruce.to_xml.should == "<contributor><name>Bruce D'Arcus</name></contributor>"
+        expect(bruce.to_xml).to eq("<contributor><name>Bruce D'Arcus</name></contributor>")
       end
     end
 
   end
 
   describe Info::Rights do
-    it { should_not be_nil }
+    it { is_expected.not_to be_nil }
 
     describe '#dup' do
       it 'copies attributes and text' do
@@ -269,8 +269,8 @@ module CSL
         r[:license] = 'bar'
 
         c = r.dup
-        c.text.should == 'foo'
-        c[:license].should == 'bar'
+        expect(c.text).to eq('foo')
+        expect(c[:license]).to eq('bar')
       end
     end
   end

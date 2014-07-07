@@ -7,7 +7,7 @@ module CSL
 
   describe Style::Name do
 
-    it { should be_delimiter_contextually_precedes_last }
+    it { is_expected.to be_delimiter_contextually_precedes_last }
 
     [:never, :always, :contextually].each do |setting|
       setter = "delimiter_#{setting}_precedes_last!"
@@ -15,7 +15,7 @@ module CSL
 
       describe "##{setter}" do
         it 'sets the delimiter precedes last option accordingly' do
-          subject.send(setter).send(predicate).should == true
+          expect(subject.send(setter).send(predicate)).to eq(true)
         end
       end
     end

@@ -15,7 +15,7 @@ module CSL
     describe '.regions' do
 
       it 'returns the default region when passed a language symbol' do
-        Locale.regions[:en].should == :US
+        expect(Locale.regions[:en]).to eq(:US)
       end
 
     end
@@ -25,7 +25,7 @@ module CSL
       describe 'the language hash' do
         it 'returns the default language when passed a region string' do
           %w{ US en GB en AT de DE de }.map(&:to_sym).each_slice(2) do |region, language|
-            Locale.languages[region].should == language
+            expect(Locale.languages[region]).to eq(language)
           end
         end
       end
@@ -40,28 +40,28 @@ module CSL
         'de-AT' => 'de-AT'
       }.each_pair do |tag, expected|
         it "converts #{tag.inspect} to #{expected.inspect}" do
-          Locale.normalize(tag).should == expected
+          expect(Locale.normalize(tag)).to eq(expected)
         end
       end
     end
 
     describe '.new' do
-      it { should_not be_nil }
+      it { is_expected.not_to be_nil }
 
       it 'defaults to default language' do
-        Locale.new.language.should == Locale.default.split(/-/)[0].to_sym
+        expect(Locale.new.language).to eq(Locale.default.split(/-/)[0].to_sym)
       end
 
       it 'defaults to default region' do
-        Locale.new.region.should == Locale.default.split(/-/)[1].to_sym
+        expect(Locale.new.region).to eq(Locale.default.split(/-/)[1].to_sym)
       end
 
       it 'contains no dates by default' do
-        Locale.new.dates.should be_nil
+        expect(Locale.new.dates).to be_nil
       end
 
       it 'contains no terms by default' do
-        Locale.new.terms.should be_nil
+        expect(Locale.new.terms).to be_nil
       end
 
     end
@@ -72,15 +72,15 @@ module CSL
         let(:locale) { Locale.load('en-GB') }
 
         it 'the returned locale has the correct IETF tag' do
-          locale.to_s.should == 'en-GB'
+          expect(locale.to_s).to eq('en-GB')
         end
 
         it 'the locale has language :en' do
-          locale.language.should == :en
+          expect(locale.language).to eq(:en)
         end
 
         it 'the locale has region :GB' do
-          locale.region.should == :GB
+          expect(locale.region).to eq(:GB)
         end
 
       end
@@ -91,17 +91,17 @@ module CSL
 
       it 'when passed "en-GB" sets language to :en and region to :GB' do
         locale.set('en-GB')
-        [locale.language, locale.region].should == [:en, :GB]
+        expect([locale.language, locale.region]).to eq([:en, :GB])
       end
 
       it 'when passed "de" sets language to :de and region to :DE' do
         locale.set('de')
-        [locale.language, locale.region].should == [:de, :DE]
+        expect([locale.language, locale.region]).to eq([:de, :DE])
       end
 
       it 'when passed "-AT" sets language to :de and region to :AT' do
         locale.set('-AT')
-        [locale.language, locale.region].should == [:de, :AT]
+        expect([locale.language, locale.region]).to eq([:de, :AT])
       end
 
     end
@@ -115,11 +115,11 @@ module CSL
         end
 
         it 'creates a duplicate option element if the first locale has no options' do
-          locale.should_not have_options
+          expect(locale).not_to have_options
           locale.merge!(locale_with_options)
-          locale.should have_options
-          locale.options[:foo].should == 'bar'
-          locale.options.should_not equal(locale_with_options.options)
+          expect(locale).to have_options
+          expect(locale.options[:foo]).to eq('bar')
+          expect(locale.options).not_to equal(locale_with_options.options)
         end
 
         it 'merges the options if both locales have options' do
@@ -127,15 +127,15 @@ module CSL
 
           expect { locale.merge!(locale_with_options) }.not_to change { locale.options.object_id }
 
-          locale.options[:foo].should == 'bar'
-          locale.options[:bar].should == 'foo'
+          expect(locale.options[:foo]).to eq('bar')
+          expect(locale.options[:bar]).to eq('foo')
         end
 
         it 'overrides the options with those in the other locale' do
           locale << Locale::StyleOptions.new(:bar => 'foo', :foo => 'foo')
           locale.merge!(locale_with_options)
-          locale.options[:foo].should == 'bar'
-          locale.options[:bar].should == 'foo'
+          expect(locale.options[:foo]).to eq('bar')
+          expect(locale.options[:bar]).to eq('foo')
         end
       end
 
@@ -146,19 +146,19 @@ module CSL
 
         it 'creates duplicate date elements if the first locale has no options' do
           locale.merge!(Locale.load('en-US'))
-          locale.should have_dates
+          expect(locale).to have_dates
         end
       end
     end
 
     describe '#legacy?' do
       it 'returns false by default' do
-        locale.should_not be_legacy
+        expect(locale).not_to be_legacy
       end
 
       it 'returns true if the version is less than 1.0.1' do
         locale.version = '0.8'
-        locale.should be_legacy
+        expect(locale).to be_legacy
       end
     end
 
@@ -168,30 +168,30 @@ module CSL
         locale.store 'open-quote', '»'
         locale.store 'close-quote', '«'
 
-        locale.quote('foo').should == '»foo«'
+        expect(locale.quote('foo')).to eq('»foo«')
       end
 
       it 'does not alter the string if there are no quotes in the locale' do
-        locale.quote('foo').should == 'foo'
+        expect(locale.quote('foo')).to eq('foo')
       end
 
       it 'adds quotes inside final punctuation if punctuation-in-quote option is set' do
         locale.store 'open-quote', '»'
         locale.store 'close-quote', '«'
 
-        locale.quote('foo.').should == '»foo«.'
-        locale.quote('foo,').should == '»foo«,'
+        expect(locale.quote('foo.')).to eq('»foo«.')
+        expect(locale.quote('foo,')).to eq('»foo«,')
 
-        locale.quote('foo!').should == '»foo!«'
-        locale.quote('foo?').should == '»foo?«'
+        expect(locale.quote('foo!')).to eq('»foo!«')
+        expect(locale.quote('foo?')).to eq('»foo?«')
 
         locale.punctuation_in_quotes!
 
-        locale.quote('foo.').should == '»foo.«'
-        locale.quote('foo,').should == '»foo,«'
+        expect(locale.quote('foo.')).to eq('»foo.«')
+        expect(locale.quote('foo,')).to eq('»foo,«')
 
-        locale.quote('foo!').should == '»foo!«'
-        locale.quote('foo?').should == '»foo?«'
+        expect(locale.quote('foo!')).to eq('»foo!«')
+        expect(locale.quote('foo?')).to eq('»foo?«')
       end
 
       it 'replaces existing quotes with inner quotes' do
@@ -200,7 +200,7 @@ module CSL
         locale.store 'open-inner-quote', '‘'
         locale.store 'close-inner-quote', '’'
 
-        locale.quote('“foo”').should == '“‘foo’”'
+        expect(locale.quote('“foo”')).to eq('“‘foo’”')
       end
     end
   end

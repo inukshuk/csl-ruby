@@ -3,9 +3,9 @@ require 'spec_helper'
 module CSL
   describe Style::Label do
 
-    it { should_not be_names_label }
-    it { should_not be_always_pluralize }
-    it { should_not be_never_pluralize }
+    it { is_expected.not_to be_names_label }
+    it { is_expected.not_to be_always_pluralize }
+    it { is_expected.not_to be_never_pluralize }
 
     describe '.terms' do
       Hash[*%w{
@@ -17,7 +17,7 @@ module CSL
         chapter-number    chapter
       }].each do |variable, term|
         it "returns #{term.inspect} for #{variable.inspect}" do
-          Style::Label.terms[variable].should == term
+          expect(Style::Label.terms[variable]).to eq(term)
         end
       end
     end
@@ -25,18 +25,18 @@ module CSL
     describe 'a label inside a names node' do
       before(:each) { Style::Names.new << subject }
 
-      it { should be_names_label }
+      it { is_expected.to be_names_label }
     end
 
     describe '#term' do
-      it { should be_empty }
+      it { is_expected.to be_empty }
 
       it 'returns the term for the current variable' do
         subject[:variable] = 'page'
-        subject.term.should == 'page'
+        expect(subject.term).to eq('page')
 
         subject[:variable] = 'number-of-volumes'
-        subject.term.should == 'volume'
+        expect(subject.term).to eq('volume')
       end
     end
 

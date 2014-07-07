@@ -6,15 +6,15 @@ module CSL
   
     let(:date) { Locale::Date.new }
     
-    it { should_not be_nil }
+    it { is_expected.not_to be_nil }
     
-    it { should be_text }
-    it { should_not be_numeric }
+    it { is_expected.to be_text }
+    it { is_expected.not_to be_numeric }
   
     describe '#parts' do
       
       it 'returns nil by default' do
-        date.parts.should be_empty
+        expect(date.parts).to be_empty
       end
       
     end
@@ -22,11 +22,11 @@ module CSL
     describe '#to_xml' do
       
       it 'returns <date/> by default' do
-        Locale::Date.new.to_xml.should == '<date/>'
+        expect(Locale::Date.new.to_xml).to eq('<date/>')
       end
 
       it 'returns <date form="numeric"/> for an empty numeric date' do
-        Locale::Date.new(:form => 'numeric').to_xml.should == '<date form="numeric"/>'
+        expect(Locale::Date.new(:form => 'numeric').to_xml).to eq('<date form="numeric"/>')
       end
       
     end
@@ -35,24 +35,24 @@ module CSL
 
   describe Locale::DatePart do
 
-    it { should_not be_nil }
+    it { is_expected.not_to be_nil }
     
-    it { should_not be_day }
-    it { should_not be_month }
-    it { should_not be_year }
+    it { is_expected.not_to be_day }
+    it { is_expected.not_to be_month }
+    it { is_expected.not_to be_year }
   
     describe '#to_xml' do
       
       it 'returns <date-part/> by default' do
-        Locale::DatePart.new.to_xml.should == "<date-part/>"
+        expect(Locale::DatePart.new.to_xml).to eq("<date-part/>")
       end
       
       it 'returns <date-part name="year"/> when the name is "year"' do
-        Locale::DatePart.new(:name => 'year').to_xml.should == '<date-part name="year"/>'
+        expect(Locale::DatePart.new(:name => 'year').to_xml).to eq('<date-part name="year"/>')
       end
       
       it 'returns <date-part name="month" form="numeric" prefix="-"/> for a numeric month with prefix "-"' do
-        Locale::DatePart.new(:name => 'month', :form => 'numeric', :prefix => '-').to_xml.should match(/(\s(name|form|prefix)="[^"]+"){3}/)
+        expect(Locale::DatePart.new(:name => 'month', :form => 'numeric', :prefix => '-').to_xml).to match(/(\s(name|form|prefix)="[^"]+"){3}/)
       end
       
     end
