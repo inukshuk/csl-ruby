@@ -28,7 +28,7 @@ module CSL
             end
 
             it 'returns a node with no attributes' do
-              expect(Parser.instance.parse(source)).not_to have_attributes
+              expect(Parser.instance.parse(source).attributes).to be_empty
             end
 
             it 'returns a node with no children' do
@@ -60,7 +60,7 @@ module CSL
             let(:source) { '<foo bar="x"/>' }
 
             it 'returns a node with attributes' do
-              expect(Parser.instance.parse(source)).to have_attributes
+              expect(Parser.instance.parse(source).attributes).not_to be_empty
             end
 
             it 'returns a node with attribute bar' do

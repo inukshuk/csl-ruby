@@ -3,7 +3,7 @@ gemspec
 
 group :development, :test do
   gem 'rake', '~>10.0'
-  gem 'rspec', '~>2.13'
+  gem 'rspec', '~>3.0'
   gem 'cucumber', '~>1.2'
   gem 'simplecov', '~>0.8', :require => false
   gem 'rubinius-coverage', :platform => :rbx
@@ -11,8 +11,14 @@ group :development, :test do
 end
 
 group :debug do
-  gem 'ruby-debug', :require => false, :platforms => [:jruby]
-  gem 'debugger', :require => false, :platforms => [:mri]
+  if RUBY_VERSION >= '2.0'
+    gem 'byebug', :require => false, :platforms => :mri
+  else
+    gem 'debugger', :require => false, :platforms => :mri
+  end
+
+  gem 'ruby-debug', :require => false, :platforms => :jruby
+
   gem 'rubinius-debugger', :require => false, :platforms => :rbx
   gem 'rubinius-compiler', :require => false, :platforms => :rbx
 end
