@@ -207,11 +207,11 @@ module CSL
         n1.children[0][:foo] = 'bar'
         expect(n1).to eq(n2)
       end
+
     end
   end
 
   describe TextNode do
-
     it { is_expected.not_to be nil }
     it { is_expected.not_to have_children }
     it { is_expected.to have_attributes(:attributes => {}) }
@@ -266,11 +266,6 @@ module CSL
 
         n2.text = 'foo'
         expect(n1).to eq(n2)
-      end
-
-      it 'text nodes are less than other nodes' do
-        expect(TextNode.new).to be < Node.new
-        expect(Node.new).not_to be < TextNode.new
       end
     end
   end

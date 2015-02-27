@@ -474,11 +474,12 @@ module CSL
       attribute?(:'quotes') && !!(attributes[:'quotes'].to_s =~ /^true$/i)
     end
 
+
     def <=>(other)
       return nil unless other.is_a?(Node)
-      return 1 if other.textnode?
-
-      [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
+      comparables <=> other.comparables
+    rescue
+      nil
     end
 
     # Returns the node' XML tags (including attribute assignments) as an
@@ -509,6 +510,18 @@ module CSL
     protected
 
     def match_conditions
+    end
+
+    def comparables
+      c = []
+
+      c << nodename
+      c << attributes
+
+      c << (textnode? ? text : '')
+      c << (has_children? ? children : [])
+
+      c
     end
 
     private
@@ -602,13 +615,6 @@ module CSL
 
     def tags
       ["<#{attribute_assignments.unshift(nodename).join(' ')}>#{to_s}</#{nodename}>"]
-    end
-
-    def <=>(other)
-      return nil unless other.is_a?(Node)
-      return -1 unless other.textnode?
-
-      [nodename, attributes, text] <=> [other.nodename, other.attributes, other.text]
     end
 
     def inspect
