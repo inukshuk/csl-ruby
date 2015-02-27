@@ -57,26 +57,26 @@ module CSL
           end
 
           describe 'for <foo bar="x"/>' do
-            let(:source) { '<foo bar="x"/>' }
+            let(:src) { '<foo bar="x"/>' }
 
             it 'returns a node with attributes' do
-              expect(Parser.instance.parse(source).attributes).not_to be_empty
+              expect(Parser.instance.parse(src).attributes).not_to be_empty
             end
 
             it 'returns a node with attribute bar' do
-              expect(Parser.instance.parse(source).attribute?(:bar)).to be
+              expect(Parser.instance.parse(src).attribute?(:bar)).to be
             end
 
             it 'bar should be "x"' do
-              expect(Parser.instance.parse(source)[:bar]).to eq('x')
+              expect(Parser.instance.parse(src)[:bar]).to eq('x')
             end
           end
 
           describe 'for <foo>Foo Bar</foo>' do
-            let(:source) { '<foo>Foo Bar</foo>' }
+            let(:src) { '<foo>Foo Bar</foo>' }
 
             it 'returns text node' do
-              expect(Parser.instance.parse(source)).to be_textnode
+              expect(Parser.instance.parse(src)).to be_textnode
             end
           end
 
