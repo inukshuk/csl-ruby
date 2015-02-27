@@ -237,6 +237,42 @@ module CSL
           .to eq('<text-node foo="bar">foo</text-node>')
       end
     end
+
+    describe 'comparing nodes' do
+      it 'empty nodes are equal' do
+        expect(TextNode.new).to eq(TextNode.new)
+      end
+
+      it 'considers node names' do
+        expect(TextNode.new).not_to eq(TextNode.new { |n| n.nodename = 'foo' })
+      end
+
+      it 'considers attributes' do
+        expect(TextNode.new(:foo => 'bar')).to eq(TextNode.new(:foo => 'bar'))
+        expect(TextNode.new(:foo => 'bar')).not_to eq(TextNode.new(:foo => 'baz'))
+
+        expect(TextNode.new(:foo => 'bar', :baz => 'qux'))
+          .not_to eq(TextNode.new(:foo => 'bar'))
+
+        expect(TextNode.new(:foo => 'bar', :baz => 'qux'))
+          .to eq(TextNode.new(:baz => 'qux', :foo => 'bar'))
+      end
+
+      it 'considers text' do
+        n1, n2 = TextNode.new, TextNode.new
+
+        n1.text = 'foo'
+        expect(n1).not_to eq(n2)
+
+        n2.text = 'foo'
+        expect(n1).to eq(n2)
+      end
+
+      it 'text nodes are less than other nodes' do
+        expect(TextNode.new).to be < Node.new
+        expect(Node.new).not_to be < TextNode.new
+      end
+    end
   end
 
 end

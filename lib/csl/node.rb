@@ -475,9 +475,10 @@ module CSL
     end
 
     def <=>(other)
+      return nil unless other.is_a?(Node)
+      return 1 if other.textnode?
+
       [nodename, attributes, children] <=> [other.nodename, other.attributes, other.children]
-    rescue
-      nil
     end
 
     # Returns the node' XML tags (including attribute assignments) as an
@@ -601,6 +602,13 @@ module CSL
 
     def tags
       ["<#{attribute_assignments.unshift(nodename).join(' ')}>#{to_s}</#{nodename}>"]
+    end
+
+    def <=>(other)
+      return nil unless other.is_a?(Node)
+      return -1 unless other.textnode?
+
+      [nodename, attributes, text] <=> [other.nodename, other.attributes, other.text]
     end
 
     def inspect
