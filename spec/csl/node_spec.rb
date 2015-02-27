@@ -6,7 +6,7 @@ module CSL
 
     it { is_expected.not_to be nil }
     it { is_expected.not_to have_children }
-    it { is_expected.to have_attributes(attributes: {}) }
+    it { is_expected.to have_attributes(:attributes => {}) }
 
     describe 'given a FooBarNode with attributes :foo and :bar and a TestNode without defined attributes' do
       before(:all) do
@@ -113,21 +113,32 @@ module CSL
         end
 
         it "returns a hash of the node's formatting attributes" do
-          expect(TestNode.new(:foo => 'foo', :'font-style' => 'italic').formatting_options).to eq({ :'font-style' => 'italic' })
+          expect(
+            TestNode.new(:foo => 'foo', :'font-style' => 'italic').formatting_options
+          ).to eq({ :'font-style' => 'italic' })
         end
       end
 
       describe '#values_at' do
         it 'FooBarNode accepts attribute names' do
-          expect(FooBarNode.new(:foo => 'Foo', :bar => 'Bar').values_at(:bar, :foo)).to eq(%w{ Bar Foo })
-          expect(FooBarNode.new(:foo => 'Foo').values_at(:bar, :foo)).to eq([nil, 'Foo'])
-          expect(FooBarNode.new(:foo => 'Foo').values_at(:unknown, :foo)).to eq([nil, 'Foo'])
+          expect(FooBarNode.new(:foo => 'Foo', :bar => 'Bar').values_at(:bar, :foo))
+            .to eq(%w{ Bar Foo })
+
+          expect(FooBarNode.new(:foo => 'Foo').values_at(:bar, :foo))
+            .to eq([nil, 'Foo'])
+
+          expect(FooBarNode.new(:foo => 'Foo').values_at(:unknown, :foo))
+            .to eq([nil, 'Foo'])
         end
 
         it 'TestNode accepts attribute names' do
-          expect(TestNode.new(:foo => 'Foo', :bar => 'Bar').values_at(:bar, :foo)).to eq(%w{ Bar Foo })
-          expect(TestNode.new(:foo => 'Foo').values_at(:bar, :foo)).to eq([nil, 'Foo'])
-          expect(TestNode.new(:foo => 'Foo').values_at(:unknown, :foo)).to eq([nil, 'Foo'])
+          expect(TestNode.new(:foo => 'Foo', :bar => 'Bar').values_at(:bar, :foo))
+            .to eq(%w{ Bar Foo })
+
+          expect(TestNode.new(:foo => 'Foo').values_at(:bar, :foo))
+            .to eq([nil, 'Foo'])
+          expect(TestNode.new(:foo => 'Foo').values_at(:unknown, :foo))
+            .to eq([nil, 'Foo'])
         end
       end
 
@@ -160,17 +171,54 @@ module CSL
         end
       end
     end
+
+    describe 'comparing nodes' do
+      it 'empty nodes are equal' do
+        expect(Node.new).to eq(Node.new)
+      end
+
+      it 'considers node names' do
+        expect(Node.new).not_to eq(Node.new { |n| n.nodename = 'foo' })
+      end
+
+      it 'considers attributes' do
+        expect(Node.new(:foo => 'bar')).to eq(Node.new(:foo => 'bar'))
+        expect(Node.new(:foo => 'bar')).not_to eq(Node.new(:foo => 'baz'))
+
+        expect(Node.new(:foo => 'bar', :baz => 'qux'))
+          .not_to eq(Node.new(:foo => 'bar'))
+
+        expect(Node.new(:foo => 'bar', :baz => 'qux'))
+          .to eq(Node.new(:baz => 'qux', :foo => 'bar'))
+      end
+
+      it 'considers children' do
+        n1, n2 = Node.new, Node.new
+
+        n1 << Node.new
+        expect(n1).not_to eq(n2)
+
+        n2 << Node.new
+        expect(n1).to eq(n2)
+
+        n2.children[0][:foo] = 'bar'
+        expect(n1).not_to eq(n2)
+
+        n1.children[0][:foo] = 'bar'
+        expect(n1).to eq(n2)
+      end
+    end
   end
 
   describe TextNode do
 
     it { is_expected.not_to be nil }
     it { is_expected.not_to have_children }
-    it { is_expected.to have_attributes(attributes: {}) }
+    it { is_expected.to have_attributes(:attributes => {}) }
 
     describe '.new' do
       it 'accepts a hash of attributes' do
-        expect(TextNode.new(:foo => 'bar').attributes).not_to be_empty
+        expect(TextNode.new(:foo => 'bar').attributes).to have_key(:foo)
       end
 
       it 'yields itself to the optional block' do
@@ -178,13 +226,15 @@ module CSL
       end
 
       it 'accepts hash and yields itself to the optional block' do
-        expect(TextNode.new(:foo => 'bar') { |n| n.text = 'foo' }.to_xml).to eq('<text-node foo="bar">foo</text-node>')
+        expect(TextNode.new(:foo => 'bar') { |n| n.text = 'foo' }.to_xml)
+          .to eq('<text-node foo="bar">foo</text-node>')
       end
     end
 
     describe '#pretty_print' do
       it 'prints the text node as XML' do
-        expect(TextNode.new(:foo => 'bar') { |n| n.text = 'foo' }.pretty_print).to eq('<text-node foo="bar">foo</text-node>')
+        expect(TextNode.new(:foo => 'bar') { |n| n.text = 'foo' }.pretty_print)
+          .to eq('<text-node foo="bar">foo</text-node>')
       end
     end
   end
