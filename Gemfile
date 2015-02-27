@@ -30,14 +30,13 @@ end
 group :extra do
   gem 'guard', '~>2.2'
   gem 'guard-rspec'
+  gem 'guard-cucumber'
   gem 'bond'
   gem 'diff-lcs'
   gem 'pry'
-  gem 'guard-cucumber'
-  gem 'rb-fsevent', '~>0.9', :platforms => [:ruby]
-
-  gem 'yard', '~>0.8', :platforms => [:mri]
-  gem 'redcarpet', '~>3.0', :platforms => [:mri]
+  gem 'rb-fsevent', '~>0.9', :platforms => :ruby
+  gem 'yard', '~>0.8', :platforms => :mri
+  gem 'redcarpet', '~>3.0', :platforms => :mri
 end
 
 group :rbx do
