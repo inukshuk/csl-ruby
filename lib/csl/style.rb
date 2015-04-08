@@ -145,7 +145,8 @@ module CSL
     end
 
     def load_related_style_from(uri)
-      # TODO try local first
+      Style.load(File.basename(uri))
+    rescue CSL::ParseError
       Style.load(uri)
     end
 
