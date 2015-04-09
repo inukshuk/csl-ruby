@@ -363,6 +363,5 @@ module CSL
     class Substitute < Node
     end
 
-
   end
 end
