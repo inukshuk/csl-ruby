@@ -98,6 +98,11 @@ module CSL
       it 'when setting an independet-parent link a style becomes dependent' do
         expect { @style.independent_parent_link = 'foo' }.to change { @style.independent? }
       end
+
+      it 'looks up independent styles parents locally first' do
+        @style.independent_parent_link = 'http://example.com/non-existent/styles/apa'
+        expect(@style.independent_parent).to eq Style.load('apa')
+      end
     end
 
     describe 'macros' do
