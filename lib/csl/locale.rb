@@ -432,10 +432,10 @@ module CSL
         when other.default_region?
           1
         else
-          region <=> other.region
+          region.to_s <=> other.region.to_s
         end
       else
-        language <=> other.language
+        language.to_s <=> other.language.to_s
       end
     end
 
