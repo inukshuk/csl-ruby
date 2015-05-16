@@ -106,8 +106,7 @@ module CSL
         if arguments[0].is_a?(Hash)
           arguments[0] = arguments[0].symbolize_keys
 
-          locale = arguments[0].delete(:lang) ||
-            arguments[0].delete(:'xml:lang')
+          locale = arguments[0].delete(:lang) || arguments[0].delete(:'xml:lang')
 
           attributes, options = arguments
         else
@@ -121,7 +120,7 @@ module CSL
 
       super(attributes, &nil)
 
-      set(locale) unless locale.nil?
+      set(locale) unless locale.blank?
 
       unless options.nil?
         children[:'style-options'] = StyleOptions.new(options)
