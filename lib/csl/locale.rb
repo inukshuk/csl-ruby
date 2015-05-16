@@ -373,7 +373,7 @@ module CSL
 
     def like?(other)
       return false unless other.is_a? Locale
-      return true  if universal? || other.universal?
+      return true  if other.universal?
 
       language == other.language
     end
