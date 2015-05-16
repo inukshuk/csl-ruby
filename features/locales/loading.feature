@@ -41,7 +41,7 @@ Feature: Loading CSL Locales
             <multiple>Ref.</multiple>
           </term>
           <term name="retrieved">abgerufen</term>
-          
+
           <!-- LONG ROLE FORMS -->
           <term name="author">
             <single/>

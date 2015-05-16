@@ -149,6 +149,29 @@ module CSL
           expect(locale).to have_dates
         end
       end
+
+      describe 'terms' do
+        let(:us) { Locale.load('en-US') }
+
+        it 'does not change the terms if none are set on either locale' do
+          expect { locale.merge!(Locale.new) }.not_to change { locale.terms.to_s }
+        end
+
+        it 'overrides terms with those of the other locale' do
+          expect(locale).not_to have_terms
+
+          locale.merge! us
+          expect(locale).to have_terms
+        end
+
+        it 'makes copies of the terms' do
+          locale.merge! us
+          expect(locale).to have_terms
+
+          expect(locale.terms.first).to eq(us.terms.first)
+          expect(locale.terms.first).not_to be(us.terms.first)
+        end
+      end
     end
 
     describe '#legacy?' do

@@ -389,6 +389,7 @@ module CSL
       others.each do |other|
         merge_options other
         merge_dates other
+        merge_terms other
       end
 
       self
@@ -481,6 +482,16 @@ module CSL
         other.each_date do |date|
           add_child date.deep_copy
         end
+      end
+
+      self
+    end
+
+    def merge_terms(other)
+      return self unless other.has_terms?
+
+      other.each_term do |term|
+        store term.deep_copy
       end
 
       self
