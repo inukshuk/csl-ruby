@@ -1,7 +1,7 @@
 Feature: Parse CSL localized terms
   As a hacker of CSL styles
   I want to be able to parse CSL localized terms
-  
+
   Scenario: A few standard terms
     When I parse the CSL string
       """
