@@ -371,8 +371,15 @@ module CSL
       language && language == Locale.languages[region]
     end
 
-    def same?(other)
+    def like?(other)
+      return false unless other.is_a? Locale
+      return true  if universal? || other.universal?
+
       language == other.language
+    end
+
+    def universal?
+      language.nil?
     end
 
     def validate
