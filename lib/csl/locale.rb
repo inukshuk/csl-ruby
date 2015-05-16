@@ -101,13 +101,13 @@ module CSL
     def initialize(*arguments)
       case arguments.length
       when 0
-        locale, attributes, options = Locale.default, {}, nil
+        locale, attributes, options = nil, {}, nil
       when 1
         if arguments[0].is_a?(Hash)
           arguments[0] = arguments[0].symbolize_keys
 
           locale = arguments[0].delete(:lang) ||
-            arguments[0].delete(:'xml:lang') || Locale.default
+            arguments[0].delete(:'xml:lang')
 
           attributes, options = arguments
         else
@@ -369,6 +369,10 @@ module CSL
     #   language for its region
     def default_language?
       language && language == Locale.languages[region]
+    end
+
+    def same?(other)
+      language == other.language
     end
 
     def validate

@@ -48,12 +48,12 @@ module CSL
     describe '.new' do
       it { is_expected.not_to be_nil }
 
-      it 'defaults to default language' do
-        expect(Locale.new.language).to eq(Locale.default.split(/-/)[0].to_sym)
+      it 'has no language' do
+        expect(Locale.new.language).to be_nil
       end
 
-      it 'defaults to default region' do
-        expect(Locale.new.region).to eq(Locale.default.split(/-/)[1].to_sym)
+      it 'has no region' do
+        expect(Locale.new.region).to be_nil
       end
 
       it 'contains no dates by default' do
@@ -85,6 +85,12 @@ module CSL
 
       end
 
+    end
+
+    describe '.parse' do
+      it 'does not set a default language' do
+        expect(Locale.parse('<locale/>').language).to be_nil
+      end
     end
 
     describe '#set' do
