@@ -484,7 +484,7 @@ module CSL
       return self unless other.has_dates?
 
       if has_dates?
-        other.each_date do |date|
+        other.dates do |date|
           delete_children each_date.select { |d| d[:form] == date[:form] }
           add_child date.deep_copy
         end
