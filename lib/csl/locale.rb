@@ -347,7 +347,11 @@ module CSL
     # block is given, an enumerator is returned instead.
     def each_date
       if block_given?
-        date.each(&Proc.new)
+        if date.is_a? CSL::Node
+          yield date
+        else
+          date.each(&Proc.new)
+        end
       else
         enum_for :each_date
       end
@@ -485,7 +489,7 @@ module CSL
 
       if has_dates?
         other.each_date do |date|
-          delete_children each_date.select { |d| d[:form] == date[:form] }
+          delete_children(*each_date.select { |d| d[:form] == date[:form] })
           add_child date.deep_copy
         end
       else

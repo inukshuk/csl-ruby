@@ -388,7 +388,7 @@ module CSL
           def empty?
             all?(&:nil?)
           end
-          
+
           def select(&block)
             each.select(&block)
           end

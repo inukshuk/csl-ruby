@@ -154,6 +154,15 @@ module CSL
           locale.merge!(Locale.load('en-US'))
           expect(locale).to have_dates
         end
+
+        it 'merges dates of both locales' do
+          locale << Locale::Date.new(:form => 'numeric')
+
+          other = Locale.load('en-US')
+          locale.merge! other
+
+          expect(locale.dates.length).to eq(other.dates.length)
+        end
       end
 
       describe 'terms' do
