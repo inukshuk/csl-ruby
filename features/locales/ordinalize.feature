@@ -642,7 +642,7 @@ Feature: Converting numbers to ordinals using CSL locales
     Given the locale:
       """
       <?xml version="1.0" encoding="utf-8"?>
-      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="de">
+      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="se">
         <terms>
         <term name="ordinal">:e</term>
         <term name="ordinal-01">:a</term>
