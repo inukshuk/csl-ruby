@@ -130,7 +130,7 @@ Feature: Converting numbers to ordinals using CSL locales
       <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="de">
         <terms>
           <term name="ordinal">.</term>
-          
+
           <term name="long-ordinal-01">erstes</term>
           <term name="long-ordinal-01" gender-form="feminine">
             <single>erste</single>
@@ -262,9 +262,9 @@ Feature: Converting numbers to ordinals using CSL locales
       <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="nl">
         <terms>
           <term name="ordinal">ste</term>
-          
+
           <term name="ordinal-00" match="whole-number">de</term>
-          
+
           <term name="ordinal-02" match="last-two-digits">de</term>
           <term name="ordinal-03" match="last-two-digits">de</term>
           <term name="ordinal-04" match="last-two-digits">de</term>
@@ -636,3 +636,62 @@ Feature: Converting numbers to ordinals using CSL locales
       | 21º     |
       | 21º     |
       | 1001º   |
+
+  @v1.0.1 @locale @ordinals @i18n @gender @lang-se
+  Scenario: Gendered German CSL 1.0.1 locales
+    Given the locale:
+      """
+      <?xml version="1.0" encoding="utf-8"?>
+      <locale xmlns="http://purl.org/net/xbiblio/csl" version="1.0.1" xml:lang="de">
+        <terms>
+        <term name="ordinal">:e</term>
+        <term name="ordinal-01">:a</term>
+        <term name="ordinal-02">:a</term>
+
+          <term name="long-ordinal-01">första</term>
+          <term name="long-ordinal-01" gender-form="masculine">förste</term>
+          <term name="long-ordinal-02">andra</term>
+          <term name="long-ordinal-02" gender-form="masculine">andre</term>
+        </terms>
+      </locale>
+      """
+    When I ordinalize these numbers:
+      | num   | form  | gender    | number   |
+      | 1     |       |           |          |
+      | 2     |       |           |          |
+      | 3     |       |           |          |
+      | 4     |       |           |          |
+      | 5     |       |           |          |
+      | 6     |       |           |          |
+      | 7     |       |           |          |
+      | 8     |       |           |          |
+      | 9     |       |           |          |
+      | 10    |       |           |          |
+      | 11    |       |           |          |
+      | 12    |       |           |          |
+      | 13    |       |           |          |
+      | 101   |       |           |          |
+      | 1     | long  |           |          |
+      | 2     | long  |           |          |
+      | 1     | long  | masculine |          |
+      | 2     | long  | masculine |          |
+    Then the ordinals should be:
+      | ordinal |
+      | 1:a     |
+      | 2:a     |
+      | 3:e     |
+      | 4:e     |
+      | 5:e     |
+      | 6:e     |
+      | 7:e     |
+      | 8:e     |
+      | 9:e     |
+      | 10:e    |
+      | 11:a    |
+      | 12:a    |
+      | 13:e    |
+      | 101:a   |
+      | första  |
+      | andra   |
+      | förste  |
+      | andre   |
