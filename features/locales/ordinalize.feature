@@ -638,7 +638,7 @@ Feature: Converting numbers to ordinals using CSL locales
       | 1001º   |
 
   @v1.0.1 @locale @ordinals @i18n @gender @lang-se
-  Scenario: Gendered German CSL 1.0.1 locales
+  Scenario: Gendered Swedish CSL 1.0.1 locales
     Given the locale:
       """
       <?xml version="1.0" encoding="utf-8"?>
@@ -647,6 +647,8 @@ Feature: Converting numbers to ordinals using CSL locales
         <term name="ordinal">:e</term>
         <term name="ordinal-01">:a</term>
         <term name="ordinal-02">:a</term>
+        <term name="ordinal-11">:e</term>
+        <term name="ordinal-12">:e</term>
 
           <term name="long-ordinal-01">första</term>
           <term name="long-ordinal-01" gender-form="masculine">förste</term>
@@ -670,7 +672,14 @@ Feature: Converting numbers to ordinals using CSL locales
       | 11    |       |           |          |
       | 12    |       |           |          |
       | 13    |       |           |          |
+      | 21    |       |           |          |
+      | 22    |       |           |          |
       | 101   |       |           |          |
+      | 102   |       |           |          |
+      | 111   |       |           |          |
+      | 112   |       |           |          |
+      | 131   |       |           |          |
+      | 132   |       |           |          |
       | 1     | long  |           |          |
       | 2     | long  |           |          |
       | 1     | long  | masculine |          |
@@ -687,10 +696,17 @@ Feature: Converting numbers to ordinals using CSL locales
       | 8:e     |
       | 9:e     |
       | 10:e    |
-      | 11:a    |
-      | 12:a    |
+      | 11:e    |
+      | 12:e    |
       | 13:e    |
+      | 21:a    |
+      | 22:a    |
       | 101:a   |
+      | 102:a   |
+      | 111:e   |
+      | 112:e   |
+      | 131:a   |
+      | 132:a   |
       | första  |
       | andra   |
       | förste  |
