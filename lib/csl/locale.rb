@@ -409,6 +409,12 @@ module CSL
       self
     end
 
+    def reverse_merge(other)
+      merged = merge(other)
+      merged.set(locale)
+      merged
+    end
+
 
     # Locales are sorted first by language, then by region; sort order is
     # alphabetical with the following exceptions: the default locale is
