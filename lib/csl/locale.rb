@@ -410,7 +410,7 @@ module CSL
     end
 
     def reverse_merge(other)
-      merged = merge(other)
+      merged = other.merge(self)
       merged.language = language
       merged.region = region
       merged
