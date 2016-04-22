@@ -27,7 +27,7 @@ module CSL
     end
 
     def delete_children(*nodes)
-      nodes.each do |node|
+      nodes.flatten.each do |node|
         delete_child node
       end
     end
