@@ -538,7 +538,7 @@ module CSL
     def match_conditions_for(name, conditions)
       case name
       when Node
-        [name.nodename, name.attributes.to_hash]
+        conditions, name = name.attributes.to_hash, name.nodename
       when Hash
         conditions, name = name, nodename
       when Symbol
