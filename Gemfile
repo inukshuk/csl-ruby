@@ -5,7 +5,6 @@ group :development, :test do
   gem 'rake', '~>10.0'
   gem 'rspec', '~>3.0'
   gem 'cucumber', '~>1.2'
-  gem 'coveralls', :require => false
 end
 
 group :debug do
@@ -35,6 +34,10 @@ group :extra do
   gem 'rb-fsevent', '~>0.9', :platforms => :ruby
   gem 'yard', '~>0.8', :platforms => :mri
   gem 'redcarpet', '~>3.0', :platforms => :mri
+end
+
+group :coverage do
+  gem 'coveralls', :require => false
   gem 'simplecov', '~>0.8', :require => false
   gem 'rubinius-coverage', :platform => :rbx
 end
