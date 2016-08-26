@@ -5,8 +5,6 @@ group :development, :test do
   gem 'rake', '~>10.0'
   gem 'rspec', '~>3.0'
   gem 'cucumber', '~>1.2'
-  gem 'simplecov', '~>0.8', :require => false
-  gem 'rubinius-coverage', :platform => :rbx
   gem 'coveralls', :require => false
 end
 
@@ -37,14 +35,14 @@ group :extra do
   gem 'rb-fsevent', '~>0.9', :platforms => :ruby
   gem 'yard', '~>0.8', :platforms => :mri
   gem 'redcarpet', '~>3.0', :platforms => :mri
+  gem 'simplecov', '~>0.8', :require => false
+  gem 'rubinius-coverage', :platform => :rbx
 end
 
 group :rbx do
-  platform :rbx do
-    gem 'rubysl', '~>2.0'
-    gem 'json', '~>1.8'
-    gem 'racc'
-  end
+  gem 'rubysl', '~>2.0', :platforms => :rbx
+  gem 'racc', :platforms => :rbx
+  gem 'json', '~>1.8', :platforms => :rbx
 end
 
 # vim: syntax=ruby
