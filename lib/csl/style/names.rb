@@ -90,14 +90,14 @@ module CSL
         limit = truncate_when(subsequent)
         count = truncate_at(subsequent)
 
-        !count.zero? && !limit.zero? && names.to_i >= limit
+        !count.nil? && !limit.zero? && names.to_i >= limit
       end
 
       # @param [Enumerable] names
       # @return [Array] the truncated list of names
       def truncate(names, subsequent = false)
         count = truncate_at(subsequent)
-        count = names.length if count.zero?
+        count = names.length if count.nil?
         names.take count
       end
 
@@ -111,9 +111,9 @@ module CSL
 
       def truncate_at(subsequent = false)
         if subsequent && attribute?(:'et-al-subsequent-use-first')
-          attributes.fetch(:'et-al-subsequent-use-first').to_i
+          attributes.fetch(:'et-al-subsequent-use-first')
         else
-          attributes.fetch(:'et-al-use-first').to_i
+          attributes.fetch(:'et-al-use-first')
         end
       end
 
