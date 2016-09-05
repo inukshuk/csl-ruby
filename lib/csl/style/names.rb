@@ -96,8 +96,7 @@ module CSL
       # @return [Array] the truncated list of names
       def truncate(names, subsequent = false)
         limit = truncate_at(subsequent)
-
-        return [] if limit.zero?
+        limit = names.length if limit.zero?
         names.take limit
       end
 
@@ -111,9 +110,9 @@ module CSL
 
       def truncate_at(subsequent = false)
         if subsequent && attribute?(:'et-al-subsequent-use-first')
-          attributes.fetch(:'et-al-subsequent-use-first', 1).to_i
+          attributes.fetch(:'et-al-subsequent-use-first').to_i
         else
-          attributes.fetch(:'et-al-use-first', 1).to_i
+          attributes.fetch(:'et-al-use-first').to_i
         end
       end
 
