@@ -88,16 +88,17 @@ module CSL
       def truncate?(names, subsequent = false)
         names = names.length if names.respond_to?(:length)
         limit = truncate_when(subsequent)
+        count = truncate_at(subsequent)
 
-        !limit.zero? && names.to_i >= limit
+        !count.zero? && !limit.zero? && names.to_i >= limit
       end
 
       # @param [Enumerable] names
       # @return [Array] the truncated list of names
       def truncate(names, subsequent = false)
-        limit = truncate_at(subsequent)
-        limit = names.length if limit.zero?
-        names.take limit
+        count = truncate_at(subsequent)
+        count = names.length if count.zero?
+        names.take count
       end
 
       def truncate_when(subsequent = false)
