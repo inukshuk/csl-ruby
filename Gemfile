@@ -17,13 +17,8 @@ group :optional do
 end
 
 group :extra do
-  gem 'guard'
-  gem 'guard-rspec'
-  gem 'guard-cucumber'
-  gem 'bond'
   gem 'diff-lcs'
   gem 'pry'
-  gem 'rb-fsevent', platforms: :ruby
   gem 'yard', platforms: :mri
   gem 'redcarpet', platforms: :mri
 end

@@ -8,6 +8,8 @@ EXCLUDES = %w{
   .coveralls.yml
   .travis.yml
   .csl.gemspec
+  .simplecov
+  .rspec
 } | `git ls-files -- {spec,features}/*`.split("\n")
 
 Gem::Specification.new do |s|
