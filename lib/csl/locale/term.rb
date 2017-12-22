@@ -441,7 +441,7 @@ module CSL
         when options.key?(:number) || options.key?('number')
           key = options[:number] || options['number']
 
-          if key.is_a?(Fixnum) || key.to_s =~ /^[+-]?\d+$/
+          if key.is_a?(Integer) || key.to_s =~ /^[+-]?\d+$/
             key.to_i > 1
           else
             !key.blank? && key.to_s =~ /^plural/i
