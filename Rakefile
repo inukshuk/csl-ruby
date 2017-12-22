@@ -40,7 +40,7 @@ begin
   task :test_with_coveralls => [:spec, :cucumber, 'coveralls:push']
 rescue LoadError => e
   # ignore
-end
+end if ENV['CI']
 
 task :release do |t|
   system "gem build csl.gemspec"
