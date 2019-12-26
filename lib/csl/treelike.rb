@@ -17,9 +17,9 @@ module CSL
       @nodename ||= self.class.name.split(/::/)[-1].gsub(/([[:lower:]])([[:upper:]])/, '\1-\2').downcase
     end
 
-    def each_child
+    def each_child(&block)
       if block_given?
-        children.each(&Proc.new)
+        children.each(&block)
         self
       else
         enum_for :each_child
@@ -167,11 +167,11 @@ module CSL
     end
 
     # Traverses the node's sub-tree in depth-first order.
-    def each_descendant
+    def each_descendant(&block)
       if block_given?
         each_child do |child|
           yield child
-          child.each_descendant(&Proc.new)
+          child.each_descendant(&block)
         end
 
         self
@@ -376,9 +376,9 @@ module CSL
 
           # Iterates through all children. Nil values are skipped and Arrays
           # expanded.
-          def each
+          def each(&block)
             if block_given?
-              order.each(&Proc.new)
+              order.each(&block)
               self
             else
               to_enum

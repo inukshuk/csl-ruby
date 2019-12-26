@@ -268,9 +268,9 @@ module CSL
     alias has_defaults? has_default_attributes?
 
     # Iterates through the Node's attributes
-    def each
+    def each(&block)
       if block_given?
-        attributes.each_pair(&Proc.new)
+        attributes.each_pair(&block)
         self
       else
         to_enum
