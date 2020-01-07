@@ -6,7 +6,6 @@ format to describe the formatting of citations, notes and bibliographies.
 
 [![Build Status](https://secure.travis-ci.org/inukshuk/csl-ruby.png)](http://travis-ci.org/inukshuk/csl-ruby)
 [![Coverage Status](https://coveralls.io/repos/inukshuk/csl-ruby/badge.png?branch=master)](https://coveralls.io/r/inukshuk/csl-ruby?branch=master)
-[![Dependency Status](https://gemnasium.com/inukshuk/csl-ruby.png)](https://gemnasium.com/inukshuk/csl-ruby)
 
 Styles and Locales
 ------------------
