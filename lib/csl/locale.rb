@@ -330,9 +330,9 @@ module CSL
     #
     # Calls block once for each term defined by the locale. If no block is
     # given, an enumerator is returned instead.
-    def each_term
+    def each_term(&block)
       if block_given?
-        terms.each(&Proc.new)
+        terms.each(&block)
         self
       else
         enum_for :each_term
@@ -345,12 +345,12 @@ module CSL
     #
     # Calls block once for each date format defined by the locale. If no
     # block is given, an enumerator is returned instead.
-    def each_date
+    def each_date(&block)
       if block_given?
         if date.is_a? CSL::Node
           yield date
         else
-          date.each(&Proc.new)
+          date.each(&block)
         end
       else
         enum_for :each_date
