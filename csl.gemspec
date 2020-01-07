@@ -34,7 +34,6 @@ Gem::Specification.new do |s|
 
   s.files        = `git ls-files`.split("\n") - EXCLUDES
   s.require_path = 'lib'
-  s.has_rdoc     = 'yard'
 end
 
 # vim: syntax=ruby
