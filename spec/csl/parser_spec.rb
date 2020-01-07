@@ -86,27 +86,31 @@ module CSL
 
           describe 'xml comments' do
             it 'ignores comment-only documents' do
-              expect(Parser.instance.parse("<!--x></x-->")).to be_nil
+              expect(Parser.instance.parse('<!--x></x-->')).to be_nil
             end
 
             it 'ignores comments in normal nodes' do
-              expect(Parser.instance.parse("<x><!-- comment --></x>")).not_to have_children
+              expect(Parser.instance.parse('<x><!-- comment --></x>'))
+                .not_to have_children
             end
 
             it 'ignores comments in text nodes' do
-              node = Parser.instance.parse("<x>foo<!-- comment --></x>")
+              node = Parser.instance.parse('<x>foo<!-- comment --></x>')
               expect(node).to be_textnode
               expect(node).not_to have_children
               expect(node.text).to eq('foo')
             end
-
           end
 
+          describe 'xml entities in attributes' do
+            it 'are not decoded' do
+              expect(
+                Parser.instance.parse('<foo bar="%lt;"/>')[:bar]
+              ).to eq('%lt;')
+            end
+          end
         end
-
       end
     end
-
   end
-
 end
