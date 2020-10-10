@@ -230,7 +230,11 @@ module CSL
     %w{ ancestors descendants siblings root depth }.each do |name|
       ivar = "@#{name}"
       define_method("#{name}!") do
-        instance_variable_get(ivar) || send(name)
+        if instance_variable_defined?(ivar)
+          instance_variable_get(ivar) 
+        else 
+          send(name)
+        end
       end
     end
 
