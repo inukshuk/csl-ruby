@@ -12,7 +12,7 @@ module CSL
     # the Group calls a variable (either directly or via a macro), and
     # b) all variables that are called are empty.
     class Group < Node
-      attr_struct(*Schema.attr(:formatting, :delimiter, :prefix, :suffix))
+      attr_struct(*Schema.attr(:formatting, :delimiter))
       
       def delimiter
         attributes.fetch(:delimiter, '')
