@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Sylvester Keil']
   s.email       = ['http://sylvester.keil.or.at']
   s.homepage    = 'https://github.com/inukshuk/csl-ruby'
-  s.license     = 'AGPL-3.0'
+  s.licenses     = ['AGPL-3.0','BSD-2-Clause']
   s.date        = Time.now.strftime('%Y-%m-%d')
   s.summary     = 'A Ruby CSL parser and library'
   s.description = <<~EOS
