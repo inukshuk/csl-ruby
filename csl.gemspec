@@ -30,7 +30,8 @@ Gem::Specification.new do |s|
 
 
   s.required_ruby_version = '>= 2.2'
-  s.add_dependency('namae', ['~>1.0'])
+  s.add_runtime_dependency('namae', ['~>1.0'])
+  s.add_runtime_dependency('rexml')
 
   s.files        = `git ls-files`.split("\n") - EXCLUDES
   s.require_path = 'lib'
