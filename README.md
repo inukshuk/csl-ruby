@@ -4,9 +4,6 @@ CSL-Ruby provides a Ruby parser and a comprehensive API for the
 [Citation Style Language](http://citationstyles.org) (CSL), an XML-based
 format to describe the formatting of citations, notes and bibliographies.
 
-[![Build Status](https://secure.travis-ci.org/inukshuk/csl-ruby.png)](http://travis-ci.org/inukshuk/csl-ruby)
-[![Coverage Status](https://coveralls.io/repos/inukshuk/csl-ruby/badge.png?branch=master)](https://coveralls.io/r/inukshuk/csl-ruby?branch=master)
-
 Styles and Locales
 ------------------
 You can load CSL styles and locales by passing a respective XML string, file

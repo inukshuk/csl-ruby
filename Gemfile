@@ -24,7 +24,6 @@ group :extra do
 end
 
 group :coverage do
-  gem 'coveralls', require: false if ENV['CI']
   gem 'simplecov', require: false
 end
 
