@@ -34,14 +34,6 @@ Cucumber::Rake::Task.new(:cucumber) do |t|
   t.profile = 'default'
 end
 
-begin
-  require 'coveralls/rake/task'
-  Coveralls::RakeTask.new
-  task :test_with_coveralls => [:spec, :cucumber, 'coveralls:push']
-rescue LoadError => e
-  # ignore
-end if ENV['CI']
-
 task :release do |t|
   system "gem build csl.gemspec"
   system "git tag #{CSL::VERSION}"
