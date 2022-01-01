@@ -2,46 +2,172 @@ module CSL
 
   class Schema
 
-    @version         = '1.0.1'.freeze
+    @version         = '1.0.2'.freeze
     @major_version   = '1.0'.freeze
 
     @namespace = 'http://purl.org/net/xbiblio/csl'.freeze
     @preamble  = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n".freeze
 
-    @default_license = 'http://creativecommons.org/licenses/by-sa/3.0/'
+    @default_license = 'https://creativecommons.org/licenses/by-sa/4.0/'
     @default_rights_string =
-      'This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License'
+      'This work is licensed under a Creative Commons Attribution-ShareAlike 4.0 International License.'
 
-    @types = %w{ article article-journal article-magazine article-newspaper
-      bill book broadcast chapter entry entry-dictionary entry-encyclopedia
-      figure graphic interview legal_case legislation manuscript map
-      motion_picture musical_score pamphlet paper-conference patent
-      personal_communication post post-weblog report review review-book song
-      speech thesis treaty webpage }.map(&:to_sym).freeze
+    @types = %w{
+      article
+      article-journal
+      article-magazine
+      article-newspaper
+      bill
+      book
+      broadcast
+      chapter
+      classic
+      collection
+      dataset
+      document
+      entry
+      entry-dictionary
+      entry-encyclopedia
+      event
+      figure
+      graphic
+      hearing
+      interview
+      legal_case
+      legislation
+      manuscript
+      map
+      motion_picture
+      musical_score
+      pamphlet
+      paper-conference
+      patent
+      performance
+      periodical
+      personal_communication
+      post
+      post-weblog
+      regulation
+      report
+      review
+      review-book
+      software
+      song
+      speech
+      standard
+      thesis
+      treaty
+      webpage
+    }.map(&:to_sym).freeze
 
     @variables = Hash.new { |h,k| h.fetch(k.to_sym, nil) }.merge({
       :date => %w{
-        accessed container event-date issued original-date submitted
+        accessed
+        available-date
+        event-date
+        issued
+        original-date
+        submitted
       },
 
       :names => %w{
-        author collection-editor composer container-author recipient editor
-        editorial-director illustrator interviewer original-author translator
+        author
+        chair
+        collection-editor
+        compiler
+        composer
+        container-author
+        contributor
+        creator
+        curator
+        editor
+        editorial-director
+        executive-producer
+        guest
+        host
+        illustrator
+        interviewer
+        narrator
+        organizer
+        original-author
+        performer
+        producer
+        recipient
+        translator
+        writer
       },
 
       :number => %w{
-        chapter-number collection-number edition issue number number-of-pages
-        number-of-volumes volume
+        chapter-number
+        citation-number
+        collection-number
+        edition
+        first-reference-note-number
+        issue
+        locator
+        number
+        number-of-pages
+        number-of-volumes
+        page
+        page-first
+        part-number
+        printing-number
+        section
+        supplement-number
+        version
+        volume
       },
 
       :text => %w{
-        abstract annote archive archive_location archive-place authority
-        call-number citation-label citation-number collection-title
-        container-title container-title-short dimensions DOI event event-place
-        first-reference-note-number genre ISBN ISSN jurisdiction keyword
-        locator medium note original-publisher original-publisher-place
-        original-title page page-first PMID PMCID publisher publisher-place
-        references section source status title title-short URL version
+        abstract
+        annote
+        archive
+        archive_collection
+        archive_location
+        archive-place
+        authority
+        call-number
+        citation-key
+        citation-label
+        collection-title
+        container-title
+        container-title-short
+        dimensions
+        division
+        DOI
+        event
+        event-place
+        event-title
+        genre
+        ISBN
+        ISSN
+        jurisdiction
+        keyword
+        language
+        license
+        medium
+        note
+        original-publisher
+        original-publisher-place
+        original-title
+        part
+        part-title
+        PMCID
+        PMID
+        printing
+        publisher
+        publisher-place
+        references
+        reviewed-genre
+        reviewed-title
+        scale
+        source
+        status
+        title
+        title-short
+        translated-title
+        URL
+        volume-title
         year-suffix
       }
     })
