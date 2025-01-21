@@ -318,7 +318,7 @@ module CSL
           case
           when node =~ /^\s*</
             @validator[@schema, node]
-          when File.exists?(node)
+          when File.exist?(node)
             @validator[@schema, File.open(node, 'r:UTF-8')]
           else
             glob = Dir.glob(node)
