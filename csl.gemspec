@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
 
   s.required_ruby_version = '>= 2.2'
   s.add_dependency('namae', ['~> 1.2'])
-  s.add_dependency('rexml')
+  s.add_dependency('rexml', '~> 3.0')
   s.add_dependency('forwardable', '~> 1.3')
   s.add_dependency('open-uri', '< 1.0')
   s.add_dependency('singleton', '< 1.0')
