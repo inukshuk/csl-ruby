@@ -4,6 +4,7 @@ gemspec
 group :development, :test do
   gem 'rake'
   gem 'rspec'
+  gem 'stringio'
   gem 'cucumber'
 end
 

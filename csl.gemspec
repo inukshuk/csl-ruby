@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
   s.authors     = ['Sylvester Keil']
   s.email       = ['http://sylvester.keil.or.at']
   s.homepage    = 'https://github.com/inukshuk/csl-ruby'
-  s.licenses     = ['AGPL-3.0','BSD-2-Clause']
+  s.licenses     = ['BSD-2-Clause']
   s.date        = Time.now.strftime('%Y-%m-%d')
   s.summary     = 'A Ruby CSL parser and library'
   s.description = <<~EOS
@@ -30,8 +30,13 @@ Gem::Specification.new do |s|
 
 
   s.required_ruby_version = '>= 2.2'
-  s.add_runtime_dependency('namae', ['~>1.0'])
-  s.add_runtime_dependency('rexml')
+  s.add_dependency('namae', ['~> 1.2'])
+  s.add_dependency('rexml')
+  s.add_dependency('forwardable', '~> 1.3')
+  s.add_dependency('open-uri', '< 1.0')
+  s.add_dependency('singleton', '< 1.0')
+  s.add_dependency('set', '~> 1.1')
+  s.add_dependency('time', '< 1.0')
 
   s.files        = `git ls-files`.split("\n") - EXCLUDES
   s.require_path = 'lib'
