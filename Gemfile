@@ -8,7 +8,7 @@ group :development, :test do
 end
 
 group :debug do
-  gem 'byebug', require: false, platforms: :mri
+  gem 'debug', '>= 1.0.0', require: false, platforms: :mri
   gem 'ruby-debug', require: false, platforms: :jruby
 end
 
@@ -25,6 +25,7 @@ end
 
 group :coverage do
   gem 'simplecov', require: false
+  gem 'simplecov-lcov', require: false
 end
 
 # vim: syntax=ruby

@@ -6,11 +6,13 @@ end
 
 begin
   case
-  when RUBY_PLATFORM < 'java'
-    require 'debug'
-    Debugger.start
+  when RUBY_PLATFORM == 'java'
+    # require 'debug'
+    # Debugger.start
+  when defined?(RUBY_ENGINE) && RUBY_ENGINE == 'rbx'
+    require 'rubinius/debugger'
   else
-    require 'byebug'
+    require 'debug'
   end
 rescue LoadError
   # ignore
