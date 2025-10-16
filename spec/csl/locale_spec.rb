@@ -39,6 +39,7 @@ module CSL
         '-BR' => 'pt-BR',
         'de-AT' => 'de-AT',
         'de-aT' => 'de-AT',
+        'bal-PK' => 'bal-PK',
         'sr-RS' => 'sr-Latn-RS',
         'sr' => 'sr-Latn-RS',
         '-RS' => 'sr-Latn-RS',
@@ -117,6 +118,11 @@ module CSL
       it 'when passed "-AT" sets language to :de and region to :AT' do
         locale.set('-AT')
         expect([locale.language, locale.region, locale.script]).to eq([:de, :AT, nil])
+      end
+
+      it 'when passed "bal-PK" sets language to :bal and region to :PK' do
+        locale.set('bal-PK')
+        expect([locale.language, locale.region, locale.script]).to eq([:bal, :PK, nil])
       end
 
       it 'when passed "sr" sets language, region, and script' do

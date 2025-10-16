@@ -15,7 +15,7 @@ module CSL
     @extension = '.xml'.freeze
     @prefix = 'locales-'.freeze
 
-    @tag_pattern = /^[a-z]{2}(-[a-z]{4})?(-[a-z]{2})?|-[a-z]{2}$/i
+    @tag_pattern = /^[a-z]{2,3}(-[a-z]{4})?(-[a-z]{2})?|-[a-z]{2}$/i
 
     # Default languages/regions.
     # Auto-detection is based on these lists.
