@@ -15,7 +15,7 @@ module CSL
     @extension = '.xml'.freeze
     @prefix = 'locales-'.freeze
 
-    @tag_pattern = /^[a-z]{2}(-[A-Z]{2})?|-[A-Z]{2}$/
+    @tag_pattern = /^[a-z]{2}(-[a-z]{4})?(-[a-z]{2})?|-[a-z]{2}$/i
 
     # Default languages/regions.
     # Auto-detection is based on these lists.
@@ -29,12 +29,16 @@ module CSL
       AT de BR pt CA en CH de GB en TW zh
     }.map(&:to_sym)]).freeze
 
+    @scripts = Hash[*%w{
+      sr Latn
+    }.map(&:to_sym)].freeze
+
 
     class << self
       include Loader
 
       attr_accessor :default
-      attr_reader :languages, :regions
+      attr_reader :languages, :regions, :scripts
 
       def load(input = nil)
         input ||= Locale.default
@@ -42,12 +46,13 @@ module CSL
         super(input)
       end
 
-      # Normalizes an IETF tag; adds a language's default region or a
-      # region's default language.
+      # Normalizes an IETF tag; adds default language, region, script.
       #
       # @example
       #   Locale.normalize("en")  #-> "en-US"
       #   Locale.normalize("-BR") #-> "pt-BR"
+      #   Locale.normalize("de-at") #-> "de-AT"
+      #   Locale.normalize("sr") #-> "sr-Latn-RS"
       #
       # @raise [ArgumentError] if the passed-in string is no IETF tag
       #
@@ -56,15 +61,32 @@ module CSL
       def normalize(tag)
         tag = tag.to_s.strip
 
-        raise ArgumentError, "not a valid IETF tag: #{tag.inspect}" unless
-          tag =~ @tag_pattern
+        unless tag =~ @tag_pattern
+          raise ArgumentError, "unsupported IETF tag: #{tag.inspect}"
+        end
 
-        language, region = tag.split(/-/)
+        language, *rs = tag.split(/-/)
+        region, script = rs.reverse
 
-        return [language, regions[language.to_sym]].compact.join('-') if region.nil?
-        return [languages[region.to_sym], region].join('-') if language.empty?
+        if language.nil? || language.empty?
+          language = languages[region.to_sym]
+        else
+          language.downcase!
+        end
 
-        tag
+        if region.nil?
+          region = regions[language.to_sym]
+        else
+          region.upcase!
+        end
+
+        if script.nil?
+          script = scripts[language.to_sym]
+        else
+          script.capitalize!
+        end
+
+        [language, script, region].compact.join('-')
       end
     end
 
@@ -78,7 +100,7 @@ module CSL
 
     has_language
 
-    attr_accessor :region
+    attr_accessor :region, :script
 
     alias_child :metadata, :info
     alias_child :dates, :date
@@ -181,14 +203,15 @@ module CSL
     #
     # @return [self]
     def set(locale)
-      @language, @region = Locale.normalize(locale).split(/-/).map(&:to_sym)
+      @language, *rs = Locale.normalize(locale).split(/-/).map(&:to_sym)
+      @region, @script = rs.reverse
       self
     end
 
-    # Sets the locale's language and region to nil.
+    # Sets the locale's language, script and region to nil.
     # @return [self]
     def clear
-      @language, @region = nil
+      @language, @script, @region = nil
       self
     end
 
@@ -414,11 +437,12 @@ module CSL
     end
 
 
-    # Locales are sorted first by language, then by region; sort order is
-    # alphabetical with the following exceptions: the default locale is
-    # prioritised; in case of a language match the default region of that
-    # language will be prioritised (e.g., de-DE will come before de-AT even
-    # though the alphabetical order would be different).
+    # Locales are sorted first by language, then by region and script;
+    # sort order is alphabetical with the following exceptions:
+    # the default locale is prioritised; in case of a language match
+    # the default region of that language will be prioritised (e.g.,
+    # de-DE will come before de-AT even though the alphabetical order
+    # would be different).
     #
     # @param other [Locale] the locale used for comparison
     # @return [1,0,-1,nil] the result of the comparison
@@ -427,7 +451,7 @@ module CSL
       when !other.is_a?(Locale)
         nil
       when [language, region] == [other.language, other.region]
-        0
+        script <=> other.script
       when default?
         -1
       when other.default?
@@ -448,7 +472,7 @@ module CSL
 
     # @return [String] the Locale's IETF tag
     def to_s
-      [language, region].compact.join('-')
+      [language, script, region].compact.join('-')
     end
 
     # @return [String] a string representation of the Locale

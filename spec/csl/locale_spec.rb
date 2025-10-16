@@ -37,7 +37,13 @@ module CSL
         'en' => 'en-US',
         '-GB' => 'en-GB',
         '-BR' => 'pt-BR',
-        'de-AT' => 'de-AT'
+        'de-AT' => 'de-AT',
+        'de-aT' => 'de-AT',
+        'sr-RS' => 'sr-Latn-RS',
+        'sr' => 'sr-Latn-RS',
+        '-RS' => 'sr-Latn-RS',
+        'sr-latn-rs' => 'sr-Latn-RS',
+        'sr-Cyrl-RS' => 'sr-Cyrl-RS'
       }.each_pair do |tag, expected|
         it "converts #{tag.inspect} to #{expected.inspect}" do
           expect(Locale.normalize(tag)).to eq(expected)
@@ -54,6 +60,10 @@ module CSL
 
       it 'has no region' do
         expect(Locale.new.region).to be_nil
+      end
+
+      it 'has no script' do
+        expect(Locale.new.script).to be_nil
       end
 
       it 'contains no dates by default' do
@@ -94,22 +104,25 @@ module CSL
     end
 
     describe '#set' do
-
       it 'when passed "en-GB" sets language to :en and region to :GB' do
         locale.set('en-GB')
-        expect([locale.language, locale.region]).to eq([:en, :GB])
+        expect([locale.language, locale.region, locale.script]).to eq([:en, :GB, nil])
       end
 
       it 'when passed "de" sets language to :de and region to :DE' do
         locale.set('de')
-        expect([locale.language, locale.region]).to eq([:de, :DE])
+        expect([locale.language, locale.region, locale.script]).to eq([:de, :DE, nil])
       end
 
       it 'when passed "-AT" sets language to :de and region to :AT' do
         locale.set('-AT')
-        expect([locale.language, locale.region]).to eq([:de, :AT])
+        expect([locale.language, locale.region, locale.script]).to eq([:de, :AT, nil])
       end
 
+      it 'when passed "sr" sets language, region, and script' do
+        locale.set('sr')
+        expect([locale.language, locale.region, locale.script]).to eq([:sr, :RS, :Latn])
+      end
     end
 
     describe '#merge!' do
