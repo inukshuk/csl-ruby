@@ -40,10 +40,27 @@ module CSL
       attr_accessor :default
       attr_reader :languages, :regions, :scripts
 
+      # Loads the locale. For IETF tags without a locale file, falls
+      # back to the language's primary dialect and to the default locale.
       def load(input = nil)
         input ||= Locale.default
-        input = normalize input if input.to_s =~ @tag_pattern
-        super(input)
+
+        # Drop extensions and private-use subtags (e.g. "-x-...")
+        tag = input.to_s.sub(/-[a-z0-9]-.*\z/i, '')
+        return super(input) unless tag =~ @tag_pattern
+
+        tag = normalize(tag)
+        candidates = [tag, normalize(tag.split('-')[0]), Locale.default].uniq
+
+        error = nil
+
+        candidates.each do |candidate|
+          return super(candidate)
+        rescue ParseError => e
+          error ||= e
+        end
+
+        raise error
       end
 
       # Normalizes an IETF tag; adds default language, region, script.

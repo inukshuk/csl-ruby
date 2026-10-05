@@ -79,6 +79,27 @@ module CSL
 
     describe '.load' do
 
+      describe 'locale fallback' do
+        it 'falls back to the primary dialect' do
+          expect(Locale.load('de-AT').to_s).to eq('de-DE')
+          expect(Locale.load('de-XX').to_s).to eq('de-DE')
+        end
+
+        it 'falls back to the default locale' do
+          expect(Locale.load('gx').to_s).to eq('en-US')
+          expect(Locale.load('xx-YY').to_s).to eq('en-US')
+        end
+
+        it 'ignores extensions and private-use subtags' do
+          expect(Locale.load('en-US-x-sort-ja-alalc97').to_s).to eq('en-US')
+          expect(Locale.load('de-AT-u-co-phonebk').to_s).to eq('de-DE')
+        end
+
+        it 'does not fall back for file paths' do
+          expect { Locale.load('spec/fixtures/locales/locales-xx-YY.xml') }.to raise_error(ParseError)
+        end
+      end
+
       it 'loads locales from relative file paths' do
         expect(Locale.load('spec/fixtures/locales/locales-de-DE.xml').to_s).to eq('de-DE')
       end
