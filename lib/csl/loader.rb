@@ -9,6 +9,12 @@ module CSL
   #   Base classes are exepcted to define a #parse method.
   module Loader
 
+    class << self
+      attr_accessor :allow_remote
+    end
+
+    @allow_remote = true
+
     attr_accessor :root, :prefix, :extension
 
     # @example
@@ -83,6 +89,7 @@ module CSL
         end
 
         if location =~ /\A\w+:\/\//
+          raise 'loading from URLs is disabled' unless Loader.allow_remote
           URI.open(location, 'r:UTF-8') { |io| io.read }
         else
           File.open(location, 'r:UTF-8') { |io| io.read }
