@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'tempfile'
 
 module CSL
 
@@ -107,6 +108,24 @@ module CSL
               expect(
                 Parser.instance.parse('<foo bar="%lt;"/>')[:bar]
               ).to eq('%lt;')
+            end
+          end
+
+          describe 'external entities' do
+            it 'are not expanded' do
+              Tempfile.create('secret') do |file|
+                file.write('SECRET')
+                file.flush
+
+                xml = %(<!DOCTYPE foo [<!ENTITY e SYSTEM "file://#{file.path}">]><foo>&e;</foo>)
+                expect(parser[xml].to_s).not_to include('SECRET')
+              end
+            end
+          end
+
+          describe 'character references' do
+            it 'are decoded' do
+              expect(Parser.instance.parse('<foo bar="&#x0A;"/>')[:bar]).to eq("\n")
             end
           end
         end

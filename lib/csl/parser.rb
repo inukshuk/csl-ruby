@@ -12,8 +12,7 @@ module CSL
       :nokogiri => lambda { |source|
         Nokogiri::XML::Document.parse(source, nil, nil,
           Nokogiri::XML::ParseOptions::DEFAULT_XML |
-          Nokogiri::XML::ParseOptions::NOBLANKS |
-          Nokogiri::XML::ParseOptions::NOENT)
+          Nokogiri::XML::ParseOptions::NOBLANKS)
       },
       :default  => lambda { |source|
         REXML::Document.new(source, :compress_whitespace => :all, :ignore_whitespace_nodes => :all)
