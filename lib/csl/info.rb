@@ -85,18 +85,6 @@ module CSL
       end
     end
 
-    # Ruby 1.8 still has Object#id methods so the attr_children generator
-    # may not have created those; since #id is deprecated in 1.8.7 we're
-    # forcing the override anyway. Live dangerously!
-    remove_method :id
-
-    # @return [Id] the id text node
-    def id
-      children[:id]
-    end
-
-    alias id= set_child_id
-
     def self_link!
       return unless has_id?
       self.self_link = id

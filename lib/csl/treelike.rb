@@ -349,8 +349,7 @@ module CSL
 
         const_set(:Children, Struct.new(*names) {
 
-          # 1.8 Compatibility
-          @keys = members.map(&:to_sym).freeze
+          @keys = members.freeze
 
           class << self
             attr_reader :keys

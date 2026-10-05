@@ -1,5 +1,4 @@
 
-require 'enumerator'
 require 'forwardable'
 require 'open-uri'
 require 'singleton'

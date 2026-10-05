@@ -131,8 +131,7 @@ module CSL
       def attr_struct(*attributes)
         const_set(:Attributes, Struct.new(*attributes) {
 
-          # 1.8 Compatibility
-          @keys = attributes.map(&:to_sym).freeze
+          @keys = members.freeze
 
           class << self
             attr_reader :keys
