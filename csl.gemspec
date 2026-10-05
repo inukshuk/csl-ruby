@@ -4,14 +4,6 @@ $:.unshift lib unless $:.include?(lib)
 
 require 'csl/version'
 
-EXCLUDES = %w{
-  .coveralls.yml
-  .travis.yml
-  .csl.gemspec
-  .simplecov
-  .rspec
-} | `git ls-files -- {spec,features}/*`.split("\n")
-
 Gem::Specification.new do |s|
   s.name        = 'csl'
   s.version     = CSL::VERSION.dup
@@ -29,7 +21,7 @@ Gem::Specification.new do |s|
 	EOS
 
 
-  s.required_ruby_version = '>= 2.2'
+  s.required_ruby_version = '>= 3.1'
   s.add_dependency('namae', ['~> 1.2'])
   s.add_dependency('rexml', '~> 3.0')
   s.add_dependency('forwardable', '~> 1.3')
@@ -38,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency('set', '~> 1.1')
   s.add_dependency('time', '< 1.0')
 
-  s.files        = `git ls-files`.split("\n") - EXCLUDES
+  s.files        = `git ls-files -- lib vendor`.split("\n") + %w[BSDL README.md]
   s.require_path = 'lib'
 end
 

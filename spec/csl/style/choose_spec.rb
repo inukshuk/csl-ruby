@@ -22,7 +22,7 @@ module CSL
           end
 
           describe 'when the condition has multiple values' do
-            before { node[:'is-numeric'] << ' issue' }
+            before { node[:'is-numeric'] = "#{node[:'is-numeric']} issue" }
             
             it 'it splits the values in the conditions list' do
               expect(node.conditions).to eq([[:'is-numeric', :all?, ['edition', 'issue']]])

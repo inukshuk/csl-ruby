@@ -13,14 +13,12 @@ $:.unshift(File.join(File.dirname(__FILE__), './lib'))
 require 'csl/version'
 
 
-desc 'Run a Pry session with CSL loaded'
+desc 'Run an IRB session with CSL loaded'
 task :console do
   ARGV.clear
-
-  require 'pry'
+  require 'irb'
   require 'csl'
-
-  Pry.start
+  IRB.start
 end
 
 require 'rspec/core'
@@ -36,7 +34,7 @@ end
 
 task :release do |t|
   system "gem build csl.gemspec"
-  system "git tag #{CSL::VERSION}"
+  system "git tag v#{CSL::VERSION}"
   system "git push --tags"
   system "gem push csl-#{CSL::VERSION}.gem"
 end
@@ -51,11 +49,4 @@ task :check_warnings do
   CSL::Locale.new
 
   puts CSL::VERSION
-end
-
-begin
-  require 'yard'
-  YARD::Rake::YardocTask.new
-rescue LoadError => e
-  # ignore
 end

@@ -17,15 +17,8 @@ group :optional do
   gem 'nokogiri'
 end
 
-group :extra do
-  gem 'diff-lcs'
-  gem 'pry'
-  gem 'yard', platforms: :mri
-  gem 'redcarpet', platforms: :mri
-end
-
 group :coverage do
-  gem 'simplecov', require: false
+  gem 'simplecov', '>= 1.3', require: false
   gem 'simplecov-lcov', require: false
 end
 

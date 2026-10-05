@@ -16,7 +16,7 @@ module CSL
 
       has_no_children
 
-      @variables = [:locator, :page].concat(Schema.variables[:number]).freeze
+      @variables = ([:locator, :page] | Schema.variables[:number]).freeze
 
       @terms = Hash.new { |h,k| h[k] = k }
 

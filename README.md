@@ -1,48 +1,56 @@
 CSL-Ruby
 ========
 CSL-Ruby provides a Ruby parser and a comprehensive API for the
-[Citation Style Language](http://citationstyles.org) (CSL), an XML-based
-format to describe the formatting of citations, notes and bibliographies.
+[Citation Style Language](https://citationstyles.org) (CSL),
+an XML-based format to describe the formatting
+of citations, notes and bibliographies.
 
 Styles and Locales
 ------------------
-You can load CSL styles and locales by passing a respective XML string, file
-name, or URL. You can also load styles and locales by name if the
-corresponding files are installed in your local styles and locale directories.
+You can load CSL styles and locales
+by passing a respective XML string, file name, or URL.
+You can also load styles and locales by name
+if the corresponding files are installed
+in your local styles and locale directories.
 By default, CSL-Ruby looks for CSL styles and locale files in
 
     /usr/local/share/csl/styles
     /usr/local/share/csl/locales
 
-You can change these locations by changing the value of `CSL::Style.root` and
-`CSL::Locale.root` respectively.
+You can change these locations
+by changing the value of `CSL::Style.root` and `CSL::Locale.root` respectively.
 
-Alternatively, you can `gem install csl-styles` to install all official CSL
-styles and locales. To make the styles and locales available, simply
-`require 'csl/styles`.
+Alternatively, you can `gem install csl-styles`
+to install all official CSL styles and locales.
+To make the styles and locales available,
+simply `require 'csl/styles'`.
 
 Usage
 -----
-CSL-Ruby is broadly aimed at two very different usage scenarios: on the one
-hand, you can use the parser to load existing styles and locales and
-manipulate, query or otherwise work with them using a dedicated API: that is
-to say, you do not have to resort to XML-related methods of access, but can
-make use of a large set of library methods which are specific to CSL. This
-is useful, primarily, for citation processors like
-[CiteProc-Ruby](https://github.com/inukshuk/citeproc).
+CSL-Ruby is broadly aimed at two very different usage scenarios:
+on the one hand,
+you can use the parser to load existing styles and locales
+and manipulate, query or otherwise work with them using a dedicated API:
+that is to say,
+you do not have to resort to XML-related methods of access,
+but can make use of a large set of library methods which are specific to CSL.
+This is useful, primarily, for citation processors like
+[CiteProc-Ruby](https://github.com/inukshuk/citeproc-ruby).
 
-On the other hand, CSL-Ruby makes it easy to create new styles and locales
-using Ruby; this is useful, for example, if you need to change or adapt
-styles on-the-fly or for writing an interactive style editor.
+On the other hand,
+CSL-Ruby makes it easy to create new styles and locales using Ruby;
+this is useful, for example,
+if you need to change or adapt styles on-the-fly
+or for writing an interactive style editor.
 
-To get you started, here are a few usage examples; for the full set of
-available features, please consult the
-[API documentation](http://rubydoc.info/gems/csl/).
+To get you started, here are a few usage examples;
+for the full set of available features, please consult the
+[API documentation](https://rubydoc.info/gems/csl/).
 
     require 'csl'
 
     # Load a style from the Zotero style repository
-    jps = CSL::Style.load 'http://zotero.org/styles/american-journal-of-political-science'
+    jps = CSL::Style.load 'https://www.zotero.org/styles/american-journal-of-political-science'
 
     # Query style information
     jps.title #-> "American Journal of Political Science"
@@ -53,7 +61,7 @@ available features, please consult the
     jps.valid? #-> true
 
     # Load another style
-    amc = CSL::Style.load 'http://zotero.org/styles/applied-mathematics-and-computation'
+    amc = CSL::Style.load 'https://www.zotero.org/styles/applied-mathematics-and-computation'
 
     amc.independent? #-> false
 
@@ -68,9 +76,9 @@ available features, please consult the
     # Load a locally installed style
     apa = CSL::Style.load :apa
 
-    # Fetch the a macro
-    authors = apa.macros['authors'].children[0]
-    #-> #<CSL::Style::Names variable="author" children=[2]>
+    # Fetch the first child of a macro
+    authors = apa.macros['author-bib'].children[0]
+    #-> #<CSL::Style::Group delimiter=" " children=[2]>
 
     # Load a locally installed locale
     fr = CSL::Locale.load :fr
@@ -82,7 +90,7 @@ available features, please consult the
 
     # Ordinalize a number
     fr.ordinalize 42 #=> "42ᵉ"
-    fr.ordinalize 3, form: 'long' => "troisième"
+    fr.ordinalize 3, form: 'long' #=> "troisième"
 
     # Create a new style
     style = CSL::Style.new
@@ -101,11 +109,12 @@ available features, please consult the
 
 Dependencies
 ------------
-CSL-Ruby was written with portability in mind. For performance reasons it
-will use [Nokogiri ](http://nokogiri.org) for XML parsing and validation
-if available; however, CSL-Ruby will fallback to REXML from the Ruby standard
-library. In order to use Nokogiri, simply `gem install nokogiri` or add it
-to your Gemfile.
+CSL-Ruby was written with portability in mind.
+For performance reasons it will use [Nokogiri](https://nokogiri.org)
+for XML parsing and validation if available;
+however, CSL-Ruby will fallback to REXML from the Ruby standard library.
+In order to use Nokogiri,
+simply `gem install nokogiri` or add it to your Gemfile.
 
 Development
 -----------
@@ -114,28 +123,33 @@ You can check out a copy of the latest code using Git:
 
     $ git clone https://github.com/inukshuk/csl-ruby.git
 
-To get started, install the development dependencies and run all tests:
+To get started,
+install the development dependencies and run all tests:
 
     $ cd csl-ruby
     $ bundle install
     $ rake
 
-If you've found a bug or have a question, please open an issue on the
+If you've found a bug or have a question,
+please open an issue on the
 [issue tracker](https://github.com/inukshuk/csl-ruby/issues).
-Or, for extra credit, clone the CSL-Ruby repository, write a failing
-example, fix the bug and submit a pull request.
+Or, for extra credit, clone the CSL-Ruby repository,
+write a failing example, fix the bug and submit a pull request.
 
 Credits
 -------
 Thanks to Rintze M. Zelle, Sebastian Karcher, Frank G. Bennett, Jr.,
-and Bruce D'Arcus of CSL and citeproc-js fame for their support!
+and Bruce D'Arcus of CSL and citeproc-js fame
+for their support!
 
-Thanks to Google and the Berkman Center at Harvard University for supporting
-this project as part of [Google Summer of Code](https://developers.google.com/open-source/soc/).
+Thanks to Google and the Berkman Center at Harvard University
+for supporting this project as part of
+[Google Summer of Code](https://developers.google.com/open-source/soc/).
 
 Copyright
 ---------
-Copyright 2009-2025 Sylvester Keil. All rights reserved.
+Copyright 2009-2026 Sylvester Keil.
+All rights reserved.
 
 Copyright 2012 President and Fellows of Harvard College.
 

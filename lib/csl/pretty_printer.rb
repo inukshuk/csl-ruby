@@ -10,7 +10,7 @@ module CSL
     end
 
     def pretty_print
-      preamble << tags.map { |t| pp t }.join("\n")
+      "#{preamble}#{tags.map { |t| pp t }.join("\n")}"
     end
 
     private
