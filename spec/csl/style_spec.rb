@@ -71,6 +71,20 @@ module CSL
         it '#title returns the title as a string' do
           expect(style.title).to be_a(String)
         end
+
+        it 'includes the info in the xml' do
+          expect(style.to_xml).to match(/<info>\s*<title>foo<\/title>\s*<\/info>/)
+        end
+
+        it 'is the parent of the info node' do
+          expect(style.info.parent).to equal(style)
+        end
+      end
+
+      describe 'when reading the id or title' do
+        before { style.id; style.title }
+
+        it { expect(style).not_to have_info }
       end
     end
 

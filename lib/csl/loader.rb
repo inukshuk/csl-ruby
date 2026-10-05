@@ -82,8 +82,10 @@ module CSL
           location = input
         end
 
-        Kernel.open(location, 'r:UTF-8') do |io|
-          io.read
+        if location =~ /\A\w+:\/\//
+          URI.open(location, 'r:UTF-8') { |io| io.read }
+        else
+          File.open(location, 'r:UTF-8') { |io| io.read }
         end
       end
     rescue => e

@@ -79,6 +79,18 @@ module CSL
 
     describe '.load' do
 
+      it 'loads locales from relative file paths' do
+        expect(Locale.load('spec/fixtures/locales/locales-de-DE.xml').to_s).to eq('de-DE')
+      end
+
+      it 'loads locales from URLs' do
+        url = 'https://example.com/locales/locales-de-DE.xml'
+        xml = File.read('spec/fixtures/locales/locales-de-DE.xml')
+
+        expect(URI).to receive(:open).with(url, 'r:UTF-8').and_yield(StringIO.new(xml))
+        expect(Locale.load(url).to_s).to eq('de-DE')
+      end
+
       describe 'when called with "en-GB" ' do
         let(:locale) { Locale.load('en-GB') }
 
