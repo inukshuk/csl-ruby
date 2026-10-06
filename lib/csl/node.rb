@@ -573,17 +573,6 @@ module CSL
       CSL.encode_xml_text text.to_s.strip
     end
 
-    # TextNodes quack like a string.
-    # def_delegators :to_s, *String.instance_methods(false).reject do |m|
-    #   m.to_s =~ /^\W|!$|(?:^(?:hash|eql?|to_s|length|size|inspect)$)/
-    # end
-    #
-    # String.instance_methods(false).select { |m| m.to_s =~ /!$/ }.each do |m|
-    #   define_method(m) do
-    #     content.send(m) if content.respond_to?(m)
-    #   end
-    # end
-
     def initialize(argument = '')
       case
       when argument.respond_to?(:each_pair)
