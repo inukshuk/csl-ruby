@@ -51,6 +51,37 @@ module CSL
       end
     end
 
+    describe '#localize' do
+      let(:locale) { Locale.load('en-US') }
+
+      before do
+        style << Locale.new('en').tap { |l| l.store 'editor', 'EDITOR' }
+        style << Locale.new('de').tap { |l| l.store 'editor', 'HERAUSGEBER' }
+      end
+
+      it 'returns a copy of the locale with the in-style locale definitions' do
+        localized = style.localize(locale)
+
+        expect(localized.translate('editor')).to eq('EDITOR')
+        expect(localized).not_to equal(locale)
+      end
+
+      it 'does not change the passed-in locale' do
+        style.localize(locale)
+        expect(locale.translate('editor')).to eq('editor')
+      end
+
+      it 'uses the in-style definitions for the requested language' do
+        expect(style.localize(Locale.load('gx')).translate('editor')).to eq('editor')
+        style << Locale.new('gx').tap { |l| l.store 'editor', 'EDXITOR' }
+        expect(style.localize(Locale.load('gx')).translate('editor')).to eq('EDXITOR')
+      end
+
+      it 'returns the locale itself if there are no in-style definitions' do
+        expect(Style.new.localize(locale)).to equal(locale)
+      end
+    end
+
     describe '#children' do
 
       it { is_expected.not_to have_info }

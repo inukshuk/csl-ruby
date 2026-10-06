@@ -74,6 +74,15 @@ module CSL
       @errors = Schema.validate self
     end
 
+    # Merges the style's overrides into the given locale. 
+    #
+    # @param locale [Locale]
+    # @return [Locale]
+    def localize(locale)
+      overrides = locales.sort.reverse.select { |other| locale.like?(other) }
+      overrides.empty? ? locale : locale.merge(*overrides)
+    end
+
     def valid?
       validate.empty?
     end
