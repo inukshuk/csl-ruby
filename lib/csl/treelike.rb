@@ -33,12 +33,17 @@ module CSL
     end
     alias delete delete_children
 
-    # Deletes child nodes that are equal to the passed-in node. Returns all
-    # deleted children. If no children were deleted, returns nil. If the
-    # optional block is given, returns the result block if no children were
-    # deleted.
+    # Deletes the passed-in child node.
+    # Returns the deleted child.
+    # If the node is not a child, returns nil or,
+    # if the optional block is given, the result of the block.
     def delete_child(child)
-      deleted = children.delete child
+      deleted = if children.is_a?(Array)
+        index = children.index { |node| node.equal?(child) }
+        children.delete_at(index) unless index.nil?
+      else
+        children.delete child
+      end
 
       case
       when deleted.nil? && block_given?
@@ -423,18 +428,19 @@ module CSL
 
           alias << push
 
-          # Delete items from self that are equal to node. If any items are
-          # found, returns the deleted items. If the items is not found,
-          # returns nil. If the optional code block is given, returns the
-          # result og block if the item is not found.
+          # Deletes the passed-in node; other, equal nodes are not deleted.
+          # Returns the deleted node or nil if the node is not found.
+          # If the optional code block is given,
+          # returns the result of the block if the node is not found.
           def delete(node)
             return nil unless node.respond_to?(:nodename)
 
             deleted = resolve(node.nodename)
             if deleted.kind_of?(Array)
-              deleted = deleted.delete(node)
+              index = deleted.index { |other| other.equal?(node) }
+              deleted = index.nil? ? nil : deleted.delete_at(index)
             else
-              if deleted == node
+              if deleted.equal?(node)
                 self[node.nodename] = nil
               else
                 deleted = nil
@@ -442,7 +448,7 @@ module CSL
             end
 
             # Delete node from ordered list as well
-            @order.delete(node)
+            @order.delete_if { |other| other.equal?(node) }
 
             if deleted.nil? && block_given?
               yield

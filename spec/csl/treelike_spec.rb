@@ -146,6 +146,64 @@ module CSL
       
     end
     
+
+    describe '#unlink' do
+      it 'removes only the node itself from array children' do
+        group = Style::Group.new
+        a, b = Style::Text.new(:value => 'x'), Style::Text.new(:value => 'x')
+        group << a << b
+
+        a.unlink
+
+        expect(group.children.length).to eq(1)
+        expect(group.children[0]).to equal(b)
+        expect(b.parent).to equal(group)
+        expect(a.parent).to be_nil
+      end
+
+      it 'removes only the node itself from named children' do
+        style = Style.new
+        a, b = Locale.new('en'), Locale.new('en-US')
+        style << a << b
+
+        a.unlink
+
+        expect(style.locales.length).to eq(1)
+        expect(style.locales[0]).to equal(b)
+        expect(a.parent).to be_nil
+      end
+    end
+
+    describe '#delete_child' do
+      it 'does not delete equal nodes which are not children' do
+        group = Style::Group.new
+        group << Style::Text.new(:value => 'x') << Style::Text.new(:value => 'x')
+
+        expect(group.delete_child(Style::Text.new(:value => 'x'))).to be_nil
+        expect(group.children.length).to eq(2)
+      end
+
+      it 'deletes only the passed-in child' do
+        group = Style::Group.new
+        a, b = Style::Text.new(:value => 'x'), Style::Text.new(:value => 'x')
+        group << a << b
+
+        expect(group.delete_child(b)).to equal(b)
+        expect(group.children.length).to eq(1)
+        expect(group.children[0]).to equal(a)
+        expect(b.parent).to be_nil
+      end
+
+      it 'returns the deleted child of named children' do
+        style = Style.new
+        a, b = Locale.new('en'), Locale.new('de')
+        style << a << b
+
+        expect(style.delete_child(a)).to equal(a)
+        expect(a.parent).to be_nil
+        expect(style.locales).to eq([b])
+      end
+    end
 	end
 	
 end
