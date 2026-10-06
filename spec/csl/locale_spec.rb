@@ -204,6 +204,25 @@ module CSL
       end
     end
 
+    describe '#<=>' do
+      it 'sorts the default locale and primary dialects first' do
+        locales = %w{ fr-FR de-AT en-GB de-DE en-US }.map { |tag| Locale.new(tag) }
+        expect(locales.sort.map(&:to_s)).to eq(%w{ en-US de-DE de-AT en-GB fr-FR })
+      end
+
+      it 'ignores locale data' do
+        customized = Locale.load('en-US').tap { |l| l.store 'editor', 'EDITOR' }
+        expect(customized).to eq(Locale.load('en-US'))
+      end
+
+      it 'compares the locales fallback locales were requested for' do
+        expect(Locale.load('gx')).not_to eq(Locale.load('en-US'))
+        expect(Locale.load('de-AT')).not_to eq(Locale.load('de-DE'))
+        expect(Locale.load('de')).to eq(Locale.load('de-DE'))
+        expect(Locale.load('gx')).to eq(Locale.load('gx'))
+      end
+    end
+
     describe '#merge!' do
       let(:locale_with_options) { Locale.new('en', :foo => 'bar') }
 

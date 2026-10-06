@@ -404,13 +404,13 @@ module CSL
 
     # @returns [Boolean] whether or not the Locale is the default locale
     def default?
-      to_s == Locale.default
+      default_tag?(language, script, region)
     end
 
     # @return [Boolean] whehter or not the Locale's region is the default
     #   region for its language
     def default_region?
-      region && region == Locale.regions[language]
+      default_region_for?(language, region)
     end
 
     # @return [Boolean] whether or not the Locale's language is the default
@@ -480,30 +480,15 @@ module CSL
     # de-DE will come before de-AT even though the alphabetical order
     # would be different).
     #
+    # Fallback locales are compared as the locale they were requested
+    # for (see #requested); locale data (terms, dates, and options) is
+    # not compared.
+    #
     # @param other [Locale] the locale used for comparison
     # @return [1,0,-1,nil] the result of the comparison
     def <=>(other)
-      case
-      when !other.is_a?(Locale)
-        nil
-      when [language, region] == [other.language, other.region]
-        script <=> other.script
-      when default?
-        -1
-      when other.default?
-        1
-      when language == other.language
-        case
-        when default_region?
-          -1
-        when other.default_region?
-          1
-        else
-          region.to_s <=> other.region.to_s
-        end
-      else
-        language.to_s <=> other.language.to_s
-      end
+      return nil unless other.is_a?(Locale)
+      compare(identity, other.identity)
     end
 
     # @return [String] the Locale's IETF tag
@@ -516,7 +501,54 @@ module CSL
       "#<#{self.class.name} #{to_s}>"
     end
 
+    protected
+
+    # @return [Array<Symbol, nil>] language, script, and region of the
+    #   locale or, for fallback locales, of the requested tag
+    def identity
+      return [language, script, region] unless fallback?
+
+      language, *rs = requested.split('-').map(&:to_sym)
+      region, script = rs.reverse
+
+      [language, script, region]
+    end
+
     private
+
+    # Compares two locale identities (see #identity).
+    def compare(a, b)
+      language, script, region = a
+      other_language, other_script, other_region = b
+
+      case
+      when [language, region] == [other_language, other_region]
+        script <=> other_script
+      when default_tag?(*a)
+        -1
+      when default_tag?(*b)
+        1
+      when language == other_language
+        case
+        when default_region_for?(language, region)
+          -1
+        when default_region_for?(other_language, other_region)
+          1
+        else
+          region.to_s <=> other_region.to_s
+        end
+      else
+        language.to_s <=> other_language.to_s
+      end
+    end
+
+    def default_tag?(language, script, region)
+      [language, script, region].compact.join('-') == Locale.default
+    end
+
+    def default_region_for?(language, region)
+      region && region == Locale.regions[language]
+    end
 
     alias original_locale_attribute_assignments attribute_assignments
 
