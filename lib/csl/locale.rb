@@ -55,7 +55,7 @@ module CSL
         error = nil
 
         candidates.each do |candidate|
-          return super(candidate)
+          return super(candidate).tap { |locale| locale.requested = tag }
         rescue ParseError => e
           error ||= e
         end
@@ -119,6 +119,10 @@ module CSL
 
     attr_accessor :region, :script
 
+    # @return [String, nil] the IETF tag the locale was loaded for;
+    #   this differs from the locale's own tag if the locale is a fallback
+    attr_accessor :requested
+
     alias_child :metadata, :info
     alias_child :dates, :date
     alias_child :options, :style_options
@@ -171,6 +175,7 @@ module CSL
     def initialize_copy(other)
       @parent, @ancestors, @descendants, @siblings, @root, @depth = nil
       initialize(other.attributes.to_hash.merge(:lang => other.to_s))
+      @requested = other.requested
     end
 
     def added_to(node)
@@ -414,11 +419,25 @@ module CSL
       language && language == Locale.languages[region]
     end
 
+    # Whether or not the passed-in locale (e.g., an in-style locale)
+    # matches this locale. This is the case for universal locales and
+    # for locales of the language this locale was requested for.
     def like?(other)
       return false unless other.is_a? Locale
       return true  if other.universal?
 
-      language == other.language
+      requested_language == other.language
+    end
+
+    # @return [Symbol, nil] the language this locale was requested for
+    def requested_language
+      requested.nil? ? language : requested.split('-')[0].to_sym
+    end
+
+    # @return [Boolean] whether or not the locale was loaded as a
+    #   fallback for a different locale
+    def fallback?
+      !requested.nil? && requested != to_s
     end
 
     def universal?

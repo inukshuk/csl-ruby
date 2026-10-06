@@ -98,6 +98,28 @@ module CSL
         it 'does not fall back for file paths' do
           expect { Locale.load('spec/fixtures/locales/locales-xx-YY.xml') }.to raise_error(ParseError)
         end
+
+        it 'remembers the requested tag' do
+          expect(Locale.load('de-AT').requested).to eq('de-AT')
+          expect(Locale.load('gx').requested).to eq('gx')
+          expect(Locale.load('de').requested).to eq('de-DE')
+          expect(Locale.load('en-US-x-sort-ja').requested).to eq('en-US')
+        end
+
+        it 'does not set the requested tag for file paths' do
+          expect(Locale.load('spec/fixtures/locales/locales-de-DE.xml').requested).to be_nil
+        end
+
+        it 'knows whether or not it is a fallback' do
+          expect(Locale.load('de-AT')).to be_fallback
+          expect(Locale.load('de-DE')).not_to be_fallback
+          expect(Locale.new('de-DE')).not_to be_fallback
+        end
+
+        it 'keeps the requested tag in copies' do
+          expect(Locale.load('gx').deep_copy.requested).to eq('gx')
+          expect(Locale.load('gx').merge(Locale.new('de')).requested).to eq('gx')
+        end
       end
 
       it 'loads locales from relative file paths' do
@@ -161,6 +183,24 @@ module CSL
       it 'when passed "sr" sets language, region, and script' do
         locale.set('sr')
         expect([locale.language, locale.region, locale.script]).to eq([:sr, :RS, :Latn])
+      end
+    end
+
+    describe '#like?' do
+      it 'is true for locales of the same language' do
+        expect(Locale.new('de-DE')).to be_like(Locale.new('de-AT'))
+        expect(Locale.new('de-DE')).not_to be_like(Locale.new('en-US'))
+      end
+
+      it 'is true for universal locales' do
+        expect(Locale.new('de-DE')).to be_like(Locale.new.clear)
+      end
+
+      it 'uses the requested language of fallback locales' do
+        locale = Locale.load('gx')
+
+        expect(locale).to be_like(Locale.new('gx'))
+        expect(locale).not_to be_like(Locale.new('en-US'))
       end
     end
 
