@@ -271,8 +271,9 @@ module CSL
     #   de.ordinalize(13)
     #   #-> "13."
     #
-    #   de.ordinalize(3, :form => :long, :gender => :feminine)
-    #   #-> "dritte"
+    #   fr = Locale.load('fr')
+    #   fr.ordinalize(1, :'gender-form' => 'feminine')
+    #   #-> "1ʳᵉ"
     #
     # @note
     #   For CSL 1.0 (and older) locales that do not define an "ordinal-00"
@@ -284,8 +285,9 @@ module CSL
     # @param options [Hash] formatting options
     #
     # @option options [:short,:long] :form (:short) which ordinals form to use
-    # @option options [:feminine,:masculine,:neutral] :gender (:neutral)
-    #   which ordinals gender-form to use
+    # @option options ['feminine','masculine',nil] :'gender-form' (nil)
+    #   which ordinals gender-form to use; falls back to the neuter
+    #   ordinals (without gender-form)
     #
     # @raise [ArgumentError] if number cannot be converted to an integer
     #
@@ -599,6 +601,9 @@ module CSL
 
     def merge_terms(other)
       return self unless other.has_terms?
+
+      # Ordinals are replaced as a set
+      terms.drop_ordinals if has_terms? && other.terms.has_ordinals?
 
       other.each_term do |term|
         store term.deep_copy

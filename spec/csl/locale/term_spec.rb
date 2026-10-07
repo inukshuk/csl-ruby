@@ -44,6 +44,29 @@ module CSL
         end
       end
 
+      describe "given gendered terms" do
+        let(:terms) do
+          Locale::Terms.parse <<-EOS
+          <terms>
+            <term name="ordinal">.ª</term>
+            <term name="ordinal-01" gender-form="masculine">.º</term>
+            <term name="ordinal-01" gender-form="feminine">.ª</term>
+            <term name="ordinal-02" gender-form="masculine">.ºº</term>
+          </terms>
+          EOS
+        end
+
+        it "returns the ordinal of the matching gender" do
+          expect(terms.ordinalize(1, :'gender-form' => 'masculine').to_s).to eq('.º')
+          expect(terms.ordinalize(1, :'gender-form' => 'feminine').to_s).to eq('.ª')
+          expect(terms.ordinalize(2, :'gender-form' => 'masculine').to_s).to eq('.ºº')
+        end
+
+        it "falls back to the neuter ordinals" do
+          expect(terms.ordinalize(2, :'gender-form' => 'feminine').to_s).to eq('.ª')
+        end
+      end
+
     end
 
     describe '#lookup' do

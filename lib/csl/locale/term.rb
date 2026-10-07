@@ -80,10 +80,11 @@ module CSL
         return unless has_ordinals?
 
         options = Term.specialize(options)
+        form, options = options[:form], options.except(:form)
         number = number.to_i.abs
 
         # try to match long-ordinals first
-        if options.delete(:form).to_s =~ /^long/i
+        if form.to_s =~ /^long/i
           ordinal = lookup_long_ordinal_for number, options
           return ordinal unless ordinal.nil?
         end
@@ -94,9 +95,9 @@ module CSL
         ordinal = send algorithm, number, options
         return ordinal unless ordinal.nil?
 
-        # fallback to non-gendered version
-        if options.delete(:'gender-form')
-          ordinal = send algorithm, number, options
+        # fallback to neuter
+        if options.key?(:'gender-form')
+          ordinal = send algorithm, number, options.merge(:'gender-form' => nil)
         end
 
         ordinal

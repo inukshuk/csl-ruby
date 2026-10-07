@@ -290,6 +290,17 @@ module CSL
           expect(locale).to have_terms
         end
 
+        it 'replaces all ordinals if the other locale has ordinals' do
+          locale.merge! us
+
+          other = Locale.new
+          other.store Locale::Term.new(:name => 'ordinal-01', :'gender-form' => 'feminine') { |t| t.text = '.ª' }
+          locale.merge! other
+
+          expect(locale.ordinalize(1)).to eq('1.ª')
+          expect(locale.ordinalize(2)).to eq('2')
+        end
+
         it 'makes copies of the terms' do
           locale.merge! us
           expect(locale).to have_terms
@@ -297,6 +308,36 @@ module CSL
           expect(locale.terms.first).to eq(us.terms.first)
           expect(locale.terms.first).not_to be(us.terms.first)
         end
+      end
+    end
+
+    describe '#ordinalize' do
+      # The example from the CSL specification (Gender-specific Ordinals)
+      let(:fr) do
+        Locale.parse <<-EOS
+          <locale xml:lang="fr-FR">
+            <terms>
+              <term name="edition" gender="feminine">
+                <single>édition</single>
+                <multiple>éditions</multiple>
+              </term>
+              <term name="edition" form="short">éd.</term>
+              <term name="month-01" gender="masculine">janvier</term>
+              <term name="ordinal">e</term>
+              <term name="ordinal-01" gender-form="feminine" match="whole-number">re</term>
+              <term name="ordinal-01" gender-form="masculine" match="whole-number">er</term>
+            </terms>
+          </locale>
+        EOS
+      end
+
+      it 'uses the ordinal of the given gender-form' do
+        expect(fr.ordinalize(1, :'gender-form' => 'feminine')).to eq('1re')
+        expect(fr.ordinalize(1, :'gender-form' => 'masculine')).to eq('1er')
+      end
+
+      it 'falls back to the neuter ordinal' do
+        expect(fr.ordinalize(3, :'gender-form' => 'feminine')).to eq('3e')
       end
     end
 
