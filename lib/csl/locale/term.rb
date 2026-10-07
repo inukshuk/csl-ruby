@@ -343,14 +343,14 @@ module CSL
 
       def singularize
         return text if textnode?
-        children.single.to_s
+        children.single&.text.to_s.strip
       end
 
       alias singular singularize
 
       def pluralize
         return text if textnode?
-        children.multiple.to_s
+        children.multiple&.text.to_s.strip
       end
 
       alias plural pluralize

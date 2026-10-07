@@ -253,6 +253,13 @@ module CSL
           expect(node.to_s(:number => 1)).to eq(node.singularize)
         end
 
+        it 'returns the text of the singular and plural forms' do
+          term = Locale::Term.new { |t| t.single = 'ed. & tran.'; t.multiple = 'eds. & trans.' }
+
+          expect(term.to_s).to eq('ed. & tran.')
+          expect(term.to_s(:number => 2)).to eq('eds. & trans.')
+        end
+
         it "returns the term's plural form when passed :plural => true" do
           expect(node.to_s(:plural => true)).to eq(node.pluralize)
         end
