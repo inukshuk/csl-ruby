@@ -14,6 +14,6 @@ SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
 SimpleCov.configure do
   skip 'spec/'
   skip 'features/'
-
+  merge_timeout 800
   enable_coverage :branch
 end
