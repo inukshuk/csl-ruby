@@ -1,25 +1,24 @@
-# -*- encoding: utf-8 -*-
-lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
-
-require 'csl/version'
+require_relative 'lib/csl/version'
 
 Gem::Specification.new do |s|
   s.name        = 'csl'
-  s.version     = CSL::VERSION.dup
-  s.platform    = Gem::Platform::RUBY
+  s.version     = CSL::VERSION
   s.authors     = ['Sylvester Keil']
-  s.email       = ['http://sylvester.keil.or.at']
+  s.email       = ['sylvester@keil.or.at']
   s.homepage    = 'https://github.com/inukshuk/csl-ruby'
-  s.licenses     = ['BSD-2-Clause']
-  s.date        = Time.now.strftime('%Y-%m-%d')
+  s.licenses    = ['BSD-2-Clause']
   s.summary     = 'A Ruby CSL parser and library'
   s.description = <<~EOS
-		A Ruby parser and full API for the Citation Style Language (CSL),
-		an open XML-based language to describe the formatting of citations
-		and bibliographies.
-	EOS
+    A Ruby parser and full API for the Citation Style Language (CSL),
+    an open XML-based language to describe the formatting of citations
+    and bibliographies.
+  EOS
 
+  s.metadata = {
+    'source_code_uri' => 'https://github.com/inukshuk/csl-ruby',
+    'bug_tracker_uri' => 'https://github.com/inukshuk/csl-ruby/issues',
+    'rubygems_mfa_required' => 'true'
+  }
 
   s.required_ruby_version = '>= 3.1'
   s.add_dependency('namae', ['~> 1.2'])
@@ -30,8 +29,10 @@ Gem::Specification.new do |s|
   s.add_dependency('set', '~> 1.1')
   s.add_dependency('time', '< 1.0')
 
-  s.files        = `git ls-files -- lib vendor`.split("\n") + %w[BSDL README.md]
-  s.require_path = 'lib'
+  s.files = Dir[
+    'lib/**/*.rb',
+    'vendor/schema/*.rng',
+    'BSDL',
+    'README.md'
+  ]
 end
-
-# vim: syntax=ruby

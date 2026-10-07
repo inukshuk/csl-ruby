@@ -4,13 +4,11 @@ gemspec
 group :development, :test do
   gem 'rake'
   gem 'rspec'
-  gem 'stringio'
   gem 'cucumber'
 end
 
 group :debug do
-  gem 'debug', '>= 1.0.0', require: false, platforms: :mri
-  gem 'ruby-debug', require: false, platforms: :jruby
+  gem 'debug', require: false, platforms: :mri
 end
 
 group :optional do
@@ -21,5 +19,3 @@ group :coverage do
   gem 'simplecov', '>= 1.3', require: false
   gem 'simplecov-lcov', require: false
 end
-
-# vim: syntax=ruby
