@@ -288,6 +288,9 @@ module CSL
     # @option options ['feminine','masculine',nil] :'gender-form' (nil)
     #   which ordinals gender-form to use; falls back to the neuter
     #   ordinals (without gender-form)
+    # @option options [String] :noun the name of the term accompanied by
+    #   the ordinal (e.g., "edition" or "month-01"); the ordinal uses the
+    #   gender of the term unless a gender-form is given
     #
     # @raise [ArgumentError] if number cannot be converted to an integer
     #
@@ -297,6 +300,12 @@ module CSL
         number.respond_to?(:to_i)
 
       number = number.to_i
+
+      noun = terms.lookup(options[:noun]) if options.key?(:noun)
+      if noun&.gendered? && !options.key?(:'gender-form')
+        options = options.merge(:'gender-form' => noun.gender)
+      end
+
       ordinal = terms.ordinalize number, options
 
       return number.to_s if ordinal.nil?

@@ -10,6 +10,31 @@ module CSL
     it { is_expected.to be_delimiter_contextually_precedes_last }
     it { is_expected.to be_delimiter_contextually_precedes_et_al }
 
+    describe 'after-inverted-name' do
+      let(:person) { double(:invertible? => true) }
+      let(:institution) { double(:invertible? => false) }
+
+      before do
+        subject[:and] = 'text'
+        subject[:'name-as-sort-order'] = 'all'
+      end
+
+      it 'inserts the delimiter before the last name only after inverted names' do
+        subject.delimiter_precedes_last_after_inverted_name!
+
+        expect(subject.delimiter_precedes_last?(2)).to be true
+        expect(subject.delimiter_precedes_last?([person, person])).to be true
+        expect(subject.delimiter_precedes_last?([institution, person])).to be false
+      end
+
+      it 'inserts the delimiter before et-al only after inverted names' do
+        subject[:'delimiter-precedes-et-al'] = 'after-inverted-name'
+
+        expect(subject.delimiter_precedes_et_al?([person])).to be true
+        expect(subject.delimiter_precedes_et_al?([institution])).to be false
+      end
+    end
+
     it 'uses an ellipsis if et-al-use-last is true' do
       expect(subject).not_to be_ellipsis
 

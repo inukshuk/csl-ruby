@@ -339,6 +339,12 @@ module CSL
       it 'falls back to the neuter ordinal' do
         expect(fr.ordinalize(3, :'gender-form' => 'feminine')).to eq('3e')
       end
+
+      it 'uses the gender of the noun' do
+        expect(fr.ordinalize(1, :noun => 'edition')).to eq('1re')
+        expect(fr.ordinalize(1, :noun => 'month-01')).to eq('1er')
+        expect(fr.ordinalize(3, :noun => 'edition')).to eq('3e')
+      end
     end
 
     describe '#legacy?' do

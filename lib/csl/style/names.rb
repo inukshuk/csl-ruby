@@ -181,8 +181,11 @@ module CSL
         self
       end
 
+      # @param names [#to_i, Enumerable] the list of names (or its length)
+      # @return [Boolean] whether or not the delimiter will be inserted
+      #   before et-al
       def delimiter_precedes_et_al?(names)
-        names = names.length if names.respond_to?(:length)
+        count = names.respond_to?(:length) ? names.length : names.to_i
 
         case
         when delimiter_never_precedes_et_al?
@@ -190,9 +193,9 @@ module CSL
         when delimiter_always_precedes_et_al?
           true
         when delimiter_precedes_et_al_after_inverted_name?
-          name_as_sort_order_at?(names.to_i)
+          inverted_at?(names, count)
         else
-          names.to_i > 1
+          count > 1
         end
       end
 
@@ -253,7 +256,7 @@ module CSL
       # @return [Boolean] whether or not the delimiter will be inserted between
       #   the penultimate and the last name
       def delimiter_precedes_last?(names)
-        names = names.length if names.respond_to?(:length)
+        count = names.respond_to?(:length) ? names.length : names.to_i
 
         case
         when !attribute?(:and)
@@ -263,14 +266,9 @@ module CSL
         when delimiter_always_precedes_last?
           true
         when delimiter_precedes_last_after_inverted_name?
-          if name_as_sort_order?
-            all_names_as_sort_order? || names.to_i == 2
-          else
-            false
-          end
-
+          inverted_at?(names, count - 1)
         else
-          names.to_i > 2
+          count > 2
         end
       end
 
@@ -341,6 +339,21 @@ module CSL
 
       def connector=(c)
         attributes[:and] = c
+      end
+
+      private
+
+      # @param names [#to_i, Enumerable] the list of names (or its length)
+      # @param position [Integer] the position of the name (starting at 1)
+      # @return [Boolean] whether or not the name at the position is
+      #   inverted; names which are not invertible (e.g., literal names)
+      #   never are
+      def inverted_at?(names, position)
+        return false unless name_as_sort_order_at?(position)
+        return true unless names.is_a?(Enumerable)
+
+        name = names.to_a[position - 1]
+        !name.respond_to?(:invertible?) || name.invertible?
       end
     end
 
