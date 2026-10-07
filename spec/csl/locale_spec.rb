@@ -352,6 +352,24 @@ module CSL
       end
     end
 
+    describe '#punctuation_in_quote?' do
+      it 'returns false by default' do
+        expect(locale).not_to be_punctuation_in_quote
+      end
+
+      it 'returns true if the option is set to true' do
+        locale << Locale::StyleOptions.new(:'punctuation-in-quote' => '1')
+        expect(locale).to be_punctuation_in_quote
+      end
+    end
+
+    describe '#limit_day_ordinals?' do
+      it 'returns true if the option is set to true' do
+        locale << Locale::StyleOptions.new(:'limit-day-ordinals-to-day-1' => '1')
+        expect(locale).to be_limit_day_ordinals
+      end
+    end
+
     describe '#quote' do
 
       it 'quotes the passed-in string' do

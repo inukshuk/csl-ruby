@@ -136,7 +136,7 @@ module CSL
     alias demote_particle? demote_non_dropping_particle?
 
     def initialize_without_hyphen?
-      attribute?(:'initialize-with-hyphen') && !attributes[:'initialize-with-hyphen']
+      !boolean_attribute(:'initialize-with-hyphen', true)
     end
 
     def has_page_range_format?

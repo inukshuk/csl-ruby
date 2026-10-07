@@ -229,7 +229,7 @@ module CSL
       #   be inserted between before et-al depending on the
       #   number of names rendered
       def delimiter_contextually_precedes_et_al?
-        return true unless attribute?[:'delimiter-precedes-et-al']
+        return true unless attribute?(:'delimiter-precedes-et-al')
         !!(attributes[:'delimiter-precedes-et-al'].to_s =~ /^contextual/i)
       end
 
@@ -327,7 +327,7 @@ module CSL
       end
 
       def ellipsis?
-        attributes[:'et-al-use-last'].to_s =~ /^true$/
+        boolean_attribute(:'et-al-use-last')
       end
 
       def ellipsis

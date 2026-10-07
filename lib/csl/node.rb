@@ -168,13 +168,10 @@ module CSL
           end
 
           def fetch(key, default = nil)
-            value = keys.include?(key.to_sym) && send(:'[]', key)
+            value = send(:'[]', key) if keys.include?(key.to_sym)
+            return value unless value.nil?
 
-            if block_given?
-              value || yield(key)
-            else
-              value || default
-            end
+            block_given? ? yield(key) : default
           end
 
           # Merges the current with the passed-in attributes.
@@ -305,6 +302,17 @@ module CSL
     # false otherwise.
     def attribute?(name)
       attributes.fetch(name, false)
+    end
+
+    # @param name [Symbol] the name of an xsd:boolean attribute
+    # @param default [Boolean] the value if the attribute is not set
+    # @return [Boolean] the value of the boolean attribute
+    def boolean_attribute(name, default = false)
+      case attributes.fetch(name, nil).to_s
+      when 'true', '1' then true
+      when 'false', '0' then false
+      else default
+      end
     end
 
     # @param [[String]] names list of attribute names
@@ -466,11 +474,11 @@ module CSL
     end
 
     def strip_periods?
-      attribute?(:'strip-periods') && !!(attributes[:'strip-periods'].to_s =~ /^true$/i)
+      boolean_attribute(:'strip-periods')
     end
 
     def quotes?
-      attribute?(:'quotes') && !!(attributes[:'quotes'].to_s =~ /^true$/i)
+      boolean_attribute(:quotes)
     end
 
 

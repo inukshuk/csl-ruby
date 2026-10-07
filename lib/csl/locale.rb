@@ -307,8 +307,7 @@ module CSL
 
     # @return [Boolean] true when the option limit-day-ordinals-to-day-1 is true
     def limit_day_ordinals?
-      return false unless has_options? && options.attribute?(:'limit-day-ordinals-to-day-1')
-      !!(options[:'limit-day-ordinals-to-day-1'].to_s =~ /^true$/i)
+      has_options? && options.boolean_attribute(:'limit-day-ordinals-to-day-1')
     end
 
     def limit_day_ordinals!
@@ -321,8 +320,7 @@ module CSL
 
     # @return [Boolean] true when the option punctuation-in-quote is true
     def punctuation_in_quote?
-      return false unless has_options? && options.attribute?(:'punctuation-in-quote')
-      !!(options[:'punctuation-in-quote'].to_s =~ /^true$/i)
+      has_options? && options.boolean_attribute(:'punctuation-in-quote')
     end
     alias punctuation_in_quotes? punctuation_in_quote?
 

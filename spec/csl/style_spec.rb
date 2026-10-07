@@ -129,6 +129,23 @@ module CSL
       end
     end
 
+    describe '#initialize_without_hyphen?' do
+      it 'returns false by default' do
+        expect(style).not_to be_initialize_without_hyphen
+      end
+
+      it 'returns true if initialize-with-hyphen is false' do
+        style[:'initialize-with-hyphen'] = 'false'
+        expect(style).to be_initialize_without_hyphen
+
+        style[:'initialize-with-hyphen'] = 'true'
+        expect(style).not_to be_initialize_without_hyphen
+
+        style[:'initialize-with-hyphen'] = '0'
+        expect(style).to be_initialize_without_hyphen
+      end
+    end
+
     describe 'independent and dependent styles' do
       it 'styles are independent by default' do
         expect(style).to be_independent

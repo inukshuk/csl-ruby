@@ -101,6 +101,27 @@ module CSL
         end
       end
 
+      describe '#boolean_attribute' do
+        it 'returns true for xsd:boolean true values' do
+          ['true', '1', true].each do |value|
+            expect(FooBarNode.new(:foo => value).boolean_attribute(:foo)).to be(true), value.inspect
+          end
+        end
+
+        it 'returns false for xsd:boolean false values' do
+          ['false', '0', false].each do |value|
+            expect(FooBarNode.new(:foo => value).boolean_attribute(:foo, true)).to be(false), value.inspect
+          end
+        end
+
+        it 'returns the default for missing or invalid values' do
+          [nil, 'TRUE', 'yes'].each do |value|
+            expect(FooBarNode.new(:foo => value).boolean_attribute(:foo)).to be(false), value.inspect
+            expect(FooBarNode.new(:foo => value).boolean_attribute(:foo, true)).to be(true), value.inspect
+          end
+        end
+      end
+
       describe '#formatting_options' do
         it 'returns an empty hash by default' do
           expect(TestNode.new.formatting_options).to be_empty
