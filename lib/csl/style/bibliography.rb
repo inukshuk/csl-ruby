@@ -25,6 +25,10 @@ module CSL
         children[:sort].sort_keys
       end
 
+      def second_field_align?
+        attribute?(:'second-field-align')
+      end
+
       def substitute_subsequent_authors?
         attribute?(:'subsequent-author-substitute')
       end
